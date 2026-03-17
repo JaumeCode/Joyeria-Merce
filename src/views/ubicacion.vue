@@ -107,7 +107,7 @@ useHead({
   meta: [
     { name: 'description', content: 'Visítanos en Carrer del Trovador 67, Puerto de Sagunto, Valencia. Abierto de lunes a viernes de 10:00 a 13:30 y de 17:30 a 20:00. Sábados de 10:00 a 14:00. Tel: 962 67 87 34.' },
     { property: 'og:title', content: 'Dónde Estamos — Joyería Mercè' },
-    { property: 'og:description', content: 'Carrer del Trovador 67, Puerto de Sagunto, Valencia. Tel: 962 67 87 34.' },
+    { property: 'og:description', content: 'Carrer del Trovador 67, Puerto de Sagunto, Valencia. Tel: 962678734.' },
     { property: 'og:type', content: 'website' },
   ]
 })
