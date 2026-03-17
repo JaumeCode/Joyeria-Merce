@@ -509,7 +509,7 @@ const similares = computed(() => {
   justify-content: center
   flex-direction: column
   max-width: 1100px
-  margin: 1rem 7rem 2rem
+  margin: 1rem auto 2rem
   padding: 0 2rem
 
 .similares-header
