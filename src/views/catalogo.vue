@@ -123,6 +123,19 @@ const busqueda = ref('')
 const orden = ref('az')
 const materialFiltro = ref('')
 const filtrosAbiertos = ref(false)
+
+import { useHead } from '@vueuse/head'
+
+useHead({
+  title: 'Catálogo de Joyas — Joyería Mercè',
+  meta: [
+    { name: 'description', content: 'Explora nuestra colección completa de joyas artesanales de oro, plata y acero. Anillos, pulseras, cadenas, colgantes y pendientes hechos a mano en Puerto de Sagunto.' },
+    { property: 'og:title', content: 'Catálogo de Joyas — Joyería Mercè' },
+    { property: 'og:description', content: 'Colección completa de joyas artesanales hechas a mano. Oro, plata y acero.' },
+    { property: 'og:type', content: 'website' },
+  ]
+})
+
 onMounted(async () => {
   if (store.todas.length === 0) await store.obtener_joya()
   if (route.query.tipo) {
@@ -133,6 +146,14 @@ onMounted(async () => {
     materialFiltro.value = route.query.material
   }
 })
+//Query de seccion de anillos de compromiso 
+watch(() => route.query, (query) => {
+  if (query.tipo) catActiva.value = query.tipo
+  if (query.material) materialFiltro.value = query.material
+
+})
+
+
 
 const esNovedad = (fecha) => Date.now() - fecha < 14 * 24 * 60 * 60 * 1000
 
@@ -544,4 +565,55 @@ watch([catActiva, busqueda, orden, materialFiltro], () => { paginaActual.value =
 
   .precio
     font-size: 0.9rem
+
+// ── Paginación ────────────────────────────────────────────────────────────────
+.paginacion
+  display: flex
+  justify-content: center
+  align-items: center
+  gap: 6px
+  margin: 3rem auto 2rem
+  padding: 0 2rem
+
+.pag_btn
+  min-width: 38px
+  height: 38px
+  padding: 0 12px
+  border-radius: 10px
+  border: 1px solid rgba(0,0,0,0.1)
+  background: #fff
+  font-size: 0.82rem
+  cursor: pointer
+  color: #1a1a1a
+  transition: all 0.2s
+  font-family: inherit
+  display: flex
+  align-items: center
+  justify-content: center
+
+  &:hover:not(:disabled)
+    background: #f5f0e8
+    border-color: rgba(0,0,0,0.2)
+
+  &:disabled
+    opacity: 0.3
+    cursor: not-allowed
+
+  &.activo
+    background: #1a1a1a
+    color: #EDE9D8
+    border-color: #1a1a1a
+    font-weight: 500
+
+@media (max-width: 768px)
+  .paginacion
+    gap: 4px
+    margin: 2rem auto 1.5rem
+    flex-wrap: wrap
+
+  .pag_btn
+    min-width: 34px
+    height: 34px
+    font-size: 0.78rem
+    border-radius: 8px
 </style>

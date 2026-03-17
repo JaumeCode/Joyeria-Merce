@@ -177,7 +177,7 @@
           </select>
         </div>
         <div class="joya-list">
-          <div v-for="joya in joyas_filtradas" :key="joya.id" class="joya-row">
+          <div v-for="joya in joyasPaginadas" :key="joya.id" class="joya-row">
             <div class="joya-imgs">
               <img v-for="imagen in joya.imagenes" :src="imagen" alt="" />
             </div>
@@ -197,6 +197,17 @@
               <button @click="eliminar_joya(joya)" class="btn-del">Eliminar</button>
             </div>
           </div>
+        </div>
+        <div class="paginacion" v-if="total_paginas > 1">
+          <button class="pag-btn" @click="cambiarPagina(paginaActual - 1)" :disabled="paginaActual === 1">‹</button>
+          <button
+            v-for="n in total_paginas"
+            :key="n"
+            class="pag-btn"
+            :class="{ activo: paginaActual === n }"
+            @click="paginaActual = n"
+          >{{ n }}</button>
+          <button class="pag-btn" @click="paginaActual++" :disabled="paginaActual === total_paginas">›</button>
         </div>
       </section>
 
@@ -539,6 +550,23 @@ const handleFilesEditor = (e) => {
   }
   imagenesFiles_editor.value = files
 }
+
+//Paginacion de joyas 
+const paginaActual = ref(1)
+const porPagina = 5
+
+const joyasPaginadas = computed(() => {
+  const inicio = (paginaActual.value - 1) * porPagina
+  return joyas_filtradas.value.slice(inicio, inicio + porPagina)
+})
+
+const total_paginas = computed(() =>
+  Math.ceil(joyas_filtradas.value.length / porPagina)
+)
+
+
+
+
 
 const entrar_editor = (joya) => {
   editando.value = true
@@ -1659,4 +1687,44 @@ $sans:  'DM Sans', sans-serif
 
   .modal-card
     padding: 2rem 1.5rem
+
+  // ── Paginación ────────────────────────────────────────────
+.paginacion
+  display: flex
+  justify-content: center
+  align-items: center
+  gap: 6px
+  margin-top: 1.5rem
+  padding-top: 1.5rem
+  border-top: 1px solid $line-soft
+
+.pag-btn
+  min-width: 36px
+  height: 36px
+  padding: 0 10px
+  border-radius: 8px
+  border: 1px solid $line
+  background: $white
+  font-family: $sans
+  font-size: 0.82rem
+  color: $text
+  cursor: pointer
+  display: flex
+  align-items: center
+  justify-content: center
+  transition: all .2s
+
+  &:hover:not(:disabled)
+    background: $off-white
+    border-color: $text-muted
+
+  &:disabled
+    opacity: 0.3
+    cursor: not-allowed
+
+  &.activo
+    background: $text
+    color: $white
+    border-color: $text
+    font-weight: 500
 </style>

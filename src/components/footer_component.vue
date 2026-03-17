@@ -15,17 +15,17 @@
 
         <div class="col">
             <h4>Nuestra empresa</h4>
-            <a href="#">Aviso legal</a>
-            <a href="#">Politica de Privacidad</a>
+            <a href="/aviso_legal">Aviso legal</a>
+            <a href="/politicas_privacidad">Politica de Privacidad</a>
             <a href="/politicas">Politica de Cookies</a>
-            <a href="#">Devoluciones</a>
+            <a href="/ubicacion">Horarios</a>
             <a href="/ubicacion">Mapa del Sitio</a>
         </div>
 
         <div class="col">
             <h4>Administradores</h4>
             <a href="/catalogo">Productos</a>
-            <a href="/home">Principal</a>
+            <a href="/">Principal</a>
             <a href="/admin">Para Administradores</a>
             <div class="redes">
                 <a href="https://wa.me/34666238158">

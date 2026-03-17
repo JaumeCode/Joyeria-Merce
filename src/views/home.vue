@@ -125,13 +125,13 @@
                 <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_pedida.png?alt=media&token=86245207-6c02-4e4d-af8c-a311ecb25c11" alt="">
                 <h3>Anillos de Pedida</h3>
                 <p>El símbolo perfecto del amor eterno, diseñado para brillar en el momento más especial de tu vida con elegancia y distinción.</p>
-                <button>Consultar Anillos</button>
+                <button @click="router.push('/catalogo?tipo=Anillos&material=oro')">Consultar Anillos</button>
             </div>
             <div class="categoria_colgante">
                 <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_colgante.png?alt=media&token=5b23379b-2769-43b5-876b-57104fc9d82f" alt="">
                 <h3>Colgantes con Piedra</h3>
                 <p>Piezas únicas que combinan belleza y significado, ideales para lucir cerca del corazón en cualquier ocasión especial.</p>
-                <button>Consultar Colgantes</button>
+                <button @click="router.push('/catalogo?tipo=Colgantes&material=oro')">Consultar Colgantes</button>
             </div>
 
         </section>
@@ -181,8 +181,18 @@ import Swal from 'sweetalert2';
 import footer_component from '@/components/footer_component.vue';
 import { useCorreosStore } from '@/stores/correos';
 import portada from '@/components/portada.vue';
+import { useHead } from '@vueuse/head';
 
 import { useRouter } from 'vue-router';
+
+useHead({
+  title: 'Joyería Mercè — Joyas Artesanales en Puerto de Sagunto',
+  meta: [
+    { name: 'description', content: 'Joyería artesanal en Puerto de Sagunto, Valencia. Anillos, pulseras, cadenas, colgantes y pendientes de oro, plata y acero hechos a mano.' },
+    { property: 'og:title', content: 'Joyería Mercè — Joyas Artesanales en Puerto de Sagunto' },
+    { property: 'og:description', content: 'Joyería artesanal en Puerto de Sagunto, Valencia. Visítanos en Carrer del Trovador, 67.' },
+  ]
+})
 
 const router=useRouter()
 // Creamos el store

@@ -100,6 +100,17 @@
 <script setup>
 import header_all from '@/components/header_all.vue'
 import footer_component from '@/components/footer_component.vue'
+import { useHead } from '@vueuse/head'
+//Para Seo
+useHead({
+  title: 'Dónde Estamos — Joyería Mercè · Puerto de Sagunto',
+  meta: [
+    { name: 'description', content: 'Visítanos en Carrer del Trovador 67, Puerto de Sagunto, Valencia. Abierto de lunes a viernes de 10:00 a 13:30 y de 17:30 a 20:00. Sábados de 10:00 a 14:00. Tel: 962 67 87 34.' },
+    { property: 'og:title', content: 'Dónde Estamos — Joyería Mercè' },
+    { property: 'og:description', content: 'Carrer del Trovador 67, Puerto de Sagunto, Valencia. Tel: 962 67 87 34.' },
+    { property: 'og:type', content: 'website' },
+  ]
+})
 
 const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
 const hoyIndex = new Date().getDay()
