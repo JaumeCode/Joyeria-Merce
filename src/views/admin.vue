@@ -1455,103 +1455,53 @@ $sans:  'DM Sans', sans-serif
     padding: 2rem 1.5rem
 
 @media (max-width: 768px)
-  .auth
-    flex-direction: column
-
-  .auth-left
-    padding: 3rem 2rem
-    min-height: 200px
-
-    .brand-name
-      font-size: 2.8rem
-
-  .auth-right
-    width: 100%
-    padding: 2rem 1.5rem
-
-  .admin-panel
-    flex-direction: column
-
-  
-  .main-content
-    padding: 1.5rem 1rem
-
-  .stats-row
-    flex-direction: column
-
-  .form-grid
-    grid-template-columns: 1fr
-
-    .span-1, .span-2
-      grid-column: span 1
+  // ... tus estilos existentes ...
 
   .joya-row
-    flex-wrap: wrap
-    gap: 1rem
+    flex-direction: column
+    align-items: flex-start
+    gap: 0.75rem
+    padding: 1rem
 
-    &:hover
-      transform: none
+  .joya-imgs
+    width: 100%
+    gap: 0.5rem
+
+    img
+      width: 72px
+      height: 72px
+      border-radius: 8px
+
+  .joya-info
+    width: 100%
+
+    .joya-nombre
+      white-space: normal
+      font-size: 1rem
+
+    .joya-meta
+      font-size: 0.72rem
+
+    .joya-precio
+      font-size: 0.95rem
+
+  .joya-status
+    flex-direction: row
+    flex-wrap: wrap
+    gap: 0.4rem
+    width: 100%
 
   .joya-actions
     width: 100%
-    justify-content: flex-end
+    justify-content: stretch
+    gap: 0.5rem
 
-  .modal-card
-    padding: 2rem 1.5rem
-
-.email-overlay
-  position: fixed
-  inset: 0
-  background: rgba(28,25,23,0.5)
-  backdrop-filter: blur(6px)
-  display: flex
-  align-items: center
-  justify-content: center
-  z-index: 99999
-
-.email-popup
-  background: $white
-  border-radius: 16px
-  padding: 2.5rem 3rem
-  text-align: center
-  display: flex
-  flex-direction: column
-  align-items: center
-  gap: 1rem
-  min-width: 320px
-  box-shadow: $shadow-lg
-
-.email-gem
-  font-size: 2rem
-
-.email-popup h3
-  font-family: $serif
-  font-size: 1.4rem
-  font-weight: 400
-  color: $text
-
-.email-count
-  font-family: $serif
-  font-size: 2rem
-  color: $gold
-
-.email-barra
-  width: 100%
-  height: 4px
-  background: $line
-  border-radius: 999px
-  overflow: hidden
-
-.email-relleno
-  height: 100%
-  background: $gold
-  border-radius: 999px
-  transition: width 0.4s ease
-
-.email-sub
-  font-family: $sans
-  font-size: 0.75rem
-  color: $text-muted
+    .btn-edit,
+    .btn-del
+      flex: 1
+      text-align: center
+      padding: 0.6rem 0
+      font-size: 0.82rem
 
 // ── Responsive ────────────────────────────────────────────
 @media (max-width: 1024px)
