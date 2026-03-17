@@ -427,6 +427,8 @@ const similares = computed(() => {
   color: #7a6e5f
   line-height: 1.7
   margin: 0
+  word-break: break-word   
+  overflow-wrap: anywhere 
 
 .disponibilidad
   display: inline-flex
