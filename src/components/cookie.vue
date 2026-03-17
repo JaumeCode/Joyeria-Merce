@@ -8,9 +8,11 @@ const { mostrarBanner, aceptar, rechazar } = useCookieConsent()
   <Transition name="slide-up">
     <div v-if="mostrarBanner" class="cookie-banner">
       <div class="cookie-inner">
-        <div class="cookie-deco">✦</div>
-        <div class="cookie-text">
+        <div class="cookie-header-row">
+          <div class="cookie-deco">✦</div>
           <p class="cookie-title">Cookies & Privacidad</p>
+        </div>
+        <div class="cookie-text">
           <p class="cookie-desc">
             Usamos cookies para analizar las visitas a nuestra joyería y ofrecerte
             una mejor experiencia. Tus datos son tratados con la misma discreción
@@ -63,6 +65,13 @@ const { mostrarBanner, aceptar, rechazar } = useCookieConsent()
   gap: 2rem;
 }
 
+/* Fila decorativa (oculta en desktop, visible en móvil) */
+.cookie-header-row {
+  display: none;
+  align-items: center;
+  gap: 0.6rem;
+}
+
 .cookie-deco {
   font-size: 1.4rem;
   color: #c9a84c;
@@ -71,14 +80,12 @@ const { mostrarBanner, aceptar, rechazar } = useCookieConsent()
   animation: pulse-gold 3s ease-in-out infinite;
 }
 
-@keyframes pulse-gold {
-  0%, 100% { opacity: 0.5; transform: scale(1); }
-  50% { opacity: 0.9; transform: scale(1.15); }
+/* En desktop el deco va solo */
+.cookie-inner > .cookie-deco {
+  display: block;
 }
 
-.cookie-text {
-  flex: 1;
-}
+.cookie-text { flex: 1; }
 
 .cookie-title {
   font-family: 'Cormorant Garamond', serif;
@@ -106,7 +113,6 @@ const { mostrarBanner, aceptar, rechazar } = useCookieConsent()
   padding-bottom: 1px;
   transition: border-color 0.2s, color 0.2s;
 }
-
 .cookie-link:hover {
   border-color: #b8922a;
   color: #9a7820;
@@ -132,7 +138,6 @@ const { mostrarBanner, aceptar, rechazar } = useCookieConsent()
   cursor: pointer;
   transition: color 0.2s, border-color 0.2s;
 }
-
 .btn-rechazar:hover {
   color: #7a7570;
   border-color: #c0bab2;
@@ -155,7 +160,6 @@ const { mostrarBanner, aceptar, rechazar } = useCookieConsent()
   transition: background-position 0.4s ease, box-shadow 0.3s ease;
   box-shadow: 0 2px 12px rgba(201, 168, 76, 0.3);
 }
-
 .btn-aceptar:hover {
   background-position: right center;
   box-shadow: 0 4px 20px rgba(201, 168, 76, 0.45);
@@ -172,6 +176,64 @@ const { mostrarBanner, aceptar, rechazar } = useCookieConsent()
   animation: shine 4s ease-in-out infinite;
 }
 
+/* ── MÓVIL ── */
+@media (max-width: 600px) {
+  .cookie-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.1rem 1.1rem 1.3rem;
+    gap: 0.9rem;
+  }
+
+  /* Ocultar deco suelto y mostrar la fila combinada */
+  .cookie-inner > .cookie-deco {
+    display: none;
+  }
+  .cookie-header-row {
+    display: flex;
+  }
+  .cookie-header-row .cookie-deco {
+    font-size: 1.1rem;
+  }
+  .cookie-header-row .cookie-title {
+    margin: 0;
+    font-size: 0.88rem;
+  }
+
+  /* Título ya está en header-row, ocultar el del texto */
+  .cookie-text .cookie-title {
+    display: none;
+  }
+
+  .cookie-desc {
+    font-size: 0.72rem;
+  }
+
+  .cookie-actions {
+    width: 100%;
+    gap: 0.6rem;
+  }
+
+  .btn-rechazar {
+    flex: 1;
+    padding: 0.65rem 0;
+    font-size: 0.65rem;
+    text-align: center;
+  }
+
+  .btn-aceptar {
+    flex: 2;
+    padding: 0.65rem 0;
+    font-size: 0.65rem;
+    text-align: center;
+  }
+}
+
+@keyframes pulse-gold {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.15); }
+}
+
 @keyframes shine {
   0% { left: -75%; }
   30%, 100% { left: 125%; }
@@ -181,7 +243,6 @@ const { mostrarBanner, aceptar, rechazar } = useCookieConsent()
 .slide-up-leave-active {
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
 }
-
 .slide-up-enter-from,
 .slide-up-leave-to {
   transform: translateY(100%);

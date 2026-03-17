@@ -651,4 +651,23 @@ const similares = computed(() => {
   .similares-grid
     grid-template-columns: 1fr
     gap: 1rem
+
+  .disponibilidad
+    width: 100%
+    justify-content: center
+    box-sizing: border-box
+
+  .acciones
+    margin-top: 0.5rem
+
+  .btn_fav
+    width: 100%
+    box-sizing: border-box
+    padding: 14px
+
+  .btn_contacto
+    width: 100%
+    box-sizing: border-box
+    padding: 14px
+    text-align: center
 </style>
