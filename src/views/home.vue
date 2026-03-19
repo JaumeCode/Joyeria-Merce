@@ -33,6 +33,7 @@
                         textoBoton="Ver detalles"
                         class="card"
                         :novedad="esnovedad(joya.fecha_creacion)"
+                        :material="joya.material"
                     />
                 </div>
 
