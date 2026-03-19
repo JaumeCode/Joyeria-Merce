@@ -129,8 +129,8 @@
                 <p>El símbolo perfecto del amor eterno, diseñado para brillar en el momento más especial de tu vida con elegancia y distinción.</p>
                 <button @click="router.push('/catalogo?tipo=Anillos&material=oro')">Consultar Anillos</button>
             </div>
-            <div loading="lazy" class="categoria_colgante">
-                <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_colgante.png?alt=media&token=5b23379b-2769-43b5-876b-57104fc9d82f" alt="">
+            <div class="categoria_colgante">
+                <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_colgante.png?alt=media&token=5b23379b-2769-43b5-876b-57104fc9d82f" alt="">
                 <h3>Colgantes con Piedra</h3>
                 <p>Piezas únicas que combinan belleza y significado, ideales para lucir cerca del corazón en cualquier ocasión especial.</p>
                 <button @click="router.push('/catalogo?tipo=Colgantes&material=oro')">Consultar Colgantes</button>
@@ -141,8 +141,8 @@
         <section id="nosotros" class="reveal">
             <div class="left">
                 <h3>¿Donde estamos situados?</h3>
-                <p>Estamos situados en puerto de sagunto y somos una joyeria de alto nivel con un nivel de eleboracion alto ,de manera artesanal y de manera creativa</p>
-                <button @click="abrir_mapa">Localizanos</button>
+                <p>Joyería artesanal en Puerto de Sagunto. Cada pieza está elaborada a mano con materiales de primera calidad, combinando tradición y diseño contemporáneo.</p>
+                <button @click="abrir_mapa">Localízanos</button>
             </div>
             <div class="right">
                 <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Ffoto_tienda.webp?alt=media&token=c385689d-d2d2-4a10-ad18-19cbbdc2aa00" alt="">
@@ -191,7 +191,7 @@ useHead({
   meta: [
     { name: 'description', content: 'Joyería en Puerto de Sagunto, Valencia. Anillos, pulseras, cadenas, colgantes y pendientes de oro, plata y acero hechos a mano.' },
     { property: 'og:title', content: 'Joyería Mercè — Joyeria en Puerto de Sagunto' },
-    { property: 'og:description', content: 'Joyería artesanal en Puerto de Sagunto, Valencia. Visítanos en Carrer del Trovador, 67.' },
+    { property: 'og:description', content: 'Joyería en Puerto de Sagunto, Valencia. Visítanos en Carrer del Trovador, 67.' },
   ],
   link: [
     { rel: 'preconnect', href: 'https://firebasestorage.googleapis.com' },
