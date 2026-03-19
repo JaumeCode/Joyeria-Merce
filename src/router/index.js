@@ -11,6 +11,7 @@ import politicas_cookies from '@/views/politicas_cookies.vue'
 import ubicacion from '@/views/ubicacion.vue'
 import aviso_legal from '@/views/aviso_legal.vue'
 import politicas_privacidad from '@/views/politicas_privacidad.vue'
+import reviews from '@/components/reviews.vue'
 // Guard para rutas protegidas
 const soloAdmin = (to, from, next) => {
   auth.onAuthStateChanged((user) => {
@@ -34,7 +35,8 @@ const router = createRouter({
     {path: "/politicas", component: politicas_cookies},
     {path: "/ubicacion", component: ubicacion},
     {path: "/aviso_legal",component: aviso_legal},
-    {path: "/politicas_privacidad",component: politicas_privacidad}
+    {path: "/politicas_privacidad",component: politicas_privacidad},
+    {path: "/revs",component: reviews}
   ],
   scrollBehavior(to, from, savedPosition) {
     return { top: 0 }

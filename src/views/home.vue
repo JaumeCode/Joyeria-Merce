@@ -120,6 +120,7 @@
 
 
         </section>
+        <reviews/>
         <section id="categorias">
             <div class="categoria_pedida">
                 <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_pedida.png?alt=media&token=86245207-6c02-4e4d-af8c-a311ecb25c11" alt="">
@@ -182,7 +183,7 @@ import footer_component from '@/components/footer_component.vue';
 import { useCorreosStore } from '@/stores/correos';
 import portada from '@/components/portada.vue';
 import { useHead } from '@vueuse/head';
-
+import reviews from '@/components/reviews.vue';
 import { useRouter } from 'vue-router';
 
 useHead({

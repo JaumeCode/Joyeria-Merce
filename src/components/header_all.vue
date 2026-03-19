@@ -31,10 +31,11 @@
     </div>
 
     <!-- Logo -->
-    <div class="logo">
+    <div class="logo" @click="router.push('/')">
       <img
         src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2FLogo%20Tienda.png?alt=media&token=bce2532e-a646-4570-92a5-fb00a541fc79"
         alt="Logo Joyería"
+        
       >
     </div>
   </header>
@@ -151,6 +152,7 @@ $fuente-principal: 'Segoe UI', sans-serif
   background-color: $color-fondo
   border-radius: 100%
   z-index: 3
+  cursor: pointer
 
   img
     height: 7rem
