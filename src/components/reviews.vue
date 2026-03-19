@@ -65,7 +65,7 @@
 
     <div class="reviews__footer">
       <a
-        href="https://maps.google.com"
+        href="https://www.google.com/search?num=10&hl=es-ES&sca_esv=f818ef0c6d37c692&cs=1&output=search&tbm=lcl&kgmid=%2Fg%2F1tjh0p_h&q=Joyer%C3%ADa%20Merc%C3%A9&shem=dlvsc%2Cepsd1&shndl=30&source=sh%2Fx%2Floc%2Funi%2Fm1%2F1&kgs=9551e7e67e5d2831"
         target="_blank"
         rel="noopener noreferrer"
         class="reviews__cta"
