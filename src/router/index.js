@@ -36,6 +36,9 @@ const router = createRouter({
     {path: "/aviso_legal",component: aviso_legal},
     {path: "/politicas_privacidad",component: politicas_privacidad}
   ],
+  scrollBehavior(to, from, savedPosition) {
+    return { top: 0 }
+  }
 })
 
 export default router

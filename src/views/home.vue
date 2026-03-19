@@ -67,8 +67,8 @@
                         <h3>Cadenas</h3>
                     </div>
                 </div>
-                <div class="tipos2" @click="router.push('/catalogo?tipo=Colgantes')">
-                    <div class="seccion">
+                <div class="tipos2">
+                    <div class="seccion" @click="router.push('/catalogo?tipo=Colgantes')">
                         <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_colgantes.png?alt=media&token=2e64a7ca-933f-40f6-a5a0-7ae00a19f558" alt="">
                         <h3>Colgantes</h3>
                     </div>

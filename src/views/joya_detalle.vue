@@ -48,7 +48,7 @@
           <div class="info">
             <div class="chip_row">
               <span class="chip">✦ Exclusivo</span>
-              <span class="chip">Hecho a mano</span>
+              <span class="chip">Unidades Limitadas</span>
             </div>
   
             <h1 class="nombre">{{ joya.nombre }}</h1>
