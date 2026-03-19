@@ -19,4 +19,9 @@ import cookie from './components/cookie.vue';
   box-sizing: border-box
   padding: 0
   font-family: 'Montserrat', sans-serif
+
+html
+  scroll-behavior: smooth
+
+
 </style>

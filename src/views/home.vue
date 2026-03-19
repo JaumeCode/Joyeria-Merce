@@ -55,25 +55,25 @@
             <div class="joyas_tipos">
                 <div class="tipos1">
                     <div class="seccion" @click="router.push('/catalogo?tipo=Anillos')">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_anillo.png?alt=media&token=61ba81f1-dd2b-40fc-99b2-5062d9297090" alt="">
+                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_anillo.png?alt=media&token=61ba81f1-dd2b-40fc-99b2-5062d9297090" alt="">
                         <h3>Anillos</h3>
                     </div>
                     <div class="seccion" @click="router.push('/catalogo?tipo=Pulseras')">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pulseras.png?alt=media&token=dc25ceff-c450-4c13-be59-2909e94fbeff" alt="">
+                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pulseras.png?alt=media&token=dc25ceff-c450-4c13-be59-2909e94fbeff" alt="">
                         <h3>Pulseras</h3>
                     </div>
                     <div class="seccion" @click="router.push('/catalogo?tipo=Cadenas')">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_cadenas.png?alt=media&token=2680eada-061c-41bb-bd68-fff690164002" alt="">
+                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_cadenas.png?alt=media&token=2680eada-061c-41bb-bd68-fff690164002" alt="">
                         <h3>Cadenas</h3>
                     </div>
                 </div>
                 <div class="tipos2">
                     <div class="seccion" @click="router.push('/catalogo?tipo=Colgantes')">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_colgantes.png?alt=media&token=2e64a7ca-933f-40f6-a5a0-7ae00a19f558" alt="">
+                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_colgantes.png?alt=media&token=2e64a7ca-933f-40f6-a5a0-7ae00a19f558" alt="">
                         <h3>Colgantes</h3>
                     </div>
                     <div class="seccion" @click="router.push('/catalogo?tipo=Pendientes')">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pendientes.png?alt=media&token=ff8938ef-5bd5-4605-bebb-dd5d68a4d47e" alt="">
+                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pendientes.png?alt=media&token=ff8938ef-5bd5-4605-bebb-dd5d68a4d47e" alt="">
                         <h3>Pendientes</h3>
                     </div>
                 </div>
@@ -123,12 +123,12 @@
         <reviews class="reveal"/>
         <section id="categorias" class="reveal">
             <div class="categoria_pedida">
-                <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_pedida.png?alt=media&token=86245207-6c02-4e4d-af8c-a311ecb25c11" alt="">
+                <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_pedida.png?alt=media&token=86245207-6c02-4e4d-af8c-a311ecb25c11" alt="">
                 <h3>Anillos de Pedida</h3>
                 <p>El símbolo perfecto del amor eterno, diseñado para brillar en el momento más especial de tu vida con elegancia y distinción.</p>
                 <button @click="router.push('/catalogo?tipo=Anillos&material=oro')">Consultar Anillos</button>
             </div>
-            <div class="categoria_colgante">
+            <div loading="lazy" class="categoria_colgante">
                 <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_colgante.png?alt=media&token=5b23379b-2769-43b5-876b-57104fc9d82f" alt="">
                 <h3>Colgantes con Piedra</h3>
                 <p>Piezas únicas que combinan belleza y significado, ideales para lucir cerca del corazón en cualquier ocasión especial.</p>
@@ -144,7 +144,7 @@
                 <button @click="abrir_mapa">Localizanos</button>
             </div>
             <div class="right">
-                <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Ffoto_tienda.webp?alt=media&token=c385689d-d2d2-4a10-ad18-19cbbdc2aa00" alt="">
+                <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Ffoto_tienda.webp?alt=media&token=c385689d-d2d2-4a10-ad18-19cbbdc2aa00" alt="">
             </div>
 
         </section>
@@ -178,7 +178,6 @@ import { onMounted} from 'vue';
 import { useJoyasPublicasStore } from '@/stores/joyas';
 import { ref } from 'vue';
 import { computed } from 'vue';
-import Swal from 'sweetalert2';
 import footer_component from '@/components/footer_component.vue';
 import { useCorreosStore } from '@/stores/correos';
 import portada from '@/components/portada.vue';
@@ -192,6 +191,9 @@ useHead({
     { name: 'description', content: 'Joyería en Puerto de Sagunto, Valencia. Anillos, pulseras, cadenas, colgantes y pendientes de oro, plata y acero hechos a mano.' },
     { property: 'og:title', content: 'Joyería Mercè — Joyeria en Puerto de Sagunto' },
     { property: 'og:description', content: 'Joyería artesanal en Puerto de Sagunto, Valencia. Visítanos en Carrer del Trovador, 67.' },
+  ],
+  link: [
+    { rel: 'preconnect', href: 'https://firebasestorage.googleapis.com' },
   ]
 })
 
@@ -244,7 +246,7 @@ const store_correos=useCorreosStore()
 
 
 const registro=async()=>{
-
+    const Swal = (await import('sweetalert2')).default
     if(store_correos.correo==""){
         Swal.fire({
             icon: "error",
@@ -343,6 +345,7 @@ const scrollDerNovedades = () => {
 </script>
 
 <style lang="sass" scoped>
+
 .reveal
   opacity: 0
   transform: translateY(40px)
