@@ -218,9 +218,9 @@ watch([catActiva, busqueda, orden, materialFiltro], () => { paginaActual.value =
 .contenido
   max-width: 1200px
   margin: 0 auto
-  padding: 8rem 2rem 0rem
+  padding: 8rem 2rem 3rem
 
-// ── Cabecera ──────────────────────────────────────────────────────────────────
+
 .cat_header
   text-align: center
   margin-bottom: 3rem
@@ -240,7 +240,7 @@ watch([catActiva, busqueda, orden, materialFiltro], () => { paginaActual.value =
     text-transform: uppercase
     margin: 0
 
-// ── Controles ─────────────────────────────────────────────────────────────────
+
 .controles
   display: flex
   flex-wrap: wrap
@@ -311,20 +311,20 @@ watch([catActiva, busqueda, orden, materialFiltro], () => { paginaActual.value =
   outline: none
   font-family: inherit
 
-// ── Info resultados ───────────────────────────────────────────────────────────
+
 .resultado_info
   font-size: 0.78rem
   color: #9a8f7f
   letter-spacing: 0.06rem
   margin: 0 0 1.5rem
 
-// ── Grid ──────────────────────────────────────────────────────────────────────
+
 .grid
   display: grid
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr))
   gap: 1.5rem
 
-// ── Card ──────────────────────────────────────────────────────────────────────
+
 .card
   background: #fff
   border-radius: 16px
@@ -472,7 +472,7 @@ watch([catActiva, busqueda, orden, materialFiltro], () => { paginaActual.value =
     font-size: 0.9rem
     letter-spacing: 0.05rem
 
-// ── Animaciones ───────────────────────────────────────────────────────────────
+
 @keyframes pulso
   0%, 100%
     opacity: 1
@@ -481,7 +481,7 @@ watch([catActiva, busqueda, orden, materialFiltro], () => { paginaActual.value =
     opacity: 0.3
     transform: scale(0.6)
 
-// ── Mobile ────────────────────────────────────────────────────────────────────
+
 .btn_filtros
   display: none
 
