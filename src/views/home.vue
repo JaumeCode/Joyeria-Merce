@@ -83,7 +83,7 @@
 
 
         </section>
-        <section id="products" class="reveal">
+        <section id="novedades" class="reveal">
 
             <div class="title">
                 <h1>Novedades</h1>
@@ -459,7 +459,7 @@ const scrollDerNovedades = () => {
                     padding: 1rem 1.5rem
                     font-size: 1rem
 
-    #products
+    #novedades,#products
         display: flex
         justify-content: center
         align-items: center
