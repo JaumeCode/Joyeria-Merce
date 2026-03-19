@@ -93,7 +93,7 @@ $fuente-principal: 'Segoe UI', sans-serif
   cursor: pointer
   color: black
   transition: all 0.25s ease
-  z-index: 1000000
+  z-index: 100
 
   &:hover
     background: rgba(0,0,0,0.05)
