@@ -434,7 +434,10 @@ const add_joya = async () => {
       toast.error("La descripción debe tener mínimo 10 caracteres")
       return
     }
-
+    if (destacado.value && total_destacadas.value >= 10) {
+      toast.error("Ya tienes 10 joyas destacadas. Quita alguna antes de añadir otra.")
+      return
+    }
     cargando.value = true
 
     const resultado = await agregar_joya(nuevaJoya, imagenesFiles.value);
