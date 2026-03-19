@@ -18,7 +18,7 @@
                 <span>✦</span>
                 </div>
             </div>
-            <div class="carrusel_container">
+            <div class="carrusel_container reveal">
 
                 
 
@@ -44,7 +44,7 @@
             </div>
 
         </section>
-        <section id="tipos">
+        <section id="tipos" class="reveal">
 
             <div class="tipos_titulo">
 
@@ -82,7 +82,7 @@
 
 
         </section>
-        <section id="products">
+        <section id="products" class="reveal">
 
             <div class="title">
                 <h1>Novedades</h1>
@@ -120,8 +120,8 @@
 
 
         </section>
-        <reviews/>
-        <section id="categorias">
+        <reviews class="reveal"/>
+        <section id="categorias" class="reveal">
             <div class="categoria_pedida">
                 <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_pedida.png?alt=media&token=86245207-6c02-4e4d-af8c-a311ecb25c11" alt="">
                 <h3>Anillos de Pedida</h3>
@@ -137,7 +137,7 @@
 
         </section>
 
-        <section id="nosotros">
+        <section id="nosotros" class="reveal">
             <div class="left">
                 <h3>¿Donde estamos situados?</h3>
                 <p>Estamos situados en puerto de sagunto y somos una joyeria de alto nivel con un nivel de eleboracion alto ,de manera artesanal y de manera creativa</p>
@@ -149,7 +149,7 @@
 
         </section>
 
-        <section id="correo">
+        <section id="correo" class="reveal">
             <div class="titulo_correo">
                 <h3>¿Quieres Recibir Novedades?</h3>
                 <p>Introduce tu correo electronico para recibir las novedades y estar a la ultima sobre joyeria!</p>
@@ -204,6 +204,16 @@ onMounted(async () => {
   if (store_general.todas.length === 0) {
     await store_general.obtener_joya()
   }
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible')
+        observer.unobserve(e.target)
+      }
+    })
+  }, { threshold: 0.12 })
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
 })
 
 //Calcular las novedades 
@@ -333,6 +343,14 @@ const scrollDerNovedades = () => {
 </script>
 
 <style lang="sass" scoped>
+.reveal
+  opacity: 0
+  transform: translateY(40px)
+  transition: opacity 0.7s ease, transform 0.7s ease
+
+  &.visible
+    opacity: 1
+    transform: translateY(0)
 .cargando
   display: flex
   justify-content: center
