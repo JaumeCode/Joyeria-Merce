@@ -1,7 +1,7 @@
 <template>
     <a href="https://wa.me/34666238158">
 
-        <img class="whatsapp_btn" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fwhatsapp.png?alt=media&token=4a5f7d1a-ccf4-4bd4-9d6d-d8b67fb8f183" alt="">
+        <img loading="lazy" class="whatsapp_btn" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fwhatsapp.png?alt=media&token=4a5f7d1a-ccf4-4bd4-9d6d-d8b67fb8f183" alt="">
     </a>
     <div id="main">
         <header_all class="header_fixed"/>
@@ -56,25 +56,25 @@
             <div class="joyas_tipos">
                 <div class="tipos1">
                     <div class="seccion" @click="router.push('/catalogo?tipo=Anillos')">
-                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_anillo.png?alt=media&token=61ba81f1-dd2b-40fc-99b2-5062d9297090" alt="">
+                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_anillo.webp?alt=media&token=9c96bd49-68eb-452d-89d2-eb0ddd44102a" alt="">
                         <h3>Anillos</h3>
                     </div>
                     <div class="seccion" @click="router.push('/catalogo?tipo=Pulseras')">
-                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pulseras.png?alt=media&token=dc25ceff-c450-4c13-be59-2909e94fbeff" alt="">
+                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pulseras.webp?alt=media&token=33a5e604-d1ac-4fbf-9ba0-8d4ffdf48e48" alt="">
                         <h3>Pulseras</h3>
                     </div>
                     <div class="seccion" @click="router.push('/catalogo?tipo=Cadenas')">
-                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_cadenas.png?alt=media&token=2680eada-061c-41bb-bd68-fff690164002" alt="">
+                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_cadenas.webp?alt=media&token=951dbc9e-7f92-423e-9e5e-bdc6228583ae" alt="">
                         <h3>Cadenas</h3>
                     </div>
                 </div>
                 <div class="tipos2">
                     <div class="seccion" @click="router.push('/catalogo?tipo=Colgantes')">
-                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_colgantes.png?alt=media&token=2e64a7ca-933f-40f6-a5a0-7ae00a19f558" alt="">
+                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_colgantes.webp?alt=media&token=5e890de5-97dc-4495-b519-64d7ba8e28b3" alt="">
                         <h3>Colgantes</h3>
                     </div>
                     <div class="seccion" @click="router.push('/catalogo?tipo=Pendientes')">
-                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pendientes.png?alt=media&token=ff8938ef-5bd5-4605-bebb-dd5d68a4d47e" alt="">
+                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pendientes.webp?alt=media&token=9540e1fb-252b-465c-9906-02fce1745c61" alt="">
                         <h3>Pendientes</h3>
                     </div>
                 </div>
@@ -119,18 +119,17 @@
 
             </div>
 
-
         </section>
         <reviews class="reveal"/>
         <section id="categorias" class="reveal">
             <div class="categoria_pedida">
-                <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_pedida.png?alt=media&token=86245207-6c02-4e4d-af8c-a311ecb25c11" alt="">
+                <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_pedida.webp?alt=media&token=face0f05-7c44-4f63-b329-339c718e3987" alt="">
                 <h3>Anillos de Pedida</h3>
                 <p>El símbolo perfecto del amor eterno, diseñado para brillar en el momento más especial de tu vida con elegancia y distinción.</p>
                 <button @click="router.push('/catalogo?tipo=Anillos&material=oro')">Consultar Anillos</button>
             </div>
             <div class="categoria_colgante">
-                <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_colgante.png?alt=media&token=5b23379b-2769-43b5-876b-57104fc9d82f" alt="">
+                <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_colgante.webp?alt=media&token=5403fa18-00f1-486c-90eb-a1f0a7b755c8" alt="">
                 <h3>Colgantes con Piedra</h3>
                 <p>Piezas únicas que combinan belleza y significado, ideales para lucir cerca del corazón en cualquier ocasión especial.</p>
                 <button @click="router.push('/catalogo?tipo=Colgantes&material=oro')">Consultar Colgantes</button>
@@ -923,13 +922,6 @@ const scrollDerNovedades = () => {
         background: linear-gradient(135deg, rgba(100,160,255,0.2), rgba(255,255,255,0.1), rgba(180,120,255,0.15))
     100%
         background: linear-gradient(135deg, rgba(180,120,255,0.15), rgba(255,255,255,0.08), rgba(100,160,255,0.2))
-
-@media (max-width: 768px)
-    #main #presentacion
-        background: url("https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fportada_mobile.png?alt=media&token=659702fd-9627-444d-976b-c697fab33b9e") no-repeat center
-        background-size: cover
-        background-position: center
-
 
 
 
