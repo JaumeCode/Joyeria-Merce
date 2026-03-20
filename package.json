@@ -11,12 +11,10 @@
     "lint:oxlint": "oxlint . --fix",
     "lint:eslint": "eslint . --fix --cache",
     "format": "oxfmt src/"
-
   },
   "dependencies": {
     "@vueuse/head": "^2.0.0",
     "chart.js": "^4.5.1",
-    "cloudinary": "^2.9.0",
     "cors": "^2.8.6",
     "firebase": "^12.9.0",
     "js-cookie": "^3.0.5",
