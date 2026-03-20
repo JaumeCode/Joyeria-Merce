@@ -56,25 +56,25 @@
             <div class="joyas_tipos">
                 <div class="tipos1">
                     <div class="seccion" @click="router.push('/catalogo?tipo=Anillos')">
-                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_anillo.webp?alt=media&token=9c96bd49-68eb-452d-89d2-eb0ddd44102a" alt="">
+                        <img loading="lazy" decoding="async" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_anillo.webp?alt=media&token=9c96bd49-68eb-452d-89d2-eb0ddd44102a" alt="">
                         <h3>Anillos</h3>
                     </div>
-                    <div class="seccion" @click="router.push('/catalogo?tipo=Pulseras')">
+                    <div loading="lazy" decoding="async" width="228" height="120" class="seccion" @click="router.push('/catalogo?tipo=Pulseras')">
                         <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pulseras.webp?alt=media&token=33a5e604-d1ac-4fbf-9ba0-8d4ffdf48e48" alt="">
                         <h3>Pulseras</h3>
                     </div>
-                    <div class="seccion" @click="router.push('/catalogo?tipo=Cadenas')">
+                    <div loading="lazy" decoding="async" width="228" height="120" class="seccion" @click="router.push('/catalogo?tipo=Cadenas')">
                         <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_cadenas.webp?alt=media&token=951dbc9e-7f92-423e-9e5e-bdc6228583ae" alt="">
                         <h3>Cadenas</h3>
                     </div>
                 </div>
                 <div class="tipos2">
                     <div class="seccion" @click="router.push('/catalogo?tipo=Colgantes')">
-                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_colgantes.webp?alt=media&token=5e890de5-97dc-4495-b519-64d7ba8e28b3" alt="">
+                        <img loading="lazy" decoding="async" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_colgantes.webp?alt=media&token=5e890de5-97dc-4495-b519-64d7ba8e28b3" alt="">
                         <h3>Colgantes</h3>
                     </div>
                     <div class="seccion" @click="router.push('/catalogo?tipo=Pendientes')">
-                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pendientes.webp?alt=media&token=9540e1fb-252b-465c-9906-02fce1745c61" alt="">
+                        <img loading="lazy" decoding="async" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pendientes.webp?alt=media&token=9540e1fb-252b-465c-9906-02fce1745c61" alt="">
                         <h3>Pendientes</h3>
                     </div>
                 </div>
@@ -123,13 +123,13 @@
         <reviews class="reveal"/>
         <section id="categorias" class="reveal">
             <div class="categoria_pedida">
-                <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_pedida.webp?alt=media&token=face0f05-7c44-4f63-b329-339c718e3987" alt="">
+                <img loading="lazy" decoding="async" width="580" height="350" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_pedida.webp?alt=media&token=face0f05-7c44-4f63-b329-339c718e3987" alt="">
                 <h3>Anillos de Pedida</h3>
                 <p>El símbolo perfecto del amor eterno, diseñado para brillar en el momento más especial de tu vida con elegancia y distinción.</p>
                 <button @click="router.push('/catalogo?tipo=Anillos&material=oro')">Consultar Anillos</button>
             </div>
             <div class="categoria_colgante">
-                <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_colgante.webp?alt=media&token=5403fa18-00f1-486c-90eb-a1f0a7b755c8" alt="">
+                <img loading="lazy" decoding="async" width="580" height="350" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_colgante.webp?alt=media&token=5403fa18-00f1-486c-90eb-a1f0a7b755c8" alt="">
                 <h3>Colgantes con Piedra</h3>
                 <p>Piezas únicas que combinan belleza y significado, ideales para lucir cerca del corazón en cualquier ocasión especial.</p>
                 <button @click="router.push('/catalogo?tipo=Colgantes&material=oro')">Consultar Colgantes</button>
@@ -144,7 +144,7 @@
                 <button @click="abrir_mapa">Localízanos</button>
             </div>
             <div class="right">
-                <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Ffoto_tienda.webp?alt=media&token=c385689d-d2d2-4a10-ad18-19cbbdc2aa00" alt="">
+                <img loading="lazy" decoding="async" width="400" height="480" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Ffoto_tienda.webp?alt=media&token=c385689d-d2d2-4a10-ad18-19cbbdc2aa00" alt="">
             </div>
 
         </section>

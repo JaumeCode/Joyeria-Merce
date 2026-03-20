@@ -279,7 +279,7 @@ onUnmounted(() => {
 </script>
 
 <style lang="sass" scoped>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap')
+
 
 .scene
   width: 100%
