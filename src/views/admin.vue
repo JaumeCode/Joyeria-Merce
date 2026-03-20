@@ -1432,7 +1432,61 @@ $sans:  'DM Sans', sans-serif
 
 .modal-actions
   gap: .8rem
+// ── Email overlay ─────────────────────────────────────────
+.email-overlay
+  position: fixed
+  inset: 0
+  background: rgba(28,25,23,0.6)
+  backdrop-filter: blur(8px)
+  display: flex
+  align-items: center
+  justify-content: center
+  z-index: 99999
 
+.email-popup
+  background: $white
+  border-radius: 20px
+  padding: 3rem 2.5rem
+  text-align: center
+  max-width: 360px
+  width: 90%
+  box-shadow: $shadow-lg
+  display: flex
+  flex-direction: column
+  gap: 1rem
+
+.email-gem
+  font-size: 2rem
+  margin: 0
+
+  h3
+    font-family: $serif
+    font-size: 1.5rem
+    font-weight: 400
+    color: $text
+
+.email-count
+  font-family: $sans
+  font-size: 1rem
+  color: $text-mid
+
+.email-barra
+  width: 100%
+  height: 4px
+  background: $line
+  border-radius: 999px
+  overflow: hidden
+
+.email-relleno
+  height: 100%
+  background: $gold
+  border-radius: 999px
+  transition: width 0.5s ease
+
+.email-sub
+  font-family: $sans
+  font-size: .78rem
+  color: $text-muted
 // ── Animations ────────────────────────────────────────────
 @keyframes fadeIn
   from

@@ -120,37 +120,6 @@ import { onMounted } from 'vue'
 import { useHead } from '@vueuse/head'
 import card_jewlery from '@/components/card_jewlery.vue'
 
-//Para Seo , detecta cada joya y su respectivo nombre 
-useHead(computed(() => ({
-  title: joya.value
-    ? `${joya.value.nombre} — Joyería Mercè`
-    : 'Joyería Mercè',
-  meta: [
-    {
-      name: 'description',
-      content: joya.value
-        ? `${joya.value.nombre} de ${joya.value.material}. ${joya.value.descripcion?.slice(0, 140)}. Disponible en Joyería Mercè, Puerto de Sagunto.`
-        : 'Joya artesanal en Joyería Mercè, Puerto de Sagunto.'
-    },
-    {
-      property: 'og:title',
-      content: joya.value ? `${joya.value.nombre} — Joyería Mercè` : 'Joyería Mercè'
-    },
-    {
-      property: 'og:description',
-      content: joya.value ? joya.value.descripcion?.slice(0, 140) : ''
-    },
-    {
-      property: 'og:image',
-      content: joya.value?.imagenes?.[0] || ''
-    },
-    {
-      property: 'og:type',
-      content: 'product'
-    }
-  ]
-})))
-
 
 
 const route = useRoute()
@@ -220,6 +189,37 @@ const similares = computed(() => {
     .filter(j =>j.id !== joya.value.id &&(j.tipo === joya.value.tipo || j.material === joya.value.material))
     .slice(0, 4)
 })
+//Para Seo , detecta cada joya y su respectivo nombre 
+useHead(computed(() => ({
+  title: joya.value
+    ? `${joya.value.nombre} — Joyería Mercè`
+    : 'Joyería Mercè',
+  meta: [
+    {
+      name: 'description',
+      content: joya.value
+        ? `${joya.value.nombre} de ${joya.value.material}. ${joya.value.descripcion?.slice(0, 140)}. Disponible en Joyería Mercè, Puerto de Sagunto.`
+        : 'Joya artesanal en Joyería Mercè, Puerto de Sagunto.'
+    },
+    {
+      property: 'og:title',
+      content: joya.value ? `${joya.value.nombre} — Joyería Mercè` : 'Joyería Mercè'
+    },
+    {
+      property: 'og:description',
+      content: joya.value ? joya.value.descripcion?.slice(0, 140) : ''
+    },
+    {
+      property: 'og:image',
+      content: joya.value?.imagenes?.[0] || ''
+    },
+    {
+      property: 'og:type',
+      content: 'product'
+    }
+  ]
+})))
+
 
 </script>
 
