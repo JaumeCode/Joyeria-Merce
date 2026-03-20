@@ -56,25 +56,25 @@
             <div class="joyas_tipos">
                 <div class="tipos1">
                     <div class="seccion" @click="router.push('/catalogo?tipo=Anillos')">
-                        <img loading="lazy" decoding="async" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_anillo.webp?alt=media&token=9c96bd49-68eb-452d-89d2-eb0ddd44102a" alt="">
+                        <img loading="lazy" decoding="async" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_anillo.webp?alt=media&token=529bcdc7-7175-4d40-a7d0-3cc1d7bcc24f" alt="">
                         <h3>Anillos</h3>
                     </div>
                     <div loading="lazy" decoding="async" width="228" height="120" class="seccion" @click="router.push('/catalogo?tipo=Pulseras')">
-                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pulseras.webp?alt=media&token=33a5e604-d1ac-4fbf-9ba0-8d4ffdf48e48" alt="">
+                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pulseras.webp?alt=media&token=f1f85e99-78da-45d2-8e03-99edd78bf8bb" alt="">
                         <h3>Pulseras</h3>
                     </div>
                     <div loading="lazy" decoding="async" width="228" height="120" class="seccion" @click="router.push('/catalogo?tipo=Cadenas')">
-                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_cadenas.webp?alt=media&token=951dbc9e-7f92-423e-9e5e-bdc6228583ae" alt="">
+                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_cadenas.webp?alt=media&token=7beaee3f-d559-4f12-8692-d3fb129a9b63" alt="">
                         <h3>Cadenas</h3>
                     </div>
                 </div>
                 <div class="tipos2">
                     <div class="seccion" @click="router.push('/catalogo?tipo=Colgantes')">
-                        <img loading="lazy" decoding="async" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_colgantes.webp?alt=media&token=5e890de5-97dc-4495-b519-64d7ba8e28b3" alt="">
+                        <img loading="lazy" decoding="async" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_colgantes.webp?alt=media&token=c7610d83-f5cc-4080-800f-47160a4d9f46" alt="">
                         <h3>Colgantes</h3>
                     </div>
                     <div class="seccion" @click="router.push('/catalogo?tipo=Pendientes')">
-                        <img loading="lazy" decoding="async" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pendientes.webp?alt=media&token=9540e1fb-252b-465c-9906-02fce1745c61" alt="">
+                        <img loading="lazy" decoding="async" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pendientes.webp?alt=media&token=fa0aa854-f592-4937-95af-32a624b9cba8" alt="">
                         <h3>Pendientes</h3>
                     </div>
                 </div>
