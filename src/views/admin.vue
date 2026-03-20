@@ -654,7 +654,6 @@ const eliminar_joya = async (joya) => {
 </script>
 
 <style lang="sass" scoped>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap')
 
 // ── Tokens ───────────────────────────────────────────────
 $white:      #FFFFFF

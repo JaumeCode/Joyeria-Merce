@@ -34,7 +34,6 @@ const { mostrarBanner, aceptar, rechazar } = useCookieConsent()
 </template>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;500&display=swap');
 
 .cookie-banner {
   position: fixed;

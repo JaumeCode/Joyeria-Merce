@@ -138,7 +138,6 @@ const llamar = () => {
 </script>
 
 <style lang="sass" scoped>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;500&display=swap')
 
 $cream:      #faf8f5
 $white:      #ffffff
