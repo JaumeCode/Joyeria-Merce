@@ -24,7 +24,7 @@ exports.notificar_novedad = onRequest({
       try {
         console.log("Enviando a:", email)
         await resend.emails.send({
-          from: "Joyería Mercè <novedades@jaumecode.com>",
+          from: "Joyería Mercè <novedades@joyeriamerce.es>",
           to: [email],
           subject: "✦ Novedad en Joyería Mercè",
           html: `
