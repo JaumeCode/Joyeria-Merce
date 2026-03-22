@@ -40,7 +40,7 @@ exports.notificar_novedad = onRequest({
                 <p style="color: #9a8c7e; font-size: 0.85rem; letter-spacing: 0.15rem; text-transform: uppercase; margin: 0 0 0.5rem 0;">Nueva Joya Disponible</p>
                 <h2 style="color: #1a1a1a; font-size: 1.6rem; margin: 0 0 1rem 0; font-weight: 600;">${nombre}</h2>
                 <p style="color: #7a6e5f; font-size: 1rem; line-height: 1.7; margin: 0 0 1.5rem 0;">${descripcion}</p>
-                <a href="https://tudominio.com" style="display: inline-block; padding: 14px 32px; background: #1a1a1a; color: #EDE9D8; border-radius: 8px; text-decoration: none; font-size: 0.95rem; letter-spacing: 0.05rem;">
+                <a href="https://joyeriamerce.es/catalogo" style="display: inline-block; padding: 14px 32px; background: #1a1a1a; color: #EDE9D8; border-radius: 8px; text-decoration: none; font-size: 0.95rem; letter-spacing: 0.05rem;">
                   Ver en Catálogo →
                 </a>
               </div>
