@@ -331,7 +331,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { logOut } from '@/functions_firebase/auth';
 import { computed } from 'vue';
 import { useCorreosStore } from '@/stores/correos';
-
+import { useHead } from '@vueuse/head';
 useHead({
   meta: [
     { name: 'robots', content: 'noindex, nofollow' }
