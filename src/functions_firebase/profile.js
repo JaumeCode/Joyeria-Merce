@@ -97,7 +97,10 @@ export const agregar_joya = async (joya, files) => {
     destacado: joya.destacado,
     disponible: joya.disponible,
     imagenes: subida.urls,   // ✅ URLs directas, no rutas
-    fecha_creacion: Date.now()
+    fecha_creacion: Date.now(),
+    fecha_disponible: joya.fecha_disponibilidad,
+    medidas: joya.medidas
+
   })
 
   return { ok: true, urls: subida.urls }

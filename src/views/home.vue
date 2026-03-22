@@ -34,6 +34,7 @@
                         class="card"
                         :novedad="esnovedad(joya.fecha_creacion)"
                         :material="joya.material"
+                        :medidas="joya.medidas"
                     />
                 </div>
 
@@ -109,6 +110,7 @@
                         textoBoton="Ver detalles"
                         class="card"
                         :novedad="esnovedad(joya.fecha_creacion)"
+                        :medidas="joya.medidas"
                     />
                 </div>
 

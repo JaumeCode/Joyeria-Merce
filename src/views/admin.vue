@@ -121,6 +121,12 @@
               <option value="cadenas">Cadenas</option>
             </select>
           </div>
+       
+          <div class="field span-1">
+            <label>Medidas</label>
+            <input type="text" placeholder="Ej. 18mm diámetro, talla 12..." v-model="medidas" />
+          </div>
+          <!-- DESPUÉS -->
           <div class="field span-1">
             <label>Disponibilidad</label>
             <select v-model="disponible">
@@ -128,6 +134,11 @@
               <option :value="false">No disponible</option>
             </select>
           </div>
+          <div class="field span-1" v-if="disponible === false">
+            <label>Fecha de disponibilidad</label>
+            <input type="date" v-model="fecha_disponibilidad" :min="hoy" />
+          </div>
+
           <div class="field span-1 field-checks">
             <label class="toggle-label">
               <input type="checkbox" v-model="destacado"/>
@@ -258,6 +269,15 @@
             <option :value="false">No disponible</option>
           </select>
         </div>
+        <div class="field span-1" v-if="disponible_editor === false">
+          <label for="">Fecha Disponibilidad</label>
+          <input type="date" v-model="fecha_disponibilidad_editor" :min="hoy" />
+        </div>
+       <div class="field span-1">
+            <label>Medidas</label>
+            <input type="text" placeholder="Ej. 18mm diámetro, talla 12..." v-model="medidas_editor" />
+          </div>
+                
         <div class="field span-1 field-checks">
           <label class="toggle-label">
             <input v-model="destacado_editor" type="checkbox" />
@@ -311,6 +331,12 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { logOut } from '@/functions_firebase/auth';
 import { computed } from 'vue';
 import { useCorreosStore } from '@/stores/correos';
+
+useHead({
+  meta: [
+    { name: 'robots', content: 'noindex, nofollow' }
+  ]
+})
 
 //Servicios de Notificacion
 const toast = useToast()
@@ -373,6 +399,11 @@ const descripcion = ref("")
 const disponible = ref(true)
 const destacado = ref(false)
 const imagenesFiles = ref([])
+//Fecha de Disponibildiad
+const fecha_disponibilidad = ref("")
+const hoy = new Date().toISOString().split('T')[0]
+//Medidas 
+const medidas = ref("")
 
 const handleFiles = (e) => {
   const files = Array.from(e.target.files)
@@ -402,7 +433,9 @@ const add_joya = async () => {
     descripcion: descripcion.value,
     disponible: disponible.value,
     destacado: destacado.value,
-    imagenes: imagenesFiles.value
+    imagenes: imagenesFiles.value,
+    fecha_disponibilidad: disponible.value ? null : fecha_disponibilidad.value,
+    medidas: medidas.value
   }
 
   try {
@@ -438,6 +471,10 @@ const add_joya = async () => {
       toast.error("Ya tienes 10 joyas destacadas. Quita alguna antes de añadir otra.")
       return
     }
+    if(!medidas.value){
+      toast.error("Tienes que Indicar las medidas")
+      return
+    }
     cargando.value = true
 
     const resultado = await agregar_joya(nuevaJoya, imagenesFiles.value);
@@ -457,6 +494,7 @@ const add_joya = async () => {
       disponible.value = true
       destacado.value = false
       imagenesFiles.value = []
+      medidas.value = ""
     }
 
     if (notificar_email.value && disponible.value) {
@@ -544,6 +582,8 @@ const descripcion_editor = ref("")
 const disponible_editor = ref(true)
 const destacado_editor = ref(false)
 const imagenesFiles_editor = ref([])
+const fecha_disponibilidad_editor = ref("")
+const medidas_editor = ref("")
 
 const handleFilesEditor = (e) => {
   const files = Array.from(e.target.files)
@@ -569,8 +609,6 @@ const total_paginas = computed(() =>
 
 
 
-
-
 const entrar_editor = (joya) => {
   editando.value = true
   id_editor.value = joya.id
@@ -581,6 +619,8 @@ const entrar_editor = (joya) => {
   tipo_editor.value = joya.tipo
   descripcion_editor.value = joya.descripcion
   destacado_editor.value = joya.destacado
+  fecha_disponibilidad_editor.value = joya.fecha_disponibilidad || ""
+  medidas_editor.value = joya.medidas || ""
 }
 
 const guardar_edicion = async () => {
@@ -592,6 +632,8 @@ const guardar_edicion = async () => {
     descripcion: descripcion_editor.value,
     disponible: disponible_editor.value,
     destacado: destacado_editor.value,
+    fecha_disponibilidad: disponible_editor.value ? null : fecha_disponibilidad_editor.value,
+    medidas: medidas_editor.value,
   }
   try {
     cargando.value = true
@@ -851,7 +893,22 @@ $sans:  'DM Sans', sans-serif
     &:focus
       border-color: $gold-soft
       box-shadow: 0 0 0 3px rgba(184,134,11,0.08)
+  input[type="date"]
+    font-family: $sans
+    font-size: .92rem
+    color: $text
+    background: $white
+    border: 1px solid $line
+    border-radius: 8px
+    padding: .75rem 1rem
+    outline: none
+    transition: border-color .2s, box-shadow .2s
+    width: 100%
+    cursor: pointer
 
+    &:focus
+      border-color: $gold-soft
+      box-shadow: 0 0 0 3px rgba(184,134,11,0.08)
   select
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A8A29E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")
     background-repeat: no-repeat

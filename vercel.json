@@ -1,5 +1,15 @@
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.joyeriamerce.es"
+        }
+      ],
+      "destination": "https://joyeriamerce.es/$1",
+      "permanent": true
+    }
   ]
 }

@@ -54,11 +54,16 @@
             <h1 class="nombre">{{ joya.nombre }}</h1>
             <p class="precio">{{ joya.precio }} €</p>
             <p class="material">✦ {{ joya.material.charAt(0).toUpperCase() + joya.material.slice(1) }}</p>
+            <p class="medidas" v-if="joya.medidas">📐 {{ joya.medidas }}</p>
             <p class="descripcion">{{ joya.descripcion }}</p>
             <span class="disponibilidad" :class="joya.disponible ? 'disponible' : 'agotado'">
               <span class="dot" />
               {{ joya.disponible ? 'Recoge en tienda' : 'No disponible' }}
             </span>
+            <p class="fecha_disponibilidad" v-if="!joya.disponible && joya.fecha_disponibilidad">
+              📅 Disponible a partir del {{ formatearFecha(joya.fecha_disponibilidad) }}
+            </p>
+            
   
   
             <div class="acciones">
@@ -137,7 +142,11 @@ onMounted(async () => {
     await joyasStore.obtener_joya()
   }
 })
-
+const formatearFecha = (fecha) => {
+  if (!fecha) return ''
+  const [anio, mes, dia] = fecha.split('-')
+  return `${dia}/${mes}/${anio}`
+}
 // Busca la joya por el ID de la URL
 const joya = computed(() =>
   joyasStore.todas.find(j => j.id === route.params.id)
@@ -430,6 +439,19 @@ useHead(computed(() => ({
   word-break: break-word   
   overflow-wrap: anywhere 
 
+.medidas
+  font-size: 0.72rem
+  font-weight: 500
+  letter-spacing: 0.15rem
+  text-transform: uppercase
+  color: #9a8f7f
+
+
+.fecha_disponibilidad
+  font-size: 0.78rem
+  color: #7a6e5f
+  margin: 0
+  letter-spacing: 0.02rem
 .disponibilidad
   display: inline-flex
   align-items: center

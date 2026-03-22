@@ -23,7 +23,7 @@
       </p>
       <h3 class="nombre">{{ nombre }}</h3>
       <div class="footer_card">
-        <span class="material">Alta joyería</span>
+        <span class="material">{{ medidas }}</span>
         <button class="btn" @click="$router.push(`/joya/${id}`)">
           {{ textoBoton }} →
         </button>
@@ -43,8 +43,10 @@ defineProps({
   descripcion: { type: String, required: true },
   textoBoton: { type: String, default: 'Ver joya' },
   novedad: { type: Boolean, default: false },
-  material: { type: String, default: 'Artesanal' }
+  material: { type: String, default: 'Artesanal' },
+  medidas: {type: String, default: "Medida Unica"}
 })
+
 </script>
 
 <style lang="sass" scoped>
