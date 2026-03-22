@@ -31,7 +31,6 @@ export default defineConfig({
     Sitemap({
       hostname: 'https://joyeriamerce.es',
       dynamicRoutes: [
-        '/',
         '/catalogo',
         '/ubicacion',
         ...joyaRoutes
