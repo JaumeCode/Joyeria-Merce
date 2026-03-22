@@ -190,7 +190,7 @@ import { useRouter } from 'vue-router';
 useHead({
   title: 'Joyería Mercè — Joyeria en Puerto de Sagunto',
   meta: [
-    { name: 'description', content: 'Joyería en Puerto de Sagunto, Valencia. Anillos, pulseras, cadenas, colgantes y pendientes de oro, plata y acero hechos a mano.' },
+    { name: 'description', content: '<meta name="description" content="Joyería Mercè en Puerto de Sagunto, Valencia. Anillos de compromiso, pulseras, colgantes, cadenas y pendientes en oro, plata y acero. Joyas únicas y exclusivas para regalar, celebrar o lucir en cualquier ocasión en tu joyería de confianza.">' },
     { property: 'og:title', content: 'Joyería Mercè — Joyeria en Puerto de Sagunto' },
     { property: 'og:description', content: 'Joyería en Puerto de Sagunto, Valencia. Visítanos en Carrer del Trovador, 67.' },
   ],

@@ -5,7 +5,8 @@
       <!-- Cabecera -->
       <div class="cat_header">
         <h1>Catálogo</h1>
-        <p class="sub">Colección completa · Hecho a mano</p>
+        <p class="sub">Explora nuestra colección completa de joyas en Puerto de Sagunto. Descubre anillos, pulseras, colgantes y pendientes de oro, plata y acero, con diseño exclusivo y acabados de alta calidad, perfectos para cualquier ocasión.</p>
+        
       </div>
 
       <!-- Controles -->
@@ -127,12 +128,28 @@ const filtrosAbiertos = ref(false)
 import { useHead } from '@vueuse/head'
 
 useHead({
-  title: 'Catálogo de Joyas — Joyería Mercè',
+  title: 'Catálogo de Joyas en Puerto de Sagunto — Joyería Mercè',
   meta: [
-    { name: 'description', content: 'Explora nuestra colección completa de joyas artesanales de oro, plata y acero. Anillos, pulseras, cadenas, colgantes y pendientes hechos a mano en Puerto de Sagunto.' },
-    { property: 'og:title', content: 'Catálogo de Joyas — Joyería Mercè' },
-    { property: 'og:description', content: 'Colección completa de joyas artesanales hechas a mano. Oro, plata y acero.' },
-    { property: 'og:type', content: 'website' },
+    {
+      name: 'description',
+      content: 'Explora la colección de joyas únicas de oro, plata y acero en Joyería Mercè, Puerto de Sagunto. Anillos, pulseras, colgantes y pendientes con diseño exclusivo y acabados de calidad.'
+    },
+    {
+      property: 'og:title',
+      content: 'Catálogo de Joyas en Puerto de Sagunto — Joyería Mercè'
+    },
+    {
+      property: 'og:description',
+      content: 'Descubre anillos, pulseras, colgantes y pendientes de oro, plata y acero en Joyería Mercè. Diseño exclusivo y acabados de alta calidad en Puerto de Sagunto.'
+    },
+    {
+      property: 'og:type',
+      content: 'website'
+    },
+    {
+      name: 'keywords',
+      content: 'joyas, joyería, Puerto de Sagunto, anillos, pulseras, colgantes, pendientes, oro, plata, acero, diseño exclusivo, calidad'
+    },
   ]
 })
 
@@ -218,7 +235,7 @@ watch([catActiva, busqueda, orden, materialFiltro], () => { paginaActual.value =
 .contenido
   max-width: 1200px
   margin: 0 auto
-  padding: 8rem 2rem 3rem
+  padding: 6rem 2rem 3rem
 
 
 .cat_header
@@ -227,19 +244,18 @@ watch([catActiva, busqueda, orden, materialFiltro], () => { paginaActual.value =
 
   h1
     font-family: 'Playfair Display', serif
-    font-size: clamp(2rem, 5vw, 3.2rem)
+    font-size: clamp(2rem, 5vw, 3rem)
     font-weight: 700
     color: #1a1a1a
-    letter-spacing: 0.08rem
-    margin: 0 0 0.5rem
+    margin-bottom: 0.75rem
 
   .sub
-    font-size: 0.78rem
-    letter-spacing: 0.35rem
-    color: #9a8f7f
-    text-transform: uppercase
-    margin: 0
-
+    font-size: 0.85rem
+    color: #7a6e5f
+    text-transform: none
+    letter-spacing: 0.05rem
+    line-height: 1.5
+    margin-bottom: 3rem
 
 .controles
   display: flex
