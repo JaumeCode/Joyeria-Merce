@@ -11,5 +11,11 @@
       "destination": "https://joyeriamerce.es/$1",
       "permanent": true
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
