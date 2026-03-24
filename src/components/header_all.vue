@@ -23,11 +23,20 @@
         <a href="/anillos">Anillos</a>
         <a href="/pendientes">Pendientes</a>
         <a href="/pulseras">Pulseras</a>
+
       </nav>
 
       <nav class="nav">
-        <a href="/colgantes">Colgantes</a>
         <a href="/cadenas">Cadenas</a>
+        <div class="dropdown">
+          <span class="dropdown-trigger">Material</span>
+
+          <div class="dropdown-menu">
+            <a href="/oro">Oro</a>
+            <a href="/plata">Plata</a>
+            <a href="/acero">Acero</a>
+          </div>
+        </div>
         <a href="/ubicacion">Ubicación / Horarios</a>
       </nav>
 
@@ -144,6 +153,7 @@ $sans:  'DM Sans', sans-serif
   display: flex
   gap: 2.2rem
   cursor: pointer
+  align-items: center 
 
   a
     text-decoration: none
@@ -171,7 +181,74 @@ $sans:  'DM Sans', sans-serif
 
     &:hover::after
       width: 100%
+// ── Dropdown ─────────────────────────────────────────────
+.dropdown
+  position: relative
 
+.dropdown-trigger
+  display: inline-block
+  text-decoration: none
+  color: $color-texto
+  font-family: $sans
+  font-size: 0.7rem
+  font-weight: 500
+  letter-spacing: 0.12rem
+  text-transform: uppercase
+  position: relative
+  cursor: pointer
+  transition: color 0.25s ease
+  
+
+  &:hover
+    color: $color-oro
+
+  &::after
+    content: ''
+    position: absolute
+    left: 0
+    bottom: -4px
+    width: 0%
+    height: 1px
+    background-color: $color-oro
+    transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1)
+
+  &:hover::after
+    width: 100%
+
+.dropdown-menu
+  position: absolute
+  top: 120%
+  left: 50%
+  transform: translateX(-50%) translateY(10px)
+  background: white
+  border-radius: 12px
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08)
+  padding: 0.8rem 0
+  display: flex
+  flex-direction: column
+  min-width: 140px
+  opacity: 0
+  pointer-events: none
+  transition: all 0.25s ease
+
+  a
+    padding: 0.6rem 1rem
+    text-decoration: none
+    color: $color-texto
+    font-size: 0.7rem
+    letter-spacing: 0.1rem
+    text-transform: uppercase
+    transition: background 0.2s, color 0.2s
+
+    &:hover
+      background: rgba(201, 165, 90, 0.08)
+      color: $color-oro
+
+// Hover effect
+.dropdown:hover .dropdown-menu
+  opacity: 1
+  pointer-events: auto
+  transform: translateX(-50%) translateY(0)
 // ── Logo ──────────────────────────────────────────────────
 .logo
   position: absolute
