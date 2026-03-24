@@ -7,27 +7,48 @@
       </svg>
       <span class="badge" v-if="totalFavoritos > 0">{{ totalFavoritos }}</span>
     </button>
-    <!-- 🍔 Botón hamburguesa (solo móvil) -->
-    <button class="burger" @click="menuAbierto = !menuAbierto">
+
+    <!-- Botón hamburguesa (solo móvil) -->
+    <button class="burger" :class="{ open: menuAbierto }" @click="menuAbierto = !menuAbierto">
       <span></span>
       <span></span>
       <span></span>
     </button>
 
-    <!-- Menú (desktop y mobile) -->
-    <div class="menus" :class="{ abierto: menuAbierto }">
-      
+    <!-- Menú desktop -->
+    <div class="menus">
+
       <nav class="nav">
         <a href="/">Inicio</a>
-        <a href="/ubicacion">Ubicación  /  Horarios</a>
-        
+        <a href="/anillos">Anillos</a>
+        <a href="/pendientes">Pendientes</a>
+        <a href="/pulseras">Pulseras</a>
       </nav>
 
       <nav class="nav">
-        <a @click="router.push('/catalogo?material=oro')">Oro</a>
-        <a @click="router.push('/catalogo?material=plata')">Plata</a>
-        <a @click="router.push('/catalogo?material=acero')">Acero</a>
+        <a href="/colgantes">Colgantes</a>
+        <a href="/cadenas">Cadenas</a>
+        <a href="/ubicacion">Ubicación / Horarios</a>
       </nav>
+
+    </div>
+
+    <!-- Menú mobile -->
+    <div class="mobile-menu" :class="{ open: menuAbierto }">
+      <div class="mobile-menu-inner">
+        <div class="mobile-ornament">✦</div>
+        <a href="/"           class="mobile-link" @click="menuAbierto = false">Inicio</a>
+        <a href="/anillos"    class="mobile-link" @click="menuAbierto = false">Anillos</a>
+        <a href="/pendientes" class="mobile-link" @click="menuAbierto = false">Pendientes</a>
+        <a href="/pulseras"   class="mobile-link" @click="menuAbierto = false">Pulseras</a>
+        <a href="/colgantes"  class="mobile-link" @click="menuAbierto = false">Colgantes</a>
+        <a href="/cadenas"    class="mobile-link" @click="menuAbierto = false">Cadenas</a>
+        <a href="/ubicacion"  class="mobile-link" @click="menuAbierto = false">Ubicación / Horarios</a>
+        <div class="mobile-divider"></div>
+        <a href="/oro"   class="mobile-link mobile-link--material" @click="menuAbierto = false">Oro</a>
+        <a href="/plata" class="mobile-link mobile-link--material" @click="menuAbierto = false">Plata</a>
+        <a href="/acero" class="mobile-link mobile-link--material" @click="menuAbierto = false">Acero</a>
+      </div>
     </div>
 
     <!-- Logo -->
@@ -35,40 +56,39 @@
       <img
         src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2FLogo%20Tienda.png?alt=media&token=bce2532e-a646-4570-92a5-fb00a541fc79"
         alt="Logo Joyería"
-        
       >
     </div>
+
   </header>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { useFavoritosStore } from '@/stores/favoritos'
-import { computed } from 'vue';
+import { computed } from 'vue'
 import { useJoyasPublicasStore } from '@/stores/joyas'
 import { useRouter } from 'vue-router'
+
 const router = useRouter()
-
-
-
 const joyasStore = useJoyasPublicasStore()
 const menuAbierto = ref(false)
 const favStore = useFavoritosStore()
 
-const totalFavoritos = computed(() =>       
+const totalFavoritos = computed(() =>
   favStore.ids.filter(id => joyasStore.todas.some(j => j.id === id)).length
 )
-
 </script>
 
-
 <style lang="sass" scoped>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Playfair+Display:ital,wght@0,400;1,400&display=swap')
 
-$color-fondo: #F4F0E8
-$color-texto: black
-$color-oro: #d4af37
-$fuente-principal: 'Segoe UI', sans-serif
+$color-fondo:     #F4F0E8
+$color-texto:     #1A1A1A
+$color-oro:       #C9A55A
+$serif: 'Playfair Display', Georgia, serif
+$sans:  'DM Sans', sans-serif
 
+// ── Header ────────────────────────────────────────────────
 .header
   position: relative
   display: flex
@@ -76,8 +96,9 @@ $fuente-principal: 'Segoe UI', sans-serif
   align-items: center
   padding: 20px 40px
   background-color: $color-fondo
-  font-family: $fuente-principal
-  
+  font-family: $sans
+
+// ── Favoritos ─────────────────────────────────────────────
 .btn_favoritos
   position: absolute
   left: 20px
@@ -92,7 +113,7 @@ $fuente-principal: 'Segoe UI', sans-serif
   align-items: center
   justify-content: center
   cursor: pointer
-  color: black
+  color: $color-texto
   transition: all 0.25s ease
   z-index: 100
 
@@ -113,20 +134,27 @@ $fuente-principal: 'Segoe UI', sans-serif
     display: flex
     align-items: center
     justify-content: center
+
+// ── Menú desktop ──────────────────────────────────────────
 .menus
   display: flex
   gap: 16rem
 
 .nav
   display: flex
-  gap: 3rem
+  gap: 2.2rem
   cursor: pointer
 
   a
     text-decoration: none
     color: $color-texto
-    font-size: 1rem
+    font-family: $sans
+    font-size: 0.7rem
+    font-weight: 500
+    letter-spacing: 0.12rem
+    text-transform: uppercase
     position: relative
+    transition: color 0.25s ease
 
     &:hover
       color: $color-oro
@@ -137,13 +165,14 @@ $fuente-principal: 'Segoe UI', sans-serif
       left: 0
       bottom: -4px
       width: 0%
-      height: 2px
+      height: 1px
       background-color: $color-oro
-      transition: width 0.3s ease
+      transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1)
 
     &:hover::after
       width: 100%
 
+// ── Logo ──────────────────────────────────────────────────
 .logo
   position: absolute
   left: 50%
@@ -153,76 +182,167 @@ $fuente-principal: 'Segoe UI', sans-serif
   border-radius: 100%
   z-index: 3
   cursor: pointer
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)
+
+  &:hover
+    transform: translateX(-50%) translateY(-4px)
 
   img
     height: 7rem
     display: block
 
-/* 🍔 BOTÓN HAMBURGUESA */
+// ── Burger ────────────────────────────────────────────────
 .burger
   display: none
   position: absolute
-  top: 20px
+  top: 50%
   right: 20px
+  transform: translateY(-50%)
   background: none
   border: none
   cursor: pointer
-  z-index: 5
+  z-index: 200
+  width: 36px
+  height: 36px
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  gap: 5px
+  padding: 0
 
   span
     display: block
-    width: 25px
-    height: 3px
+    width: 22px
+    height: 1.5px
     background-color: $color-texto
-    margin: 5px 0
+    border-radius: 2px
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease
+    transform-origin: center
 
-/* 📱 MOBILE */
-/* 📱 MOBILE */
+    &:nth-child(2)
+      width: 15px
+      margin-left: auto
+
+  &.open
+    span:nth-child(1)
+      transform: translateY(6.5px) rotate(45deg)
+      width: 22px
+
+    span:nth-child(2)
+      opacity: 0
+      transform: scaleX(0)
+
+    span:nth-child(3)
+      transform: translateY(-6.5px) rotate(-45deg)
+      width: 22px
+
+// ── Mobile menu ───────────────────────────────────────────
+.mobile-menu
+  display: none
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  background: rgba(244, 240, 232, 0.98)
+  backdrop-filter: blur(20px)
+  -webkit-backdrop-filter: blur(20px)
+  z-index: 150
+  transform: translateX(100%)
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)
+
+  &.open
+    transform: translateX(0)
+
+    .mobile-link
+      animation: mobileLinkIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both
+
+      @for $i from 1 through 10
+        &:nth-child(#{$i + 1})
+          animation-delay: #{$i * 0.05}s
+
+.mobile-menu-inner
+  height: 100%
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: 0.2rem
+  padding: 4rem 2rem
+
+.mobile-ornament
+  font-size: 0.9rem
+  color: $color-oro
+  margin-bottom: 1rem
+  animation: ornamentPulse 3s ease-in-out infinite
+
+.mobile-link
+  width: 100%
+  max-width: 280px
+  padding: 0.9rem 1.5rem
+  text-align: center
+  font-family: $sans
+  font-size: 0.7rem
+  font-weight: 500
+  letter-spacing: 0.16rem
+  text-transform: uppercase
+  color: $color-texto
+  text-decoration: none
+  border-radius: 8px
+  transition: background 0.2s, color 0.2s, letter-spacing 0.2s
+  opacity: 0
+
+  &:hover
+    background: rgba(201, 165, 90, 0.08)
+    color: $color-oro
+    letter-spacing: 0.2rem
+
+  &--material
+    font-family: $serif
+    font-size: 1rem
+    letter-spacing: 0.04rem
+    text-transform: none
+    font-style: italic
+    color: darken($color-oro, 15%)
+    opacity: 0
+
+    &:hover
+      color: $color-oro
+
+.mobile-divider
+  width: 40px
+  height: 1px
+  background: rgba(201, 165, 90, 0.3)
+  margin: 0.6rem auto
+
+// ── Keyframes ─────────────────────────────────────────────
+@keyframes mobileLinkIn
+  from
+    opacity: 0
+    transform: translateY(10px)
+  to
+    opacity: 1
+    transform: translateY(0)
+
+@keyframes ornamentPulse
+  0%, 100%
+    opacity: 0.5
+    transform: scale(1)
+  50%
+    opacity: 1
+    transform: scale(1.2)
+
+// ── Responsive ────────────────────────────────────────────
 @media (max-width: 768px)
   .header
     padding: 30px 40px
 
   .burger
-    display: block
+    display: flex
 
   .menus
-    position: absolute
-    top: 110%
-    right: 20px
-    width: 220px
-    background-color: $color-fondo
-    flex-direction: column
-    align-items: center
-    gap: 25px
-    padding: 25px 20px
-    border-radius: 16px
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15)
-    opacity: 0
-    transform: translateY(-10px)
-    pointer-events: none
-    transition: all 0.35s ease
-    z-index: 4
+    display: none
 
-    &.abierto
-      opacity: 1
-      transform: translateY(0)
-      pointer-events: auto
-
-  .nav
-    flex-direction: column
-    align-items: center
-    gap: 18px
-
-    a
-      font-size: 1.05rem
-      font-weight: 500
-      padding: 6px 0
-      width: 100%
-      text-align: center
-
-      &:hover
-        color: $color-oro
-
-  
-
+  .mobile-menu
+    display: block
 </style>

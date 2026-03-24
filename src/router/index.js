@@ -9,6 +9,21 @@ import politicas_cookies from '@/views/politicas_cookies.vue'
 import ubicacion from '@/views/ubicacion.vue'
 import aviso_legal from '@/views/aviso_legal.vue'
 import politicas_privacidad from '@/views/politicas_privacidad.vue'
+import anillos from '@/views/seccion_tipos/anillos.vue'
+import pendientes from '@/views/seccion_tipos/pendientes.vue'
+import cadenas from '@/views/seccion_tipos/cadenas.vue'
+import pulseras from '@/views/seccion_tipos/pulseras.vue'
+import colgantes from '@/views/seccion_tipos/colgantes.vue'
+
+//Materiales
+import oro from '@/views/seccion_material/oro.vue'
+import plata from '@/views/seccion_material/plata.vue'
+import acero from '@/views/seccion_material/acero.vue'
+
+
+//Secciones Generales
+import anillos_compromiso from '@/views/secciones/anillos_compromiso.vue'
+import regalos from '@/views/secciones/regalos.vue'
 
 const soloAdmin = (to, from, next) => {
   auth.onAuthStateChanged((user) => {
@@ -31,6 +46,16 @@ export const routes = [
   { path: '/ubicacion', component: ubicacion },
   { path: '/aviso_legal', component: aviso_legal },
   { path: '/politicas_privacidad', component: politicas_privacidad },
+  { path:'/anillos' ,component: anillos},
+  { path: '/pendientes' ,component: pendientes},
+  { path: '/colgantes' ,component: colgantes},
+  { path: '/pulseras' ,component: pulseras},
+  { path: '/cadenas' ,component: cadenas},
+  { path: '/oro' ,component: oro},
+  { path: '/plata' ,component: plata},
+  { path: '/acero' ,component: acero},
+  { path: '/anillos-compromiso' ,component: anillos_compromiso},
+  { path: '/regalos', component: regalos}
 ]
 
 const router = createRouter({

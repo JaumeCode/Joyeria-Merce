@@ -138,7 +138,15 @@
             <label>Fecha de disponibilidad</label>
             <input type="date" v-model="fecha_disponibilidad" :min="hoy" />
           </div>
-
+          <div class="field span-1">
+            <label>Sección</label>
+            <select v-model="seccion">
+              <option disabled value="">Introduce Seccion</option>
+              <option value="general">General</option>
+              <option value="regalos">Regalos</option>
+              <option value="pedidas">Anillos de Pedida</option>
+            </select>
+          </div>
           <div class="field span-1 field-checks">
             <label class="toggle-label">
               <input type="checkbox" v-model="destacado"/>
@@ -285,6 +293,15 @@
             Destacado
           </label>
         </div>
+        <div class="field span-1">
+          <label>Sección</label>
+          <select v-model="seccion_editor">
+            <option disabled value="">Introducce Seccion</option>
+            <option value="general">General</option>
+            <option value="regalos">Regalos</option>
+            <option value="pedidas">Anillos de Pedida</option>
+          </select>
+        </div>
         <div class="field span-2">
           <label>Imágenes</label>
           <div class="file-drop">
@@ -399,6 +416,7 @@ const descripcion = ref("")
 const disponible = ref(true)
 const destacado = ref(false)
 const imagenesFiles = ref([])
+const seccion=ref("")
 //Fecha de Disponibildiad
 const fecha_disponibilidad = ref("")
 const hoy = new Date().toISOString().split('T')[0]
@@ -435,7 +453,8 @@ const add_joya = async () => {
     destacado: destacado.value,
     imagenes: imagenesFiles.value,
     fecha_disponibilidad: disponible.value ? null : fecha_disponibilidad.value,
-    medidas: medidas.value
+    medidas: medidas.value,
+    seccion: seccion.value
   }
 
   try {
@@ -475,6 +494,9 @@ const add_joya = async () => {
       toast.error("Tienes que Indicar las medidas")
       return
     }
+    if(!seccion.value){
+      toast.error("Tienes que Indicar la seccion para continuar")
+    }
     cargando.value = true
 
     const resultado = await agregar_joya(nuevaJoya, imagenesFiles.value);
@@ -495,6 +517,7 @@ const add_joya = async () => {
       destacado.value = false
       imagenesFiles.value = []
       medidas.value = ""
+      seccion.value= ""
     }
 
     if (notificar_email.value && disponible.value) {
@@ -584,6 +607,7 @@ const destacado_editor = ref(false)
 const imagenesFiles_editor = ref([])
 const fecha_disponibilidad_editor = ref("")
 const medidas_editor = ref("")
+const seccion_editor=ref("")
 
 const handleFilesEditor = (e) => {
   const files = Array.from(e.target.files)
@@ -621,6 +645,7 @@ const entrar_editor = (joya) => {
   destacado_editor.value = joya.destacado
   fecha_disponibilidad_editor.value = joya.fecha_disponibilidad || ""
   medidas_editor.value = joya.medidas || ""
+  seccion_editor.value= joya.seccion || ""
 }
 
 const guardar_edicion = async () => {
@@ -634,6 +659,7 @@ const guardar_edicion = async () => {
     destacado: destacado_editor.value,
     fecha_disponibilidad: disponible_editor.value ? null : fecha_disponibilidad_editor.value,
     medidas: medidas_editor.value,
+    seccion: seccion_editor.value
   }
   try {
     cargando.value = true
