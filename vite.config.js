@@ -33,6 +33,16 @@ export default defineConfig({
       dynamicRoutes: [
         '/catalogo',
         '/ubicacion',
+        '/oro',
+        '/plata',
+        '/acero',
+        '/anillos',
+        '/colgantes',
+        '/cadenas',
+        '/pendientes',
+        '/pulseras',
+        '/anillos_compromiso',
+        '/regalos',
         ...joyaRoutes
       ]
     }),
