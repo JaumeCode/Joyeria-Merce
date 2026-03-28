@@ -110,7 +110,7 @@ useHead({
     { property: 'og:title', content: 'Joyas de Oro — Joyería Mercè Puerto de Sagunto' },
     { property: 'og:description', content: 'Descubre joyas de oro en Joyería Mercè. Anillos, pendientes, pulseras, cadenas y colgantes con envío o recogida en tienda.' },
     { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: 'https://joyeriamerce.es/oro' },
+    { property: 'og:url', content: 'https://joyeriamerce.es/joyas/oro' },
     { property: 'og:image', content: 'https://joyeriamerce.es/og/oro.jpg' },
     { property: 'og:image:alt', content: 'Colección de joyas de oro de Joyería Mercè Puerto de Sagunto' },
     { property: 'og:locale', content: 'es_ES' },
@@ -120,7 +120,7 @@ useHead({
     { name: 'twitter:description', content: 'Joyas de oro en Puerto de Sagunto. Anillos, pendientes, pulseras, cadenas y colgantes.' },
     { name: 'twitter:image', content: 'https://joyeriamerce.es/og/oro.jpg' },
   ],
-  link: [{ rel: 'canonical', href: 'https://joyeriamerce.es/oro' }],
+  link: [{ rel: 'canonical', href: 'https://joyeriamerce.es/joyas/oro' }],
   script: [{
     type: 'application/ld+json',
     children: JSON.stringify({
@@ -128,10 +128,10 @@ useHead({
       '@type': 'CollectionPage',
       name: 'Joyas de Oro — Joyería Mercè',
       description: 'Colección de joyas de oro en Joyería Mercè, Puerto de Sagunto.',
-      url: 'https://joyeriamerce.es/oro',
+      url: 'https://joyeriamerce.es/joyas/oro',
       breadcrumb: { '@type': 'BreadcrumbList', itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://joyeriamerce.es' },
-        { '@type': 'ListItem', position: 2, name: 'Oro', item: 'https://joyeriamerce.es/oro' }
+        { '@type': 'ListItem', position: 2, name: 'Oro', item: 'https://joyeriamerce.es/joyas/oro' }
       ]},
       mainEntity: { '@type': 'ItemList', name: 'Colección de joyas de oro', description: 'Anillos, pendientes, pulseras, cadenas y colgantes de oro' },
       publisher: { '@type': 'JewelryStore', name: 'Joyería Mercè', url: 'https://joyeriamerce.es', address: { '@type': 'PostalAddress', addressLocality: 'Puerto de Sagunto', addressRegion: 'Valencia', addressCountry: 'ES' } }

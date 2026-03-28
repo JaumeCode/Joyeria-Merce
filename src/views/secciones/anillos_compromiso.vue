@@ -117,7 +117,7 @@ useHead({
     { property: 'og:title', content: 'Anillos de compromiso — Joyería Mercè Puerto de Sagunto' },
     { property: 'og:description', content: 'Encuentra el anillo de compromiso perfecto en Joyería Mercè. Solitarios, alianzas y gemas de alta calidad.' },
     { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: 'https://joyeriamerce.es/anillos-compromiso' },
+    { property: 'og:url', content: 'https://joyeriamerce.es/joyas/anillos-compromiso' },
     { property: 'og:image', content: 'https://joyeriamerce.es/og/anillos-compromiso.jpg' },
     { property: 'og:image:alt', content: 'Colección de anillos de compromiso de Joyería Mercè' },
     { property: 'og:locale', content: 'es_ES' },
@@ -127,7 +127,7 @@ useHead({
     { name: 'twitter:description', content: 'Solitarios, alianzas y anillos con piedras preciosas en Puerto de Sagunto.' },
     { name: 'twitter:image', content: 'https://joyeriamerce.es/og/anillos-compromiso.jpg' },
   ],
-  link: [{ rel: 'canonical', href: 'https://joyeriamerce.es/anillos-compromiso' }]
+  link: [{ rel: 'canonical', href: 'https://joyeriamerce.es/joyas/anillos-compromiso' }]
 })
 
 const busqueda = ref('')

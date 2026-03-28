@@ -129,6 +129,9 @@ import { useHead } from '@vueuse/head'
 
 useHead({
   title: 'Catálogo de Joyas en Puerto de Sagunto — Joyería Mercè',
+   link: [
+    { rel: 'canonical', href: 'https://joyeriamerce.es/catalogo' }
+  ],
   meta: [
     {
       name: 'description',

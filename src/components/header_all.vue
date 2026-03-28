@@ -20,24 +20,32 @@
 
       <nav class="nav">
         <a href="/">Inicio</a>
-        <a href="/anillos">Anillos</a>
-        <a href="/pendientes">Pendientes</a>
-        <a href="/pulseras">Pulseras</a>
-
+        <a href="/joyas/anillos">Anillos</a>
+        <a href="/joyas/pendientes">Pendientes</a>
+        <a href="/joyas/pulseras">Pulseras</a>
+        
       </nav>
 
       <nav class="nav">
-        <a href="/cadenas">Cadenas</a>
+        <a href="/joyas/cadenas">Cadenas</a>
         <div class="dropdown">
           <span class="dropdown-trigger">Material</span>
 
           <div class="dropdown-menu">
-            <a href="/oro">Oro</a>
-            <a href="/plata">Plata</a>
-            <a href="/acero">Acero</a>
+            <a href="/joyas/oro">Oro</a>
+            <a href="/joyas/plata">Plata</a>
+            <a href="/joyas/acero">Acero</a>
           </div>
         </div>
-        <a href="/ubicacion">Ubicación / Horarios</a>
+        <div class="dropdown">
+          <span class="dropdown-trigger">Ubicacion y Nostros</span>
+
+          <div class="dropdown-menu">
+            <a href="/ubicacion">Ubicación / Horarios</a>
+            <a href="/sobre-nosotros">Sobre Nosotros</a>
+          </div>
+        </div>
+        
       </nav>
 
     </div>
@@ -47,16 +55,17 @@
       <div class="mobile-menu-inner">
         <div class="mobile-ornament">✦</div>
         <a href="/"           class="mobile-link" @click="menuAbierto = false">Inicio</a>
-        <a href="/anillos"    class="mobile-link" @click="menuAbierto = false">Anillos</a>
-        <a href="/pendientes" class="mobile-link" @click="menuAbierto = false">Pendientes</a>
-        <a href="/pulseras"   class="mobile-link" @click="menuAbierto = false">Pulseras</a>
-        <a href="/colgantes"  class="mobile-link" @click="menuAbierto = false">Colgantes</a>
-        <a href="/cadenas"    class="mobile-link" @click="menuAbierto = false">Cadenas</a>
+        <a href="/joyas/anillos"    class="mobile-link" @click="menuAbierto = false">Anillos</a>
+        <a href="/joyas/pendientes" class="mobile-link" @click="menuAbierto = false">Pendientes</a>
+        <a href="/joyas/pulseras"   class="mobile-link" @click="menuAbierto = false">Pulseras</a>
+        <a href="/joyas/colgantes"  class="mobile-link" @click="menuAbierto = false">Colgantes</a>
+        <a href="/joyas/cadenas"    class="mobile-link" @click="menuAbierto = false">Cadenas</a>
         <a href="/ubicacion"  class="mobile-link" @click="menuAbierto = false">Ubicación / Horarios</a>
+        <a href="/sobre-nosotros" class="mobile-link" @click="menuAbierto = false">Sobre Nosotros</a>
         <div class="mobile-divider"></div>
-        <a href="/oro"   class="mobile-link mobile-link--material" @click="menuAbierto = false">Oro</a>
-        <a href="/plata" class="mobile-link mobile-link--material" @click="menuAbierto = false">Plata</a>
-        <a href="/acero" class="mobile-link mobile-link--material" @click="menuAbierto = false">Acero</a>
+        <a href="/joyas/oro"   class="mobile-link mobile-link--material" @click="menuAbierto = false">Oro</a>
+        <a href="/joyas/plata" class="mobile-link mobile-link--material" @click="menuAbierto = false">Plata</a>
+        <a href="/joyas/acero" class="mobile-link mobile-link--material" @click="menuAbierto = false">Acero</a>
       </div>
     </div>
 

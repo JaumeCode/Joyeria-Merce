@@ -112,7 +112,7 @@ useHead({
     { property: 'og:title', content: 'Pulseras de Oro, Plata y Acero — Joyería Mercè Puerto de Sagunto' },
     { property: 'og:description', content: 'Descubre pulseras de oro, plata y acero en Joyería Mercè. Rígidas, de cadena y diseños exclusivos con envío o recogida en tienda.' },
     { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: 'https://joyeriamerce.es/pulseras' },
+    { property: 'og:url', content: 'https://joyeriamerce.es/joyas/pulseras' },
     { property: 'og:image', content: 'https://joyeriamerce.es/og/pulseras.jpg' },
     { property: 'og:image:alt', content: 'Colección de pulseras de Joyería Mercè Puerto de Sagunto' },
     { property: 'og:locale', content: 'es_ES' },
@@ -122,7 +122,7 @@ useHead({
     { name: 'twitter:description', content: 'Pulseras de oro, plata y acero en Puerto de Sagunto. Rígidas, cadenas y diseños exclusivos.' },
     { name: 'twitter:image', content: 'https://joyeriamerce.es/og/pulseras.jpg' },
   ],
-  link: [{ rel: 'canonical', href: 'https://joyeriamerce.es/pulseras' }],
+  link: [{ rel: 'canonical', href: 'https://joyeriamerce.es/joyas/pulseras' }],
   script: [{
     type: 'application/ld+json',
     children: JSON.stringify({
@@ -130,10 +130,10 @@ useHead({
       '@type': 'CollectionPage',
       name: 'Pulseras — Joyería Mercè',
       description: 'Colección de pulseras de oro, plata y acero en Joyería Mercè, Puerto de Sagunto.',
-      url: 'https://joyeriamerce.es/pulseras',
+      url: 'https://joyeriamerce.es/joyas/pulseras',
       breadcrumb: { '@type': 'BreadcrumbList', itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://joyeriamerce.es' },
-        { '@type': 'ListItem', position: 2, name: 'Pulseras', item: 'https://joyeriamerce.es/pulseras' }
+        { '@type': 'ListItem', position: 2, name: 'Pulseras', item: 'https://joyeriamerce.es/joyas/pulseras' }
       ]},
       mainEntity: { '@type': 'ItemList', name: 'Colección de pulseras', description: 'Pulseras de oro, plata y acero con diseño exclusivo' },
       publisher: { '@type': 'JewelryStore', name: 'Joyería Mercè', url: 'https://joyeriamerce.es', address: { '@type': 'PostalAddress', addressLocality: 'Puerto de Sagunto', addressRegion: 'Valencia', addressCountry: 'ES' } }

@@ -112,7 +112,7 @@ useHead({
     { property: 'og:title', content: 'Anillos de Oro, Plata y Acero — Joyería Mercè Puerto de Sagunto' },
     { property: 'og:description', content: 'Descubre anillos de oro, plata y acero en Joyería Mercè. Alianzas, anillos de pedida y diseños exclusivos con envío o recogida en tienda.' },
     { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: 'https://joyeriamerce.es/anillos' },
+    { property: 'og:url', content: 'https://joyeriamerce.es/joyas/anillos'},
     { property: 'og:image', content: 'https://joyeriamerce.es/og/anillos.jpg' },
     { property: 'og:image:alt', content: 'Colección de anillos de Joyería Mercè Puerto de Sagunto' },
     { property: 'og:locale', content: 'es_ES' },
@@ -122,7 +122,7 @@ useHead({
     { name: 'twitter:description', content: 'Anillos de oro, plata y acero en Puerto de Sagunto. Alianzas, pedidas y diseños exclusivos.' },
     { name: 'twitter:image', content: 'https://joyeriamerce.es/og/anillos.jpg' },
   ],
-  link: [{ rel: 'canonical', href: 'https://joyeriamerce.es/anillos' }],
+  link: [{ rel: 'canonical', href: 'https://joyeriamerce.es/joyas/anillos'}],
   script: [{
     type: 'application/ld+json',
     children: JSON.stringify({
@@ -130,10 +130,11 @@ useHead({
       '@type': 'CollectionPage',
       name: 'Anillos — Joyería Mercè',
       description: 'Colección de anillos de oro, plata y acero en Joyería Mercè, Puerto de Sagunto.',
-      url: 'https://joyeriamerce.es/anillos',
+      url: 'https://joyeriamerce.es/joyas/anillos',
       breadcrumb: { '@type': 'BreadcrumbList', itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://joyeriamerce.es' },
-        { '@type': 'ListItem', position: 2, name: 'Anillos', item: 'https://joyeriamerce.es/anillos' }
+        { '@type': 'ListItem', position: 2, name: 'Anillos', item: 'https://joyeriamerce.es/joyas/anillos' }
+
       ]},
       mainEntity: { '@type': 'ItemList', name: 'Colección de anillos', description: 'Anillos de oro, plata y acero con diseño exclusivo' },
       publisher: { '@type': 'JewelryStore', name: 'Joyería Mercè', url: 'https://joyeriamerce.es', address: { '@type': 'PostalAddress', addressLocality: 'Puerto de Sagunto', addressRegion: 'Valencia', addressCountry: 'ES' } }

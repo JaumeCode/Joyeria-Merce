@@ -112,7 +112,7 @@ useHead({
     { property: 'og:title', content: 'Colgantes de Oro, Plata y Acero — Joyería Mercè Puerto de Sagunto' },
     { property: 'og:description', content: 'Descubre colgantes de oro, plata y acero en Joyería Mercè. Dijes, colgantes con cadena y diseños exclusivos con envío o recogida en tienda.' },
     { property: 'og:type', content: 'website' },
-    { property: 'og:url', content: 'https://joyeriamerce.es/colgantes' },
+    { property: 'og:url', content: 'https://joyeriamerce.es/joyas/colgantes' },
     { property: 'og:image', content: 'https://joyeriamerce.es/og/colgantes.jpg' },
     { property: 'og:image:alt', content: 'Colección de colgantes de Joyería Mercè Puerto de Sagunto' },
     { property: 'og:locale', content: 'es_ES' },
@@ -122,7 +122,7 @@ useHead({
     { name: 'twitter:description', content: 'Colgantes de oro, plata y acero en Puerto de Sagunto. Dijes, cadenas y diseños exclusivos.' },
     { name: 'twitter:image', content: 'https://joyeriamerce.es/og/colgantes.jpg' },
   ],
-  link: [{ rel: 'canonical', href: 'https://joyeriamerce.es/colgantes' }],
+  link: [{ rel: 'canonical', href: 'https://joyeriamerce.es/joyas/colgantes' }],
   script: [{
     type: 'application/ld+json',
     children: JSON.stringify({
@@ -130,10 +130,10 @@ useHead({
       '@type': 'CollectionPage',
       name: 'Colgantes — Joyería Mercè',
       description: 'Colección de colgantes de oro, plata y acero en Joyería Mercè, Puerto de Sagunto.',
-      url: 'https://joyeriamerce.es/colgantes',
+      url: 'https://joyeriamerce.es/joyas/colgantes',
       breadcrumb: { '@type': 'BreadcrumbList', itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://joyeriamerce.es' },
-        { '@type': 'ListItem', position: 2, name: 'Colgantes', item: 'https://joyeriamerce.es/colgantes' }
+        { '@type': 'ListItem', position: 2, name: 'Colgantes', item: 'https://joyeriamerce.es/joyas/colgantes' }
       ]},
       mainEntity: { '@type': 'ItemList', name: 'Colección de colgantes', description: 'Colgantes de oro, plata y acero con diseño exclusivo' },
       publisher: { '@type': 'JewelryStore', name: 'Joyería Mercè', url: 'https://joyeriamerce.es', address: { '@type': 'PostalAddress', addressLocality: 'Puerto de Sagunto', addressRegion: 'Valencia', addressCountry: 'ES' } }

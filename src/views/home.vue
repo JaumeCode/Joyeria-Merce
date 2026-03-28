@@ -51,37 +51,40 @@
             <div class="tipos_titulo">
 
                 <h2>Tipos de joyas</h2>
-
+                
             </div>
 
             <div class="joyas_tipos">
                 <div class="tipos1">
-                    <div class="seccion" @click="goTo('/anillos')">
+                    <div class="seccion" @click="goTo('/joyas/anillos')">
                         <img loading="lazy" decoding="async" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_anillo.webp?alt=media&token=529bcdc7-7175-4d40-a7d0-3cc1d7bcc24f" alt="">
                         <h3>Anillos</h3>
                     </div>
-                    <div loading="lazy" decoding="async" width="228" height="120" class="seccion" @click="goTo('/pulseras')">
+                    <div loading="lazy" decoding="async" width="228" height="120" class="seccion" @click="goTo('/joyas/pulseras')">
                         <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pulseras.webp?alt=media&token=f1f85e99-78da-45d2-8e03-99edd78bf8bb" alt="">
                         <h3>Pulseras</h3>
                     </div>
-                    <div loading="lazy" decoding="async" width="228" height="120" class="seccion" @click="goTo('/cadenas')">
+                    <div loading="lazy" decoding="async" width="228" height="120" class="seccion" @click="goTo('/joyas/cadenas')">
                         <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_cadenas.webp?alt=media&token=7beaee3f-d559-4f12-8692-d3fb129a9b63" alt="">
                         <h3>Cadenas</h3>
                     </div>
                 </div>
                 <div class="tipos2">
-                    <div class="seccion" @click="goTo('/colgantes')">
+                    <div class="seccion" @click="goTo('/joyas/colgantes')">
                         <img loading="lazy" decoding="async" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_colgantes.webp?alt=media&token=c7610d83-f5cc-4080-800f-47160a4d9f46" alt="">
                         <h3>Colgantes</h3>
                     </div>
-                    <div class="seccion" @click="goTo('/pendientes')">
+                    <div class="seccion" @click="goTo('/joyas/pendientes')">
                         <img loading="lazy" decoding="async" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pendientes.webp?alt=media&token=fa0aa854-f592-4937-95af-32a624b9cba8" alt="">
                         <h3>Pendientes</h3>
                     </div>
                 </div>
+                
             </div>
 
-
+            <router-link to="/joyas" class="btn_hub">
+                Explorar toda la colección →
+            </router-link>
 
         </section>
         <section id="novedades" class="reveal">
@@ -139,10 +142,11 @@
 
         </section>
 
-        <section id="nosotros" class="reveal">
+        <section id="ubicacion" class="reveal">
             <div class="left">
                 <h3>¿Donde estamos situados?</h3>
-                <p>Joyería artesanal en Puerto de Sagunto. Cada pieza está elaborada a mano con materiales de primera calidad, combinando tradición y diseño contemporáneo.</p>
+                <p>Visítanos en nuestra joyería en Puerto de Sagunto, Valencia. 
+                Te atendemos en tienda para ayudarte a elegir anillos, collares, pulseras y regalos para cualquier ocasión.</p>
                 <button @click="abrir_mapa">Localízanos</button>
             </div>
             <div class="right">
@@ -176,27 +180,46 @@
 
 import header_all from '@/components/header_all.vue';
 import card_jewlery from '@/components/card_jewlery.vue';
-import { onMounted} from 'vue';
 import { useJoyasPublicasStore } from '@/stores/joyas';
-import { ref } from 'vue';
-import { computed } from 'vue';
 import footer_component from '@/components/footer_component.vue';
 import { useCorreosStore } from '@/stores/correos';
 import portada from '@/components/portada.vue';
 import { useHead } from '@vueuse/head';
 import reviews from '@/components/reviews.vue';
 import { useRouter } from 'vue-router';
+import { onMounted, ref, computed } from 'vue';
 
 useHead({
-  title: 'Joyería Mercè — Joyeria en Puerto de Sagunto',
+  title: 'Joyería Mercè — Joyería en Puerto de Sagunto',
   meta: [
-    { name: 'description', content: '<meta name="description" content="Joyería Mercè en Puerto de Sagunto, Valencia. Anillos de compromiso, pulseras, colgantes, cadenas y pendientes en oro, plata y acero. Joyas únicas y exclusivas para regalar, celebrar o lucir en cualquier ocasión en tu joyería de confianza.">' },
-    { property: 'og:title', content: 'Joyería Mercè — Joyeria en Puerto de Sagunto' },
+    { name: 'description', content: 'Joyería Mercè en Puerto de Sagunto, Valencia. Anillos de compromiso, pulseras, colgantes, cadenas y pendientes en oro, plata y acero.' },
+    { property: 'og:title', content: 'Joyería Mercè — Joyería en Puerto de Sagunto' },
     { property: 'og:description', content: 'Joyería en Puerto de Sagunto, Valencia. Visítanos en Carrer del Trovador, 67.' },
   ],
   link: [
+    { rel: 'canonical', href: 'https://joyeriamerce.es' },
     { rel: 'preconnect', href: 'https://firebasestorage.googleapis.com' },
-  ]
+  ],
+  script: [{
+    type: 'application/ld+json',
+    children: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "JewelryStore",
+      "name": "Joyería Mercè",
+      "url": "https://joyeriamerce.es",
+      "telephone": "+34 666 238 158",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Carrer del Trovador, 67",
+        "addressLocality": "Puerto de Sagunto",
+        "postalCode": "46520",
+        "addressCountry": "ES"
+      },
+      "openingHours": ["Mo-Fr 10:00-14:00", "Mo-Fr 17:00-20:00"],
+      "image": "https://joyeriamerce.es/og-image.jpg",
+      "priceRange": "€€"
+    })
+  }]
 })
 
 
@@ -318,39 +341,21 @@ const registro=async()=>{
 
 }
 
-//Carrusel n1
-const carrusel=ref(null)
-
-const scrollIzq = () => {
-  carrusel.value.scrollBy({
-    left: -380,
-    behavior: "smooth"
-  })
-}
-
-const scrollDer = () => {
-  carrusel.value.scrollBy({
-    left: 380,
-    behavior: "smooth"
-  })
-}
-
-//Carrusel N2
+// Carruseles
+const carrusel = ref(null)
 const carruselNovedades = ref(null)
 
-const scrollIzqNovedades = () => {
-  carruselNovedades.value.scrollBy({
-    left: -380,
+const scrollCarrusel = (carruselRef, direction) => {
+  carruselRef.value.scrollBy({
+    left: direction === 'izq' ? -380 : 380,
     behavior: "smooth"
   })
 }
 
-const scrollDerNovedades = () => {
-  carruselNovedades.value.scrollBy({
-    left: 380,
-    behavior: "smooth"
-  })
-}
+const scrollIzq          = () => scrollCarrusel(carrusel, 'izq')
+const scrollDer          = () => scrollCarrusel(carrusel, 'der')
+const scrollIzqNovedades = () => scrollCarrusel(carruselNovedades, 'izq')
+const scrollDerNovedades = () => scrollCarrusel(carruselNovedades, 'der')
 
 </script>
 
@@ -543,6 +548,25 @@ const scrollDerNovedades = () => {
         align-items: center
         gap: 3rem
 
+        .btn_hub
+            display: inline-flex
+            align-items: center
+            font-size: 0.72rem
+            letter-spacing: 0.18rem
+            text-transform: uppercase
+            color: #9a8f7f
+            text-decoration: none
+            border: 1px solid rgba(0,0,0,0.12)
+            padding: 10px 24px
+            border-radius: 20px
+            transition: all 0.25s
+            margin-top: 1rem
+
+            &:hover
+                color: #1a1a1a
+                border-color: rgba(0,0,0,0.35)
+                transform: translateX(3px)
+
         .tipos_titulo
             text-align: center
 
@@ -552,6 +576,22 @@ const scrollDerNovedades = () => {
                 text-underline-offset: 1rem
                 letter-spacing: 0.2rem
                 color: #111
+
+            .ver_todas
+                display: inline-block
+                margin-top: 0.75rem
+                font-size: 0.72rem
+                letter-spacing: 0.15rem
+                text-transform: uppercase
+                color: #C9A55A
+                text-decoration: none
+                border-bottom: 1px solid rgba(201,165,90,0.4)
+                padding-bottom: 2px
+                transition: all 0.2s
+
+                &:hover
+                color: #1a1a1a
+                border-color: #1a1a1a
 
         .joyas_tipos
             width: 100%
@@ -729,7 +769,7 @@ const scrollDerNovedades = () => {
                 img
                     height: 250px
         
-    #nosotros
+    #ubicacion
         display: flex
         flex-direction: row
         justify-content: center
@@ -876,7 +916,7 @@ const scrollDerNovedades = () => {
                 font-size: 0.6rem
 
     @media (max-width: 768px)
-        #nosotros
+        #ubicacion
             flex-direction: column
             height: auto
             gap: 2rem

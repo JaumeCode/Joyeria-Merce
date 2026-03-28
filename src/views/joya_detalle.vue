@@ -203,12 +203,20 @@ useHead(computed(() => ({
   title: joya.value
     ? `${joya.value.nombre} — Joyería Mercè`
     : 'Joyería Mercè',
+  link: [
+    {
+      rel: 'canonical',
+      href: joya.value
+        ? `https://joyeriamerce.es/joya/${route.params.id}`
+        : 'https://joyeriamerce.es'
+    }
+  ],
   meta: [
     {
       name: 'description',
       content: joya.value
-        ? `${joya.value.nombre} de ${joya.value.material}. ${joya.value.descripcion?.slice(0, 140)}. Disponible en Joyería Mercè, Puerto de Sagunto.`
-        : 'Joya artesanal en Joyería Mercè, Puerto de Sagunto.'
+        ? `${joya.value.nombre} de ${joya.value.material}. ${joya.value.descripcion?.slice(0, 140)}. En Joyería Mercè, Puerto de Sagunto.`
+        : 'Joyería Mercè, Puerto de Sagunto.'
     },
     {
       property: 'og:title',
@@ -226,7 +234,34 @@ useHead(computed(() => ({
       property: 'og:type',
       content: 'product'
     }
-  ]
+  ],
+  script: joya.value ? [{
+    type: 'application/ld+json',
+    children: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": joya.value.nombre,
+      "image": joya.value.imagenes,
+      "description": joya.value.descripcion,
+      "brand": {
+        "@type": "Brand",
+        "name": "Joyería Mercè"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": `https://joyeriamerce.es/joya/${route.params.id}`,
+        "price": joya.value.precio,
+        "priceCurrency": "EUR",
+        "availability": joya.value.disponible
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Joyería Mercè"
+        }
+      }
+    })
+  }] : []
 })))
 
 
