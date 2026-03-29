@@ -82,9 +82,9 @@
                 
             </div>
 
-            <router-link to="/joyas" class="btn_hub">
+            <a href="/joyas" class="btn_hub" @click.prevent="goTo('/joyas')">
                 Explorar toda la colección →
-            </router-link>
+            </a>
 
         </section>
         <section id="novedades" class="reveal">
@@ -140,6 +140,46 @@
                 <button @click="goTo('/regalos')">Consultar Regalos</button>
             </div>
 
+        </section>
+        <section id="busca_joya_home" class="reveal">
+            <div class="bjh_inner">
+        
+            <!-- Lado izquierdo: texto y CTA -->
+            <div class="bjh_texto">
+                <span class="bjh_sym">✦</span>
+                <p class="bjh_eyebrow">Encuentra tu joya ideal</p>
+                <h2 class="bjh_titulo">
+                ¿No sabes<br>
+                <em>qué elegir?</em>
+                </h2>
+                <p class="bjh_desc">
+                Responde 5 preguntas y nuestro buscador inteligente
+                filtra toda la colección para mostrarte las piezas
+                que encajan contigo, tu ocasión y tu presupuesto.
+                </p>
+                <button class="bjh_btn" @click="irBuscador">
+                Empezar el quiz <span class="bjh_arrow">→</span>
+                </button>
+            </div>
+        
+            <!-- Lado derecho: tarjeta decorativa animada -->
+            <div class="bjh_deco" aria-hidden="true">
+        
+                <!-- Pasos decorativos -->
+                <div class="bjh_pasos">
+                <div class="bjh_paso" v-for="(paso, i) in pasos" :key="i" :style="{ '--delay': i * 0.12 + 's' }">
+                    <span class="bjh_paso_num">0{{ i + 1 }}</span>
+                    <span class="bjh_paso_label">{{ paso }}</span>
+                </div>
+                </div>
+        
+                <!-- Orbes de fondo -->
+                <div class="bjh_orb bjh_orb1"></div>
+                <div class="bjh_orb bjh_orb2"></div>
+        
+            </div>
+        
+            </div>
         </section>
 
         <section id="ubicacion" class="reveal">
@@ -356,6 +396,21 @@ const scrollIzq          = () => scrollCarrusel(carrusel, 'izq')
 const scrollDer          = () => scrollCarrusel(carrusel, 'der')
 const scrollIzqNovedades = () => scrollCarrusel(carruselNovedades, 'izq')
 const scrollDerNovedades = () => scrollCarrusel(carruselNovedades, 'der')
+
+//El buscar joya 
+const pasos = [
+  '¿Para quién es la joya?',
+  '¿Cuál es la ocasión?',
+  '¿Qué tipo de joya buscas?',
+  '¿Qué material prefieres?',
+  '¿Cuál es tu presupuesto?',
+]
+ 
+const irBuscador = async () => {
+  await router.push('/buscar-joya')
+  window.scrollTo(0, 0)
+}
+
 
 </script>
 
@@ -768,7 +823,202 @@ const scrollDerNovedades = () => scrollCarrusel(carruselNovedades, 'der')
 
                 img
                     height: 250px
-        
+
+    // ── Busca Joya ────────────────────────────────────────────
+    #busca_joya_home
+        padding: 7rem 4rem
+        background-color: #EDE9D8
+        display: flex
+        justify-content: center
+
+        .bjh_inner
+            display: flex
+            align-items: center
+            gap: 6rem
+            width: 100%
+            max-width: 1100px
+
+        .bjh_texto
+            flex: 1
+            display: flex
+            flex-direction: column
+            gap: 1.4rem
+
+        .bjh_sym
+            font-size: 1.4rem
+            color: #B8860B
+            animation: pulse 3s ease infinite
+
+        .bjh_eyebrow
+            font-size: 0.72rem
+            letter-spacing: 0.28rem
+            text-transform: uppercase
+            color: #B8860B
+            margin: 0
+
+        .bjh_titulo
+            font-family: 'Playfair Display', serif
+            font-size: 3.4rem
+            font-weight: 600
+            line-height: 1.15
+            color: #1a1a1a
+            margin: 0
+
+            em
+                font-style: italic
+                color: #B8860B
+
+        .bjh_desc
+            font-size: 0.95rem
+            color: #666
+            line-height: 1.75
+            max-width: 420px
+            margin: 0
+
+        .bjh_btn
+            display: inline-flex
+            align-items: center
+            gap: 0.8rem
+            align-self: flex-start
+            padding: 1rem 2.5rem
+            background-color: #1a1a1a
+            color: #EDE9D8
+            border: none
+            font-family: 'Playfair Display', serif
+            font-size: 0.95rem
+            font-weight: 600
+            letter-spacing: 0.12rem
+            cursor: pointer
+            transition: all 0.3s ease
+            margin-top: 0.4rem
+
+            .bjh_arrow
+                display: inline-block
+                transition: transform 0.3s ease
+
+            &:hover
+                background-color: #B8860B
+                color: #1a1a1a
+                transform: translateY(-2px)
+                box-shadow: 0 8px 24px rgba(184,134,11,0.22)
+
+                .bjh_arrow
+                    transform: translateX(5px)
+
+        .bjh_deco
+            flex: 1
+            position: relative
+            max-width: 460px
+            min-height: 360px
+            display: flex
+            align-items: center
+            justify-content: center
+
+        .bjh_orb
+            position: absolute
+            border-radius: 50%
+            border: 1px solid rgba(184,134,11,0.14)
+
+            &.bjh_orb1
+                width: 340px
+                height: 340px
+                top: 50%
+                left: 50%
+                transform: translate(-50%, -50%)
+                animation: giro 18s linear infinite
+
+            &.bjh_orb2
+                width: 240px
+                height: 240px
+                top: 50%
+                left: 50%
+                transform: translate(-50%, -50%)
+                animation: giro 12s linear infinite reverse
+
+        .bjh_pasos
+            position: relative
+            z-index: 2
+            display: flex
+            flex-direction: column
+            gap: 0
+            width: 100%
+            max-width: 360px
+            background-color: #FAFAF7
+            border: 1px solid rgba(0,0,0,0.08)
+            border-radius: 18px
+            overflow: hidden
+            box-shadow: 0 12px 40px rgba(0,0,0,0.06)
+
+        .bjh_paso
+            display: flex
+            align-items: center
+            gap: 1.2rem
+            padding: 1.1rem 1.6rem
+            border-bottom: 1px solid rgba(0,0,0,0.08)
+            animation: slideInRight 0.5s ease both
+            animation-delay: var(--delay)
+
+            &:last-child
+                border-bottom: none
+
+            &:hover
+                background-color: rgba(184,134,11,0.10)
+
+                .bjh_paso_num
+                    color: #B8860B
+
+            .bjh_paso_num
+                font-family: 'Playfair Display', serif
+                font-size: 0.7rem
+                letter-spacing: 0.2rem
+                color: rgba(0,0,0,0.2)
+                min-width: 28px
+                transition: color 0.2s
+
+            .bjh_paso_label
+                font-size: 0.88rem
+                color: #1a1a1a
+                line-height: 1.4
+
+        @media (max-width: 1024px)
+            gap: 3.5rem
+
+            .bjh_titulo
+                font-size: 2.6rem
+
+        @media (max-width: 768px)
+            padding: 5rem 1.4rem
+
+            .bjh_inner
+                flex-direction: column
+                gap: 3rem
+
+            .bjh_texto
+                align-items: center
+                text-align: center
+
+            .bjh_desc
+                text-align: center
+
+            .bjh_btn
+                align-self: center
+
+            .bjh_deco
+                width: 100%
+                max-width: 100%
+                min-height: auto
+
+            .bjh_orb
+                &.bjh_orb1
+                    width: 280px
+                    height: 280px
+
+                &.bjh_orb2
+                    width: 180px
+                    height: 180px
+
+    // ── Fin Busca Joya ────────────────────────────────────────
+
     #ubicacion
         display: flex
         flex-direction: row
@@ -892,6 +1142,8 @@ const scrollDerNovedades = () => scrollCarrusel(carruselNovedades, 'der')
             &:focus
                 border-color: #373232
                 box-shadow: 0 0 0 3px rgba(55,50,50,0.08)
+
+    
     .footer
         margin-top: 7rem
 
@@ -973,6 +1225,22 @@ const scrollDerNovedades = () => scrollCarrusel(carruselNovedades, 'der')
     100%
         background: linear-gradient(135deg, rgba(180,120,255,0.15), rgba(255,255,255,0.08), rgba(100,160,255,0.2))
 
+@keyframes pulse
+    0%, 100%
+        opacity: 1
+    50%
+        opacity: 0.4
 
+@keyframes giro
+    to
+        transform: translate(-50%, -50%) rotate(360deg)
+
+@keyframes slideInRight
+    from
+        opacity: 0
+        transform: translateX(20px)
+    to
+        opacity: 1
+        transform: translateX(0)
 
 </style>

@@ -132,6 +132,7 @@
             <select v-model="disponible">
               <option :value="true">Disponible</option>
               <option :value="false">No disponible</option>
+              <option value="pedido">Bajo pedido</option>
             </select>
           </div>
           <div class="field span-1" v-if="disponible === false">
@@ -188,6 +189,7 @@
             <option value="">Disponibilidad</option>
             <option :value="true">Disponible</option>
             <option :value="false">No disponible</option>
+            <option value="pedido">Bajo pedido</option>
           </select>
           <select class="filter-select" v-model="buscador_destacado">
             <option value="">Destacado</option>
@@ -206,8 +208,12 @@
               <p class="joya-precio">{{ joya.precio }} €</p>
             </div>
             <div class="joya-status">
-              <span class="pill" :class="joya.disponible ? 'pill-green' : 'pill-gray'">
-                {{ joya.disponible ? 'Disponible' : 'No disponible' }}
+              <span class="pill" :class="{
+                'pill-green': joya.disponible === true,
+                'pill-gray':  joya.disponible === false,
+                'pill-blue':  joya.disponible === 'pedido'
+              }">
+                {{ joya.disponible === true ? 'Disponible' : joya.disponible === 'pedido' ? 'Bajo pedido' : 'No disponible' }}
               </span>
               <span v-if="joya.destacado" class="pill pill-gold">★ Destacada</span>
             </div>
@@ -275,6 +281,7 @@
           <select v-model="disponible_editor">
             <option :value="true">Disponible</option>
             <option :value="false">No disponible</option>
+            <option value="pedido">Bajo pedido</option>
           </select>
         </div>
         <div class="field span-1" v-if="disponible_editor === false">
@@ -452,7 +459,7 @@ const add_joya = async () => {
     disponible: disponible.value,
     destacado: destacado.value,
     imagenes: imagenesFiles.value,
-    fecha_disponibilidad: disponible.value ? null : fecha_disponibilidad.value,
+    fecha_disponibilidad: disponible.value === true ? null : fecha_disponibilidad.value,
     medidas: medidas.value,
     seccion: seccion.value
   }
@@ -657,7 +664,7 @@ const guardar_edicion = async () => {
     descripcion: descripcion_editor.value,
     disponible: disponible_editor.value,
     destacado: destacado_editor.value,
-    fecha_disponibilidad: disponible_editor.value ? null : fecha_disponibilidad_editor.value,
+    fecha_disponibilidad: disponible_editor.value === true ? null : fecha_disponibilidad_editor.value,
     medidas: medidas_editor.value,
     seccion: seccion_editor.value
   }
@@ -1403,6 +1410,10 @@ $sans:  'DM Sans', sans-serif
   &.pill-gray
     background: $gray-bg
     color: $gray-text
+
+  &.pill-blue
+    background: #DBEAFE
+    color: #1E40AF
 
   &.pill-gold
     background: rgba(184,134,11,0.1)

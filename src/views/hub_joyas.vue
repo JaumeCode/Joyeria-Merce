@@ -17,10 +17,10 @@
             Anillos, pendientes, cadenas, pulseras y colgantes con diseño exclusivo
             y acabados de alta calidad, perfectas para cualquier ocasión.
           </p>
-          <router-link to="/catalogo" class="hero_cta">
+          <a class="hero_cta" href="/catalogo" @click.prevent="goTo('/catalogo')">
             Ver catálogo completo
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </router-link>
+          </a>
         </div>
         <div class="hero_deco">
           <div class="deco_anillo"></div>
@@ -54,11 +54,12 @@
       </div>
 
       <div class="tipos_grid">
-        <router-link
+        <a
           v-for="(tipo, i) in tipos"
           :key="tipo.slug"
-          :to="`/joyas/${tipo.slug}`"
+          :href="`/joyas/${tipo.slug}`"
           class="tipo_card"
+          @click.prevent="goTo(`/joyas/${tipo.slug}`)"
         >
           <div class="tipo_imagen">
             <img :src="tipo.imagen" :alt="`${tipo.nombre} de oro, plata y acero — Joyería Mercè Puerto de Sagunto`" loading="lazy" width="300" height="180"/>
@@ -75,7 +76,7 @@
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </span>
           </div>
-        </router-link>
+        </a>
       </div>
     </section>
 
@@ -90,12 +91,13 @@
       </div>
 
       <div class="materiales_grid">
-        <router-link
+        <a
           v-for="mat in materiales"
           :key="mat.slug"
-          :to="`/joyas/${mat.slug}`"
+          :href="`/joyas/${mat.slug}`"
           class="mat_card"
           :style="{ '--mat-color': mat.color, '--mat-bg': mat.bg }"
+          @click.prevent="goTo(`/joyas/${mat.slug}`)"
         >
           <div class="mat_top">
             <div class="mat_circulo">
@@ -116,7 +118,7 @@
             <span class="mat_tipos">{{ mat.tipos.join(' · ') }}</span>
             <span class="mat_cta">Explorar →</span>
           </div>
-        </router-link>
+        </a>
       </div>
     </section>
 
@@ -136,8 +138,8 @@
             joyas de regalo y piezas de uso diario en oro, plata y acero.
           </p>
           <div class="local_acciones">
-            <router-link to="/catalogo" class="btn_primario">Ver catálogo</router-link>
-            <router-link to="/ubicacion" class="btn_secundario">Cómo llegar</router-link>
+            <a href="/catalogo" class="btn_primario" @click.prevent="goTo('/catalogo')">Ver catálogo</a>
+            <a href="/ubicacion" class="btn_secundario" @click.prevent="goTo('/ubicacion')">Cómo llegar</a>
           </div>
         </div>
         <div class="local_datos">
@@ -172,34 +174,35 @@
         </div>
       </div>
     </section>
+
     <!-- Sección 03 — Ocasiones -->
     <section class="ocasiones_section">
-        <div class="section_header">
-            <span class="section_num">03</span>
-            <div>
-            <h2>Por ocasión</h2>
-            <p>Joyas pensadas para los momentos más especiales</p>
-            </div>
+      <div class="section_header">
+        <span class="section_num">03</span>
+        <div>
+          <h2>Por ocasión</h2>
+          <p>Joyas pensadas para los momentos más especiales</p>
         </div>
+      </div>
 
-        <div class="ocasiones_grid">
-            <router-link to="/joyas/anillos-compromiso" class="ocasion_card">
-            <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_pedida.webp?alt=media&token=face0f05-7c44-4f63-b329-339c718e3987" alt="Anillos de compromiso — Joyería Mercè Puerto de Sagunto" loading="lazy"/>
-            <div class="ocasion_info">
-                <h3>Anillos de compromiso</h3>
-                <p>Anillos de pedida y alianzas para el momento más especial</p>
-                <span>Ver colección →</span>
-            </div>
-            </router-link>
-            <router-link to="/joyas/regalos" class="ocasion_card">
-            <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_colgante.webp?alt=media&token=5403fa18-00f1-486c-90eb-a1f0a7b755c8" alt="Joyas de regalo — Joyería Mercè Puerto de Sagunto" loading="lazy"/>
-            <div class="ocasion_info">
-                <h3>Regalos</h3>
-                <p>Joyas para regalar en cumpleaños, aniversarios y ocasiones especiales</p>
-                <span>Ver colección →</span>
-            </div>
-            </router-link>
-        </div>
+      <div class="ocasiones_grid">
+        <a href="/joyas/anillos-compromiso" class="ocasion_card" @click.prevent="goTo('/joyas/anillos-compromiso')">
+          <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_pedida.webp?alt=media&token=face0f05-7c44-4f63-b329-339c718e3987" alt="Anillos de compromiso — Joyería Mercè Puerto de Sagunto" loading="lazy"/>
+          <div class="ocasion_info">
+            <h3>Anillos de compromiso</h3>
+            <p>Anillos de pedida y alianzas para el momento más especial</p>
+            <span>Ver colección →</span>
+          </div>
+        </a>
+        <a href="/joyas/regalos" class="ocasion_card" @click.prevent="goTo('/joyas/regalos')">
+          <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_colgante.webp?alt=media&token=5403fa18-00f1-486c-90eb-a1f0a7b755c8" alt="Joyas de regalo — Joyería Mercè Puerto de Sagunto" loading="lazy"/>
+          <div class="ocasion_info">
+            <h3>Regalos</h3>
+            <p>Joyas para regalar en cumpleaños, aniversarios y ocasiones especiales</p>
+            <span>Ver colección →</span>
+          </div>
+        </a>
+      </div>
     </section>
 
     <footer_component />
@@ -208,8 +211,16 @@
 
 <script setup>
 import { useHead } from '@vueuse/head'
+import { useRouter } from 'vue-router'
 import header_all from '@/components/header_all.vue'
 import footer_component from '@/components/footer_component.vue'
+
+const router = useRouter()
+
+const goTo = async (ruta) => {
+  await router.push(ruta)
+  window.scrollTo(0, 0)
+}
 
 useHead({
   title: 'Joyas en Puerto de Sagunto — Anillos, Cadenas, Pendientes | Joyería Mercè',
@@ -436,6 +447,7 @@ $borde: rgba(0,0,0,0.08)
   letter-spacing: 0.1rem
   text-transform: uppercase
   transition: all 0.25s
+  cursor: pointer
 
   &:hover
     background: #EDE9D8
@@ -551,6 +563,7 @@ $borde: rgba(0,0,0,0.08)
   color: inherit
   overflow: hidden
   transition: transform 0.3s ease, box-shadow 0.3s ease
+  cursor: pointer
 
   &:hover
     transform: translateY(-6px)
@@ -662,6 +675,7 @@ h3
   transition: transform 0.25s ease, box-shadow 0.25s ease
   position: relative
   overflow: hidden
+  cursor: pointer
 
   &::before
     content: ''
@@ -824,6 +838,7 @@ h3
   letter-spacing: 0.08rem
   text-transform: uppercase
   transition: all 0.2s
+  cursor: pointer
 
   &:hover
     background: #EDE9D8
@@ -839,6 +854,7 @@ h3
   letter-spacing: 0.08rem
   text-transform: uppercase
   transition: all 0.2s
+  cursor: pointer
 
   &:hover
     border-color: rgba(237,233,216,0.6)
@@ -886,6 +902,8 @@ h3
     font-size: 0.75rem
     color: rgba(237,233,216,0.4)
     line-height: 1.4
+
+// ── Ocasiones ─────────────────────────────────────────────
 .ocasiones_section
   padding: 3rem 0 5rem
 
@@ -909,6 +927,7 @@ h3
   color: inherit
   overflow: hidden
   transition: transform 0.3s ease, box-shadow 0.3s ease
+  cursor: pointer
 
   &:hover
     transform: translateY(-6px)

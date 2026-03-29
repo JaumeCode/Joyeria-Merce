@@ -33,7 +33,7 @@ export default defineConfig({
       dynamicRoutes: [
         '/catalogo',
         '/ubicacion',
-        '/busca-joya',
+        '/buscar-joya',
         '/sobre-nosotros',
         '/joyas',
         '/joyas/regalos',

@@ -56,9 +56,13 @@
             <p class="material">✦ {{ joya.material.charAt(0).toUpperCase() + joya.material.slice(1) }}</p>
             <p class="medidas" v-if="joya.medidas">📐 {{ joya.medidas }}</p>
             <p class="descripcion">{{ joya.descripcion }}</p>
-            <span class="disponibilidad" :class="joya.disponible ? 'disponible' : 'agotado'">
+            <span class="disponibilidad" :class="{
+              'disponible': joya.disponible === true,
+              'agotado':    joya.disponible === false,
+              'pedido':     joya.disponible === 'pedido'
+            }">
               <span class="dot" />
-              {{ joya.disponible ? 'Recoge en tienda' : 'No disponible' }}
+              {{ joya.disponible === true ? 'Recoge en tienda' : joya.disponible === 'pedido' ? 'Bajo pedido en tienda' : 'No disponible' }}
             </span>
             <p class="fecha_disponibilidad" v-if="!joya.disponible && joya.fecha_disponibilidad">
               📅 Disponible a partir del {{ formatearFecha(joya.fecha_disponibilidad) }}
@@ -505,6 +509,11 @@ useHead(computed(() => ({
     background: #f7eded
     color: #7a2d2d
     border: 1px solid #e2b6b6
+
+  &.pedido
+    background: #EFF6FF
+    color: #1D4ED8
+    border: 1px solid #BFDBFE
 
   .dot
     width: 7px
