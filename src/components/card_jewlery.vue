@@ -24,7 +24,7 @@
       <h3 class="nombre">{{ nombre }}</h3>
       <div class="footer_card">
         <span class="material">{{ medidas }}</span>
-        <button class="btn" @click="$router.push(`/joya/${id}`)">
+        <button class="btn" @click="$router.push(`/joya/${slug}`)">
           {{ textoBoton }} →
         </button>
       </div>
@@ -44,7 +44,8 @@ defineProps({
   textoBoton: { type: String, default: 'Ver joya' },
   novedad: { type: Boolean, default: false },
   material: { type: String, default: 'Artesanal' },
-  medidas: {type: String, default: "Medida Unica"}
+  medidas: {type: String, default: "Medida Unica"},
+  slug: { type: String, default: "No contiene Slug"}
 })
 
 </script>

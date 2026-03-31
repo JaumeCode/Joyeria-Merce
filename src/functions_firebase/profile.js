@@ -7,7 +7,10 @@ import {
     addDoc,
     collection,
     deleteDoc,
-    updateDoc
+    updateDoc,
+    query,
+    where,
+    limit
 } from "firebase/firestore"
 
 // IMPORTACIONES DEL STORAGE DE IMAGENES
@@ -19,6 +22,27 @@ import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "fi
 // Instala la dependencia: npm install browser-image-compression
 // ─────────────────────────────────────────────
 import imageCompression from 'browser-image-compression'
+
+// ─────────────────────────────────────────────
+// UTILIDAD: Generar Slug Único Autoincremental
+// ─────────────────────────────────────────────
+const generarSlug = (joya) => {
+  const limpiarTexto = (texto) => {
+    return texto
+      .toString()
+      .toLowerCase()
+      .trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/[^\w-]+/g, '')
+      .replace(/--+/g, '-');
+  }
+
+  const slugBase = limpiarTexto(`${joya.nombre} ${joya.material}`);
+  const sufijo = Math.random().toString(36).slice(2, 6); // 4 chars: ej. "k3xq"
+  return `${slugBase}-${sufijo}`;
+}
 
 const comprimirImagen = async (file) => {
   const options = {
@@ -87,10 +111,12 @@ export const agregar_joya = async (joya, files) => {
   if (!subida.ok) return { ok: false }
 
   const favoritosRef = collection(db, "joyas")
+  const slug = generarSlug(joya); // ✅ Generar slug único
 
   await addDoc(favoritosRef, {
     nombre: joya.nombre,
     descripcion: joya.descripcion,
+    slug: slug,               // ✅ Guardar slug
     precio: joya.precio,
     material: joya.material,
     tipo: joya.tipo,
@@ -187,20 +213,27 @@ export const update_joya = async (id, datosActualizados, nuevasImagenes) => {
 
     if (!docSnap.exists()) return { ok: false }
 
-    const joya = docSnap.data()
+    const joyaActual = docSnap.data()
+    
+    // ✅ Lógica de actualización de Slug
+    let nuevoSlug = joyaActual.slug;
+    if (datosActualizados.nombre !== joyaActual.nombre || datosActualizados.material !== joyaActual.material) {
+      nuevoSlug = generarSlug(datosActualizados);
+    }
 
     // Si no hay imágenes nuevas, solo actualizar datos
     if (!nuevasImagenes || nuevasImagenes.length === 0) {
       await updateDoc(docRef, {
         ...datosActualizados,
-        imagenes: joya.imagenes
+        slug: nuevoSlug,      // ✅ Actualizar slug si aplica
+        imagenes: joyaActual.imagenes
       })
       return { ok: true }
     }
 
     // Borrar imágenes antiguas del Storage
-    if (joya.imagenes) {
-      for (const url of joya.imagenes) {
+    if (joyaActual.imagenes) {
+      for (const url of joyaActual.imagenes) {
         if (!url) continue
         try {
           const rutaDecodificada = decodeURIComponent(url.split('/o/')[1].split('?')[0])
@@ -216,9 +249,10 @@ export const update_joya = async (id, datosActualizados, nuevasImagenes) => {
     const subida = await subir_imagenes(nuevasImagenes)
     if (!subida.ok) return { ok: false }
 
-    // Actualizar documento con URLs nuevas
+    // Actualizar documento con URLs nuevas y Slug
     await updateDoc(docRef, {
       ...datosActualizados,
+      slug: nuevoSlug,        // ✅ Actualizar slug si aplica
       imagenes: subida.urls   // ✅ URLs directas
     })
 

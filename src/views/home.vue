@@ -35,6 +35,7 @@
                         :novedad="esnovedad(joya.fecha_creacion)"
                         :material="joya.material"
                         :medidas="joya.medidas"
+                        :slug="joya.slug"
                     />
                 </div>
 
@@ -114,6 +115,7 @@
                         class="card"
                         :novedad="esnovedad(joya.fecha_creacion)"
                         :medidas="joya.medidas"
+                        :slug="joya.slug"
                     />
                 </div>
 

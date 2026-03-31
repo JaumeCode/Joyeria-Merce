@@ -36,7 +36,7 @@
           v-for="joya in joyasPaginadas"
           :key="joya.id"
           class="tarjeta"
-          @click="router.push(`/joya/${joya.id}`)"
+          @click="router.push(`/joya/${joya.slug}`)"
         >
           <div class="tarjeta_imagen">
             <img :src="joya.imagenes[0]" :alt="joya.nombre" />

@@ -52,7 +52,7 @@
           v-for="joya in joyasPaginadas"
           :key="joya.id"
           class="card"
-          @click="router.push(`/joya/${joya.id}`)"
+          @click="router.push(`/joya/${joya.slug}`)"
         >
           <div class="card_img">
             <img :src="joya.imagenes[0]" :alt="joya.nombre" />

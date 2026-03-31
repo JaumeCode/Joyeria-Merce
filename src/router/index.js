@@ -50,7 +50,7 @@ export const routes = [
   { path: '/admin', component: admin },
 
   // Producto individual
-  { path: '/joya/:id', component: () => import('@/views/joya_detalle.vue') },
+  { path: '/joya/:slug', component: () => import('@/views/joya_detalle.vue') },
 
   // 🔥 Catálogo dinámico para filtros
   { path: '/catalogo', component: catalogo },

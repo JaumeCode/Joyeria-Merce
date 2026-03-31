@@ -107,6 +107,7 @@
                     :novedad="esnovedad(joya.fecha_creacion)"
                     :material="joya.material"
                     :medidas="joya.medidas"
+                    :slug="joya.slug"
                 />
             </div>
 
@@ -125,6 +126,7 @@
                         v-for="joya in joyasSugeridas"
                         :key="joya.id"
                         :id="joya.id"
+                        :slug="joya.slug"
                         :imagen="joya.imagenes[0] || '/default.jpg'"
                         :nombre="joya.nombre"
                         :descripcion="joya.descripcion"
@@ -132,6 +134,7 @@
                         :novedad="esnovedad(joya.fecha_creacion)"
                         :material="joya.material"
                         :medidas="joya.medidas"
+                        
                     />
                 </div>
             </div>

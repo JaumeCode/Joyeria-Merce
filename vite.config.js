@@ -14,15 +14,20 @@ try {
   const data = await res.json()
   console.log("Respuesta Firestore:", JSON.stringify(data).slice(0, 300))
   if (data.documents) {
-    joyaRoutes = data.documents.map(doc => {
-      const parts = doc.name.split('/')
-      return `/joya/${parts[parts.length - 1]}`
-    })
+    joyaRoutes = data.documents
+      .map(doc => {
+        const slug = doc.fields?.slug?.stringValue
+        if (!slug) return null
+        return `/joya/${slug}`
+      })
+      .filter(Boolean) 
   }
   console.log("Rutas de joyas:", joyaRoutes)
 } catch (e) {
   console.error("Error:", e)
 }
+
+
 
 export default defineConfig({
   plugins: [

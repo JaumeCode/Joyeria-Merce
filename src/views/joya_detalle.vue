@@ -108,6 +108,7 @@
           :descripcion="s.descripcion"
           textoBoton="Ver detalles"
           :novedad="false"
+          :slug="s.slug"
         />
       </div>
     </div>
@@ -153,7 +154,7 @@ const formatearFecha = (fecha) => {
 }
 // Busca la joya por el ID de la URL
 const joya = computed(() =>
-  joyasStore.todas.find(j => j.id === route.params.id)
+  joyasStore.todas.find(j => j.slug === route.params.slug) // ✅ Buscamos por slug
 )
 
 //Galeria de imagenes
@@ -165,13 +166,12 @@ watch(joya, (nueva) => {
   }
 }, { immediate: true })
 
-watch(() => route.params.id, () => {
+watch(() => route.params.slug, () => {
   cargandoJoya.value = true
   window.scrollTo({ top: 0, behavior: 'instant' })
   setTimeout(() => {
     cargandoJoya.value = false
   }, 600)
-
 })
 
 
@@ -211,7 +211,7 @@ useHead(computed(() => ({
     {
       rel: 'canonical',
       href: joya.value
-        ? `https://joyeriamerce.es/joya/${route.params.id}`
+        ? `https://joyeriamerce.es/joya/${route.params.slug}`
         : 'https://joyeriamerce.es'
     }
   ],
@@ -253,7 +253,7 @@ useHead(computed(() => ({
       },
       "offers": {
         "@type": "Offer",
-        "url": `https://joyeriamerce.es/joya/${route.params.id}`,
+        "url": `https://joyeriamerce.es/joya/${route.params.slug}`,
         "price": joya.value.precio,
         "priceCurrency": "EUR",
         "availability": joya.value.disponible
