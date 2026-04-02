@@ -10,6 +10,56 @@
       ],
       "destination": "https://joyeriamerce.es/$1",
       "permanent": true
+    },
+    {
+      "source": "/anillos",
+      "destination": "/joyas/anillos",
+      "permanent": true
+    },
+    {
+      "source": "/pendientes",
+      "destination": "/joyas/pendientes",
+      "permanent": true
+    },
+    {
+      "source": "/cadenas",
+      "destination": "/joyas/cadenas",
+      "permanent": true
+    },
+    {
+      "source": "/pulseras",
+      "destination": "/joyas/pulseras",
+      "permanent": true
+    },
+    {
+      "source": "/colgantes",
+      "destination": "/joyas/colgantes",
+      "permanent": true
+    },
+    {
+      "source": "/oro",
+      "destination": "/joyas/oro",
+      "permanent": true
+    },
+    {
+      "source": "/plata",
+      "destination": "/joyas/plata",
+      "permanent": true
+    },
+    {
+      "source": "/acero",
+      "destination": "/joyas/acero",
+      "permanent": true
+    },
+    {
+      "source": "/anillos-compromiso",
+      "destination": "/joyas/anillos-compromiso",
+      "permanent": true
+    },
+    {
+      "source": "/regalos",
+      "destination": "/joyas/regalos",
+      "permanent": true
     }
   ],
   "rewrites": [
