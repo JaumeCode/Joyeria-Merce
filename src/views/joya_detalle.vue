@@ -31,15 +31,17 @@
                 <img :key="imagenActiva" :src="imagenActiva" :alt="joya.nombre" />
               </transition>
             </div>
+              <!-- Miniaturas: Usamos la pequeña para cargar rápido la lista, 
+              pero al clickar asignamos la versión de detalle correspondiente -->
             <div class="miniaturas" v-if="joya.imagenes.length > 1">
               <div
-                v-for="(img, i) in joya.imagenes"
+                v-for="(img_thumb, i) in joya.imagenes"
                 :key="i"
                 class="miniatura"
-                :class="{ activa: imagenActiva === img }"
-                @click="imagenActiva = img"
+                :class="{ activa: imagenActiva === (joya.imagenesDetalle?.[i] || img_thumb) }"
+                @click="imagenActiva = (joya.imagenesDetalle?.[i] || img_thumb)"
               >
-                <img :src="img" :alt="`${joya.nombre} ${i + 1}`" />
+                <img :src="img_thumb" :alt="`${joya.nombre} ${i + 1}`" loading="lazy" />
               </div>
             </div>
           </div>
@@ -158,13 +160,32 @@ const joya = computed(() =>
 )
 
 //Galeria de imagenes
+
+
 const imagenActiva = ref('')
 
-watch(joya, (nueva) => {
-  if (nueva?.imagenes?.length) {
-    imagenActiva.value = nueva.imagenes[0]
+// Función para actualizar imagen principal según pantalla
+const actualizarImagenPrincipal = () => {
+  const esMovil = window.innerWidth <= 768
+  if (!joya.value) return
+  if (esMovil) {
+    // Móvil → miniatura
+    imagenActiva.value = joya.value.imagenes?.[0] || joya.value.imagenesDetalle?.[0]
+  } else {
+    // PC → detalle
+    imagenActiva.value = joya.value.imagenesDetalle?.[0] || joya.value.imagenes?.[0]
   }
+}
+
+// Inicial
+watch(joya, (nueva) => {
+  if (nueva) actualizarImagenPrincipal()
 }, { immediate: true })
+
+// Detectar cambio de tamaño de pantalla
+window.addEventListener('resize', () => {
+  actualizarImagenPrincipal()
+})
 
 watch(() => route.params.slug, () => {
   cargandoJoya.value = true
@@ -666,6 +687,17 @@ useHead(computed(() => ({
   margin: 0
 
 @media (max-width: 768px)
+ 
+  .imagen_principal
+    aspect-ratio: 1
+    max-height: 400px // Aumentamos un poco de los 320px anteriores
+    padding: 0.5rem   // Menos padding para que la joya se vea más grande
+    background: linear-gradient(145deg, #f5f0e8, #ede9d8)// Fondo blanco puro para que resalte la calidad
+    
+    img
+      width: 100%
+      height: 100%
+      object-fit: cover // O 'contain' si prefieres ver la joya entera sin recortes
   .contenido
     padding: 5rem 1rem 2rem
 

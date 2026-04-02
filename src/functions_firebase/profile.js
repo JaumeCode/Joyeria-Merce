@@ -44,61 +44,39 @@ const generarSlug = (joya) => {
   return `${slugBase}-${sufijo}`;
 }
 
-const comprimirImagen = async (file) => {
+//Comprimir Images y tema de Subirlas al Bucket
+
+const comprimirImagen = async (file, maxSize) => {
   const options = {
-    maxSizeMB: 0.5,              
-    maxWidthOrHeight: 1000,       
+    maxSizeMB: 0.5,
+    maxWidthOrHeight: maxSize,
     useWebWorker: true,
-    fileType: 'image/webp',     
+    fileType: 'image/webp',
     initialQuality: 0.92,
   }
-
-  const comprimida = await imageCompression(file, options)
-  console.log(`🖼️ ${file.name}: ${(file.size/1024).toFixed(0)}KB → ${(comprimida.size/1024).toFixed(0)}KB`)
-  return comprimida
+  return await imageCompression(file, options)
 }
 
-
-// ─────────────────────────────────────────────
-// Subir Imágenes (con compresión WebP)
-// Devuelve directamente las URLs públicas, no las rutas
-// ─────────────────────────────────────────────
 export const subir_imagenes = async (files) => {
-  try {
-    if (!files || files.length === 0) {
-      return { ok: true, urls: [] }
-    }
+  const urls = []
+  const urlsDetalle = []
 
-    const urls = []
+  for (const file of files) {
+    const pequeña = await comprimirImagen(file, 500)
+    const grande = await comprimirImagen(file, 1000)
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i]
+    // subir pequeña
+    const refPequeña = storageRef(storage, `joyas/thumb_${file.name}.webp`)
+    await uploadBytes(refPequeña, pequeña, { contentType: 'image/webp', cacheControl: 'public, max-age=31536000' })
+    urls.push(await getDownloadURL(refPequeña))
 
-      // 1. Comprimir y convertir a WebP
-      const fileComprimido = await comprimirImagen(file)
-
-      // 2. Nombre con extensión .webp
-      const nombreBase = file.name.replace(/\.[^.]+$/, '')
-      const nombreUnico = `joyas/${crypto.randomUUID()}_${nombreBase}.webp`
-      const referencia = storageRef(storage, nombreUnico)
-
-      // 3. Subir con cache de 1 año
-      await uploadBytes(referencia, fileComprimido, {
-        contentType: 'image/webp',
-        cacheControl: 'public, max-age=31536000',
-      })
-
-      // 4. Obtener URL pública y guardarla directamente
-      const url = await getDownloadURL(referencia)
-      urls.push(url)
-    }
-
-    return { ok: true, urls }
-
-  } catch (error) {
-    console.log(error)
-    return { ok: false }
+    // subir grande
+    const refGrande = storageRef(storage, `joyas/full_${file.name}.webp`)
+    await uploadBytes(refGrande, grande, { contentType: 'image/webp', cacheControl: 'public, max-age=31536000' })
+    urlsDetalle.push(await getDownloadURL(refGrande))
   }
+
+  return { ok: true, urls, urlsDetalle }
 }
 
 
@@ -123,6 +101,7 @@ export const agregar_joya = async (joya, files) => {
     destacado: joya.destacado,
     disponible: joya.disponible,
     imagenes: subida.urls,   // ✅ URLs directas, no rutas
+    imagenesDetalle: subida.urlsDetalle,
     fecha_creacion: Date.now(),
     fecha_disponible: joya.fecha_disponibilidad,
     medidas: joya.medidas,
@@ -164,35 +143,32 @@ export const delete_joya = async (id) => {
   try {
     const docRef = doc(db, "joyas", id)
     const docSnap = await getDoc(docRef)
-
     if (!docSnap.exists()) return { ok: false }
-
     const joya = docSnap.data()
 
-    if (joya.imagenes && joya.imagenes.length > 0) {
-      for (const imagen of joya.imagenes) {
-        if (!imagen) continue
-        try {
-          let imagenRef
+    const todasLasUrls = [
+      ...(joya.imagenes || []),
+      ...(joya.imagenesDetalle || [])
+    ]
 
-          if (imagen.startsWith('https://')) {
-            // ✅ Es una URL completa — extraemos la ruta correctamente
-            const url = new URL(imagen)
-            const rutaCodificada = url.pathname.split('/o/')[1]
-            const ruta = decodeURIComponent(rutaCodificada)
-            imagenRef = storageRef(storage, ruta)
-          } else {
-            // ✅ Es una ruta directa (joyas antiguas) — úsala tal cual
-            imagenRef = storageRef(storage, imagen)
-          }
-
-          await deleteObject(imagenRef)
-          console.log('🗑️ Imagen borrada:', imagen)
-        } catch (e) {
-          console.warn('No se pudo borrar imagen:', imagen, e)
+    // ✅ Borrar todas en paralelo
+    await Promise.all(todasLasUrls.map(async (imagen) => {
+      if (!imagen) return
+      try {
+        let imagenRef
+        if (imagen.startsWith('https://')) {
+          const url = new URL(imagen)
+          const rutaCodificada = url.pathname.split('/o/')[1]
+          const ruta = decodeURIComponent(rutaCodificada)
+          imagenRef = storageRef(storage, ruta)
+        } else {
+          imagenRef = storageRef(storage, imagen)
         }
+        await deleteObject(imagenRef)
+      } catch (e) {
+        console.warn('No se pudo borrar imagen:', imagen, e)
       }
-    }
+    }))
 
     await deleteDoc(docRef)
     return { ok: true }
@@ -201,8 +177,7 @@ export const delete_joya = async (id) => {
     console.log(error)
     return { ok: false }
   }
-} 
-
+}
 // ─────────────────────────────────────────────
 // Actualizar Joya (con compresión WebP en nuevas imágenes)
 // ─────────────────────────────────────────────
@@ -210,12 +185,10 @@ export const update_joya = async (id, datosActualizados, nuevasImagenes) => {
   try {
     const docRef = doc(db, "joyas", id)
     const docSnap = await getDoc(docRef)
-
     if (!docSnap.exists()) return { ok: false }
-
     const joyaActual = docSnap.data()
-    
-    // ✅ Lógica de actualización de Slug
+
+    // Lógica de actualización de Slug
     let nuevoSlug = joyaActual.slug;
     if (datosActualizados.nombre !== joyaActual.nombre || datosActualizados.material !== joyaActual.material) {
       nuevoSlug = generarSlug(datosActualizados);
@@ -225,23 +198,26 @@ export const update_joya = async (id, datosActualizados, nuevasImagenes) => {
     if (!nuevasImagenes || nuevasImagenes.length === 0) {
       await updateDoc(docRef, {
         ...datosActualizados,
-        slug: nuevoSlug,      // ✅ Actualizar slug si aplica
-        imagenes: joyaActual.imagenes
+        slug: nuevoSlug,
+        imagenes: joyaActual.imagenes,
+        imagenesDetalle: joyaActual.imagenesDetalle  // ✅ Conservar las detalle
       })
       return { ok: true }
     }
 
-    // Borrar imágenes antiguas del Storage
-    if (joyaActual.imagenes) {
-      for (const url of joyaActual.imagenes) {
-        if (!url) continue
-        try {
-          const rutaDecodificada = decodeURIComponent(url.split('/o/')[1].split('?')[0])
-          const imagenRef = storageRef(storage, rutaDecodificada)
-          await deleteObject(imagenRef).catch(() => {})
-        } catch {
-          // Continuar aunque falle el borrado
-        }
+    // ✅ Borrar TODAS las imágenes antiguas (thumb + detalle)
+    const todasLasUrls = [
+      ...(joyaActual.imagenes || []),
+      ...(joyaActual.imagenesDetalle || [])
+    ]
+    for (const url of todasLasUrls) {
+      if (!url) continue
+      try {
+        const rutaDecodificada = decodeURIComponent(url.split('/o/')[1].split('?')[0])
+        const imagenRef = storageRef(storage, rutaDecodificada)
+        await deleteObject(imagenRef).catch(() => {})
+      } catch {
+        // Continuar aunque falle el borrado
       }
     }
 
@@ -249,11 +225,12 @@ export const update_joya = async (id, datosActualizados, nuevasImagenes) => {
     const subida = await subir_imagenes(nuevasImagenes)
     if (!subida.ok) return { ok: false }
 
-    // Actualizar documento con URLs nuevas y Slug
+    // ✅ Guardar ambas URLs
     await updateDoc(docRef, {
       ...datosActualizados,
-      slug: nuevoSlug,        // ✅ Actualizar slug si aplica
-      imagenes: subida.urls   // ✅ URLs directas
+      slug: nuevoSlug,
+      imagenes: subida.urls,
+      imagenesDetalle: subida.urlsDetalle
     })
 
     return { ok: true }

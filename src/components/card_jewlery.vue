@@ -82,7 +82,7 @@ defineProps({
     width: 100%
     height: 100%
     object-fit: contain
-    padding: 20px
+    padding: 0px
     transition: transform 0.5s ease
 
   .badge_nuevo

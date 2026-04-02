@@ -503,6 +503,7 @@ const add_joya = async () => {
     }
     if(!seccion.value){
       toast.error("Tienes que Indicar la seccion para continuar")
+      return
     }
     cargando.value = true
 
@@ -572,9 +573,11 @@ const add_joya = async () => {
     }
   } catch (error) {
     console.log(error)
+  }finally{
+
+    cargando.value = false
   }
 
-  cargando.value = false
 }
 
 //Estadisticas
@@ -680,8 +683,10 @@ const guardar_edicion = async () => {
   } catch (error) {
     console.log(error)
     toast.error("Error al actualizar")
+  }finally{
+
+    cargando.value = false
   }
-  cargando.value = false
 }
 
 //Buscador De Lista de Joyas
@@ -723,8 +728,10 @@ const eliminar_joya = async (joya) => {
     }
   } catch (error) {
     console.log(error)
+  }finally{
+
+    cargando.value = false
   }
-  cargando.value = false
 }
 </script>
 
