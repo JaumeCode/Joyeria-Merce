@@ -1,7 +1,7 @@
 <template>
     <footer id="footer">
         <div class="col logo_col">
-            <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2FLogo%20Tienda.png?alt=media&token=bce2532e-a646-4570-92a5-fb00a541fc79" alt="Logo Joyería Mercè">
+            <img src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2FLogo-Tienda.webp?alt=media&token=d4af9462-6814-4dbf-ad5d-50aa35ef4cef" alt="Logo Joyería Mercè">
             <div class="contacto">
                 <p><strong>Correo:</strong></p>
                 <p>joyeriamerce@gmail.com</p>
@@ -42,7 +42,7 @@
     </footer>
 </template>
 
-<script setup>
+<script setup> 
 </script>
 
 <style lang="sass" scoped>
