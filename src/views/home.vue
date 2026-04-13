@@ -236,19 +236,17 @@
 
 <script setup>
 
-import { defineAsyncComponent } from 'vue'
+import header_all from '@/components/header_all.vue';
+import card_jewlery from '@/components/card_jewlery.vue';
 import { useJoyasPublicasStore } from '@/stores/joyas';
+import footer_component from '@/components/footer_component.vue';
 import { useCorreosStore } from '@/stores/correos';
+import portada from '@/components/portada.vue';
 import { useHead } from '@vueuse/head';
+import reviews from '@/components/reviews.vue';
 import { useRouter } from 'vue-router';
 import { onMounted, ref, computed } from 'vue';
-
-// Lazy loading de componentes
-const header_all = defineAsyncComponent(() => import('@/components/header_all.vue'))
-const card_jewlery = defineAsyncComponent(() => import('@/components/card_jewlery.vue'))
-const footer_component = defineAsyncComponent(() => import('@/components/footer_component.vue'))
-const portada = defineAsyncComponent(() => import('@/components/portada.vue'))
-const reviews = defineAsyncComponent(() => import('@/components/reviews.vue'))
+import { CountUp } from 'countup.js';
 
 useHead({
   title: 'Joyería Mercè — Joyería en Puerto de Sagunto',
@@ -260,7 +258,6 @@ useHead({
   link: [
     { rel: 'canonical', href: 'https://joyeriamerce.es' },
     { rel: 'preconnect', href: 'https://firebasestorage.googleapis.com' },
-    { rel: 'dns-prefetch', href: 'https://firebasestorage.googleapis.com' },
   ],
   script: [{
     type: 'application/ld+json',
@@ -284,196 +281,185 @@ useHead({
   }]
 })
 
-const router = useRouter()
-const store_general = useJoyasPublicasStore()
-const store_correos = useCorreosStore()
 
-// Referencias
-const yearsCounter = ref(null)
-const clientsCounter = ref(null)
-const statsAnimated = ref(false)
-const carrusel = ref(null)
-const carruselNovedades = ref(null)
-
-// Navegacion Scroll Arriba
+//Navegacion Scroll Arriba
 const goTo = async (ruta) => {
   await router.push(ruta)
   window.scrollTo(0, 0)
 }
 
-// Calcular las novedades con memoización
-const esnovedad = (fecha_creacion) => {
-  const dossemanas = 14 * 24 * 60 * 60 * 1000
-  return Date.now() - fecha_creacion < dossemanas
-}
 
-// Computed optimizado con cache
-const novedades = computed(() => {
-  if (!store_general.todas?.length) return []
-  
-  return [...store_general.todas]
-    .sort((a, b) => (b.fecha_creacion || 0) - (a.fecha_creacion || 0))
-    .slice(0, 8)
-})
+const router=useRouter()
+// Creamos el store
+const store_general = useJoyasPublicasStore()
 
-// Función separada para animar estadísticas
-const animateStats = async () => {
-  if (statsAnimated.value) return
-  statsAnimated.value = true
-  
-  // Lazy load de CountUp
-  const { CountUp } = await import('countup.js')
-  
-  const yearsCountUp = new CountUp(yearsCounter.value, 25, {
-    duration: 2,
-    separator: '.',
-    prefix: '+',
-    useEasing: true,
-    easingFn: (t, b, c, d) => {
-      return c * (-Math.pow(2, -10 * t / d) + 1) + b;
-    }
-  })
-  
-  const clientsCountUp = new CountUp(clientsCounter.value, 5000, {
-    duration: 2,
-    separator: '.',
-    prefix: '+',
-    useEasing: true,
-    easingFn: (t, b, c, d) => {
-      return c * (-Math.pow(2, -10 * t / d) + 1) + b;
-    }
-  })
-  
-  if (!yearsCountUp.error) yearsCountUp.start()
-  if (!clientsCountUp.error) clientsCountUp.start()
-}
+// Referencias para los contadores
+const yearsCounter = ref(null)
+const clientsCounter = ref(null)
+const statsAnimated = ref(false)
 
-// Observer optimizado
+//Obtenemos las joyas desde la store
 onMounted(async () => {
-  // Cargar joyas solo si no están en cache
   if (store_general.todas.length === 0) {
     await store_general.obtener_joya()
   }
-  
-  const observerOptions = {
-    threshold: 0.12,
-    rootMargin: '50px' // Pre-cargar 50px antes
-  }
-  
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
         e.target.classList.add('visible')
         
-        // Animar estadísticas cuando sean visibles
-        if (e.target.id === 'estadisticas') {
-          animateStats()
+        // Si es la sección de estadísticas y aún no se ha animado
+        if (e.target.id === 'estadisticas' && !statsAnimated.value) {
+          statsAnimated.value = true
+          
+          // Contador de años con CountUp.js
+          const yearsCountUp = new CountUp(yearsCounter.value, 25, {
+            duration: 2,
+            separator: '.',
+            prefix: '+',
+            useEasing: true,
+            easingFn: (t, b, c, d) => {
+              // easeOutExpo
+              return c * (-Math.pow(2, -10 * t / d) + 1) + b;
+            }
+          })
+          
+          // Contador de clientes con CountUp.js
+          const clientsCountUp = new CountUp(clientsCounter.value, 5000, {
+            duration: 2,
+            separator: '.',
+            prefix: '+',
+            useEasing: true,
+            easingFn: (t, b, c, d) => {
+              // easeOutExpo
+              return c * (-Math.pow(2, -10 * t / d) + 1) + b;
+            }
+          })
+          
+          if (!yearsCountUp.error) {
+            yearsCountUp.start()
+          }
+          
+          if (!clientsCountUp.error) {
+            clientsCountUp.start()
+          }
         }
         
         observer.unobserve(e.target)
       }
     })
-  }, observerOptions)
+  }, { threshold: 0.12 })
 
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
 })
 
-// Abrir Mapa
-const abrir_mapa = () => {
-  window.open("https://maps.app.goo.gl/657WkNQ8XZuNJeYX8")
+//Calcular las novedades 
+const esnovedad = (fecha_creacion) => {
+    const dossemanas = 14 * 24 * 60 * 60 * 1000
+    return Date.now() - fecha_creacion < dossemanas
 }
 
-// Lazy load de SweetAlert2
-let Swal = null
-const loadSwal = async () => {
-  if (!Swal) {
-    Swal = (await import('sweetalert2')).default
-  }
-  return Swal
+
+//Sacar las ultimas novedades en joyas (Sacar las 8 Ultimas subidas)
+const novedades = computed(() => {
+  return [...(store_general.todas || [])]
+    .sort((a, b) => (b.fecha_creacion || 0) - (a.fecha_creacion || 0))
+    .slice(0, 8)
+})
+
+
+//Abrir Mapa
+const abrir_mapa=()=>{
+
+    window.open("https://maps.app.goo.gl/657WkNQ8XZuNJeYX8")
+
+    
 }
 
-// Registro de correo optimizado
-const registro = async () => {
-  const swal = await loadSwal()
-  
-  if (store_correos.correo === "") {
-    swal.fire({
-      icon: "error",
-      title: "No has introducido el correo",
-      text: "Introduce el Correo para poder recibir novedades",
-      background: "#1a1a1a",
-      color: "#EDE9D8",
-      confirmButtonColor: "#EDE9D8",
-      confirmButtonText: '<span style="color: #1a1a1a; font-weight: 600; letter-spacing: 0.1rem">Aceptar</span>'
-    });
-    return
-  }
-  
-  if (!store_correos.correo.includes('@') || !store_correos.correo.includes('.')) {
-    swal.fire({
-      icon: "error",
-      title: "El correo introducido no es valido",
-      text: "Introduce el correo correctamente porfavor",
-      background: "#1a1a1a",
-      color: "#EDE9D8",
-      confirmButtonColor: "#EDE9D8",
-      confirmButtonText: '<span style="color: #1a1a1a; font-weight: 600; letter-spacing: 0.1rem">Aceptar</span>'
-    });
-    return
-  }
+//Registro de correo
+const store_correos=useCorreosStore()
 
-  const resultado = await store_correos.guardar_correo()
 
-  if (resultado.ok) {
-    swal.fire({ 
-      icon: "success", 
-      title: "¡Registrado!",
-      background: "#1a1a1a",
-      color: "#EDE9D8",
-      confirmButtonColor: "#EDE9D8",
-      confirmButtonText: '<span style="color: #1a1a1a; font-weight: 600; letter-spacing: 0.1rem">Aceptar</span>'
-    })
-    store_correos.correo = ""
-  } else {
-    swal.fire({
-      icon: "error",
-      title: "El correo introducido ya esta registrado",
-      text: "intentalo mas tarde",
-      background: "#1a1a1a",
-      color: "#EDE9D8",
-      confirmButtonColor: "#EDE9D8",
-      confirmButtonText: '<span style="color: #1a1a1a; font-weight: 600; letter-spacing: 0.1rem">Aceptar</span>'
-    });
-  }
+const registro=async()=>{
+    const Swal = (await import('sweetalert2')).default
+    if(store_correos.correo==""){
+        Swal.fire({
+            icon: "error",
+            title: "No has introducido el correo",
+            text: "Introduce el Correo para poder recibir novedades",
+            background: "#1a1a1a",
+            color: "#EDE9D8",
+            confirmButtonColor: "#EDE9D8",
+            confirmButtonText: '<span style="color: #1a1a1a; font-weight: 600; letter-spacing: 0.1rem">Aceptar</span>'
+            
+            
+        });
+        return
+    }
+    if (!store_correos.correo.includes('@') || !store_correos.correo.includes('.')) {
+
+        Swal.fire({
+            icon: "error",
+            title: "El correo introducido no es valido",
+            text: "Introduce el correo correctamente porfavor",
+            background: "#1a1a1a",
+            color: "#EDE9D8",
+            confirmButtonColor: "#EDE9D8",
+            confirmButtonText: '<span style="color: #1a1a1a; font-weight: 600; letter-spacing: 0.1rem">Aceptar</span>'
+            
+            
+        });
+
+        return
+
+    }
+
+    const resultado=await store_correos.guardar_correo()
+
+    if (resultado.ok) {
+        Swal.fire({ icon: "success", title: "¡Registrado!",background: "#1a1a1a",
+            color: "#EDE9D8",
+            confirmButtonColor: "#EDE9D8",
+            confirmButtonText: '<span style="color: #1a1a1a; font-weight: 600; letter-spacing: 0.1rem">Aceptar</span>'
+        })
+        store_correos.correo = ""
+    }else{
+        console.log(resultado)
+        Swal.fire({
+            icon: "error",
+            title: "El correo introducido ya esta registrado",
+            text: "intentalo mas tarde",
+            background: "#1a1a1a",
+            color: "#EDE9D8",
+            confirmButtonColor: "#EDE9D8",
+            confirmButtonText: '<span style="color: #1a1a1a; font-weight: 600; letter-spacing: 0.1rem">Aceptar</span>'
+            
+        });
+        return
+
+    }
+
+
+
 }
 
-// Debounce helper (sin dependencias externas)
-const debounce = (fn, delay) => {
-  let timeout
-  return (...args) => {
-    clearTimeout(timeout)
-    timeout = setTimeout(() => fn(...args), delay)
-  }
-}
+// Carruseles
+const carrusel = ref(null)
+const carruselNovedades = ref(null)
 
-// Scroll con debounce para mejor rendimiento
-const scrollCarruselBase = (carruselRef, direction) => {
-  if (!carruselRef.value) return
-  
+const scrollCarrusel = (carruselRef, direction) => {
   carruselRef.value.scrollBy({
     left: direction === 'izq' ? -380 : 380,
     behavior: "smooth"
   })
 }
 
-const scrollCarrusel = debounce(scrollCarruselBase, 150)
-
-const scrollIzq = () => scrollCarrusel(carrusel, 'izq')
-const scrollDer = () => scrollCarrusel(carrusel, 'der')
+const scrollIzq          = () => scrollCarrusel(carrusel, 'izq')
+const scrollDer          = () => scrollCarrusel(carrusel, 'der')
 const scrollIzqNovedades = () => scrollCarrusel(carruselNovedades, 'izq')
 const scrollDerNovedades = () => scrollCarrusel(carruselNovedades, 'der')
 
-// El buscar joya 
+//El buscar joya 
 const pasos = [
   '¿Para quién es la joya?',
   '¿Cuál es la ocasión?',
@@ -486,6 +472,7 @@ const irBuscador = async () => {
   await router.push('/buscar-joya')
   window.scrollTo(0, 0)
 }
+
 
 </script>
 <style lang="sass" scoped>
@@ -1371,3 +1358,4 @@ const irBuscador = async () => {
         transform: translateX(0)
 
 </style>
+
