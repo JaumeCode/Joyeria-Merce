@@ -17,6 +17,7 @@
     "browser-image-compression": "^2.0.2",
     "chart.js": "^4.5.1",
     "cors": "^2.8.6",
+    "countup.js": "^2.10.0",
     "firebase": "^12.9.0",
     "js-cookie": "^3.0.5",
     "pinia": "^3.0.4",

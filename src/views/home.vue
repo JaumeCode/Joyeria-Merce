@@ -6,6 +6,7 @@
     <div id="main">
         <header_all class="header_fixed"/>
         <portada @catalogo="router.push('/catalogo')"/>
+        
         <section id="products">
 
             <div class="title">
@@ -127,6 +128,7 @@
             </div>
 
         </section>
+        
         <reviews class="reveal"/>
         <section id="categorias" class="reveal">
             <div class="categoria_pedida">
@@ -142,6 +144,20 @@
                 <button @click="goTo('/regalos')">Consultar Regalos</button>
             </div>
 
+        </section>
+        <section id="estadisticas" class="reveal">
+            <div class="stats_container">
+                <div class="stat_item">
+                    <div class="stat_icon">✦</div>
+                    <div class="stat_number" ref="yearsCounter">0</div>
+                    <div class="stat_label">Años de Experiencia</div>
+                </div>
+                <div class="stat_item">
+                    <div class="stat_icon">♥</div>
+                    <div class="stat_number" ref="clientsCounter">0</div>
+                    <div class="stat_label">Clientes Satisfechos</div>
+                </div>
+            </div>
         </section>
         <section id="busca_joya_home" class="reveal">
             <div class="bjh_inner">
@@ -220,16 +236,19 @@
 
 <script setup>
 
-import header_all from '@/components/header_all.vue';
-import card_jewlery from '@/components/card_jewlery.vue';
+import { defineAsyncComponent } from 'vue'
 import { useJoyasPublicasStore } from '@/stores/joyas';
-import footer_component from '@/components/footer_component.vue';
 import { useCorreosStore } from '@/stores/correos';
-import portada from '@/components/portada.vue';
 import { useHead } from '@vueuse/head';
-import reviews from '@/components/reviews.vue';
 import { useRouter } from 'vue-router';
 import { onMounted, ref, computed } from 'vue';
+
+// Lazy loading de componentes
+const header_all = defineAsyncComponent(() => import('@/components/header_all.vue'))
+const card_jewlery = defineAsyncComponent(() => import('@/components/card_jewlery.vue'))
+const footer_component = defineAsyncComponent(() => import('@/components/footer_component.vue'))
+const portada = defineAsyncComponent(() => import('@/components/portada.vue'))
+const reviews = defineAsyncComponent(() => import('@/components/reviews.vue'))
 
 useHead({
   title: 'Joyería Mercè — Joyería en Puerto de Sagunto',
@@ -241,6 +260,7 @@ useHead({
   link: [
     { rel: 'canonical', href: 'https://joyeriamerce.es' },
     { rel: 'preconnect', href: 'https://firebasestorage.googleapis.com' },
+    { rel: 'dns-prefetch', href: 'https://firebasestorage.googleapis.com' },
   ],
   script: [{
     type: 'application/ld+json',
@@ -264,142 +284,196 @@ useHead({
   }]
 })
 
+const router = useRouter()
+const store_general = useJoyasPublicasStore()
+const store_correos = useCorreosStore()
 
-//Navegacion Scroll Arriba
+// Referencias
+const yearsCounter = ref(null)
+const clientsCounter = ref(null)
+const statsAnimated = ref(false)
+const carrusel = ref(null)
+const carruselNovedades = ref(null)
+
+// Navegacion Scroll Arriba
 const goTo = async (ruta) => {
   await router.push(ruta)
   window.scrollTo(0, 0)
 }
 
-
-const router=useRouter()
-// Creamos el store
-const store_general = useJoyasPublicasStore()
-
-//Obtenemos las joyas desde la store
-onMounted(async () => {
-  if (store_general.todas.length === 0) {
-    await store_general.obtener_joya()
-  }
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible')
-        observer.unobserve(e.target)
-      }
-    })
-  }, { threshold: 0.12 })
-
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
-})
-
-//Calcular las novedades 
+// Calcular las novedades con memoización
 const esnovedad = (fecha_creacion) => {
-    const dossemanas = 14 * 24 * 60 * 60 * 1000
-    return Date.now() - fecha_creacion < dossemanas
+  const dossemanas = 14 * 24 * 60 * 60 * 1000
+  return Date.now() - fecha_creacion < dossemanas
 }
 
-
-//Sacar las ultimas novedades en joyas (Sacar las 8 Ultimas subidas)
+// Computed optimizado con cache
 const novedades = computed(() => {
-  return [...(store_general.todas || [])]
+  if (!store_general.todas?.length) return []
+  
+  return [...store_general.todas]
     .sort((a, b) => (b.fecha_creacion || 0) - (a.fecha_creacion || 0))
     .slice(0, 8)
 })
 
-
-//Abrir Mapa
-const abrir_mapa=()=>{
-
-    window.open("https://maps.app.goo.gl/657WkNQ8XZuNJeYX8")
-
-    
+// Función separada para animar estadísticas
+const animateStats = async () => {
+  if (statsAnimated.value) return
+  statsAnimated.value = true
+  
+  // Lazy load de CountUp
+  const { CountUp } = await import('countup.js')
+  
+  const yearsCountUp = new CountUp(yearsCounter.value, 25, {
+    duration: 2,
+    separator: '.',
+    prefix: '+',
+    useEasing: true,
+    easingFn: (t, b, c, d) => {
+      return c * (-Math.pow(2, -10 * t / d) + 1) + b;
+    }
+  })
+  
+  const clientsCountUp = new CountUp(clientsCounter.value, 5000, {
+    duration: 2,
+    separator: '.',
+    prefix: '+',
+    useEasing: true,
+    easingFn: (t, b, c, d) => {
+      return c * (-Math.pow(2, -10 * t / d) + 1) + b;
+    }
+  })
+  
+  if (!yearsCountUp.error) yearsCountUp.start()
+  if (!clientsCountUp.error) clientsCountUp.start()
 }
 
-//Registro de correo
-const store_correos=useCorreosStore()
+// Observer optimizado
+onMounted(async () => {
+  // Cargar joyas solo si no están en cache
+  if (store_general.todas.length === 0) {
+    await store_general.obtener_joya()
+  }
+  
+  const observerOptions = {
+    threshold: 0.12,
+    rootMargin: '50px' // Pre-cargar 50px antes
+  }
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible')
+        
+        // Animar estadísticas cuando sean visibles
+        if (e.target.id === 'estadisticas') {
+          animateStats()
+        }
+        
+        observer.unobserve(e.target)
+      }
+    })
+  }, observerOptions)
 
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
+})
 
-const registro=async()=>{
-    const Swal = (await import('sweetalert2')).default
-    if(store_correos.correo==""){
-        Swal.fire({
-            icon: "error",
-            title: "No has introducido el correo",
-            text: "Introduce el Correo para poder recibir novedades",
-            background: "#1a1a1a",
-            color: "#EDE9D8",
-            confirmButtonColor: "#EDE9D8",
-            confirmButtonText: '<span style="color: #1a1a1a; font-weight: 600; letter-spacing: 0.1rem">Aceptar</span>'
-            
-            
-        });
-        return
-    }
-    if (!store_correos.correo.includes('@') || !store_correos.correo.includes('.')) {
-
-        Swal.fire({
-            icon: "error",
-            title: "El correo introducido no es valido",
-            text: "Introduce el correo correctamente porfavor",
-            background: "#1a1a1a",
-            color: "#EDE9D8",
-            confirmButtonColor: "#EDE9D8",
-            confirmButtonText: '<span style="color: #1a1a1a; font-weight: 600; letter-spacing: 0.1rem">Aceptar</span>'
-            
-            
-        });
-
-        return
-
-    }
-
-    const resultado=await store_correos.guardar_correo()
-
-    if (resultado.ok) {
-        Swal.fire({ icon: "success", title: "¡Registrado!",background: "#1a1a1a",
-            color: "#EDE9D8",
-            confirmButtonColor: "#EDE9D8",
-            confirmButtonText: '<span style="color: #1a1a1a; font-weight: 600; letter-spacing: 0.1rem">Aceptar</span>'
-        })
-        store_correos.correo = ""
-    }else{
-        console.log(resultado)
-        Swal.fire({
-            icon: "error",
-            title: "El correo introducido ya esta registrado",
-            text: "intentalo mas tarde",
-            background: "#1a1a1a",
-            color: "#EDE9D8",
-            confirmButtonColor: "#EDE9D8",
-            confirmButtonText: '<span style="color: #1a1a1a; font-weight: 600; letter-spacing: 0.1rem">Aceptar</span>'
-            
-        });
-        return
-
-    }
-
-
-
+// Abrir Mapa
+const abrir_mapa = () => {
+  window.open("https://maps.app.goo.gl/657WkNQ8XZuNJeYX8")
 }
 
-// Carruseles
-const carrusel = ref(null)
-const carruselNovedades = ref(null)
+// Lazy load de SweetAlert2
+let Swal = null
+const loadSwal = async () => {
+  if (!Swal) {
+    Swal = (await import('sweetalert2')).default
+  }
+  return Swal
+}
 
-const scrollCarrusel = (carruselRef, direction) => {
+// Registro de correo optimizado
+const registro = async () => {
+  const swal = await loadSwal()
+  
+  if (store_correos.correo === "") {
+    swal.fire({
+      icon: "error",
+      title: "No has introducido el correo",
+      text: "Introduce el Correo para poder recibir novedades",
+      background: "#1a1a1a",
+      color: "#EDE9D8",
+      confirmButtonColor: "#EDE9D8",
+      confirmButtonText: '<span style="color: #1a1a1a; font-weight: 600; letter-spacing: 0.1rem">Aceptar</span>'
+    });
+    return
+  }
+  
+  if (!store_correos.correo.includes('@') || !store_correos.correo.includes('.')) {
+    swal.fire({
+      icon: "error",
+      title: "El correo introducido no es valido",
+      text: "Introduce el correo correctamente porfavor",
+      background: "#1a1a1a",
+      color: "#EDE9D8",
+      confirmButtonColor: "#EDE9D8",
+      confirmButtonText: '<span style="color: #1a1a1a; font-weight: 600; letter-spacing: 0.1rem">Aceptar</span>'
+    });
+    return
+  }
+
+  const resultado = await store_correos.guardar_correo()
+
+  if (resultado.ok) {
+    swal.fire({ 
+      icon: "success", 
+      title: "¡Registrado!",
+      background: "#1a1a1a",
+      color: "#EDE9D8",
+      confirmButtonColor: "#EDE9D8",
+      confirmButtonText: '<span style="color: #1a1a1a; font-weight: 600; letter-spacing: 0.1rem">Aceptar</span>'
+    })
+    store_correos.correo = ""
+  } else {
+    swal.fire({
+      icon: "error",
+      title: "El correo introducido ya esta registrado",
+      text: "intentalo mas tarde",
+      background: "#1a1a1a",
+      color: "#EDE9D8",
+      confirmButtonColor: "#EDE9D8",
+      confirmButtonText: '<span style="color: #1a1a1a; font-weight: 600; letter-spacing: 0.1rem">Aceptar</span>'
+    });
+  }
+}
+
+// Debounce helper (sin dependencias externas)
+const debounce = (fn, delay) => {
+  let timeout
+  return (...args) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => fn(...args), delay)
+  }
+}
+
+// Scroll con debounce para mejor rendimiento
+const scrollCarruselBase = (carruselRef, direction) => {
+  if (!carruselRef.value) return
+  
   carruselRef.value.scrollBy({
     left: direction === 'izq' ? -380 : 380,
     behavior: "smooth"
   })
 }
 
-const scrollIzq          = () => scrollCarrusel(carrusel, 'izq')
-const scrollDer          = () => scrollCarrusel(carrusel, 'der')
+const scrollCarrusel = debounce(scrollCarruselBase, 150)
+
+const scrollIzq = () => scrollCarrusel(carrusel, 'izq')
+const scrollDer = () => scrollCarrusel(carrusel, 'der')
 const scrollIzqNovedades = () => scrollCarrusel(carruselNovedades, 'izq')
 const scrollDerNovedades = () => scrollCarrusel(carruselNovedades, 'der')
 
-//El buscar joya 
+// El buscar joya 
 const pasos = [
   '¿Para quién es la joya?',
   '¿Cuál es la ocasión?',
@@ -413,9 +487,7 @@ const irBuscador = async () => {
   window.scrollTo(0, 0)
 }
 
-
 </script>
-
 <style lang="sass" scoped>
 
 .reveal
@@ -478,6 +550,64 @@ const irBuscador = async () => {
         position: fixed
         width: 100%
         z-index: 100000
+
+    // ── Sección de Estadísticas ────────────────────────────────
+    #estadisticas
+        padding: 6rem 2rem
+        display: flex
+        justify-content: center
+        align-items: center
+
+        .stats_container
+            display: flex
+            gap: 8rem
+            max-width: 900px
+            width: 100%
+            justify-content: center
+
+        .stat_item
+            display: flex
+            flex-direction: column
+            align-items: center
+            gap: 1rem
+
+            .stat_icon
+                font-size: 2.5rem
+                color: #B8860B
+                animation: pulse 3s ease infinite
+
+            .stat_number
+                font-family: 'Playfair Display', serif
+                font-size: 4rem
+                font-weight: 700
+                color: black
+                letter-spacing: 0.05rem
+                line-height: 1
+
+            .stat_label
+                font-size: 0.85rem
+                letter-spacing: 0.25rem
+                text-transform: uppercase
+                color: black
+                text-align: center
+                max-width: 200px
+
+        @media (max-width: 768px)
+            padding: 4rem 1.5rem
+
+            .stats_container
+                flex-direction: column
+                gap: 4rem
+
+            .stat_item
+                .stat_number
+                    font-size: 3rem
+
+                .stat_label
+                    font-size: 0.75rem
+                    letter-spacing: 0.2rem
+    // ── Fin Estadísticas ───────────────────────────────────────
+
     #presentacion
         height: 103vh              
         display: flex
@@ -1064,13 +1194,13 @@ const irBuscador = async () => {
 
         .right
             
-
-
             img
                 border: 1px solid black
                 border-radius: 15px
                 margin-top: 2rem
                 height: 30rem
+
+
     #correo
         display: flex
         flex-direction: column
@@ -1227,11 +1357,6 @@ const irBuscador = async () => {
     100%
         background: linear-gradient(135deg, rgba(180,120,255,0.15), rgba(255,255,255,0.08), rgba(100,160,255,0.2))
 
-@keyframes pulse
-    0%, 100%
-        opacity: 1
-    50%
-        opacity: 0.4
 
 @keyframes giro
     to
