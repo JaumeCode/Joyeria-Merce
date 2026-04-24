@@ -37,6 +37,7 @@
                         :material="joya.material"
                         :medidas="joya.medidas"
                         :slug="joya.slug"
+                        :loading="index > 2 ? 'lazy' : 'eager'"
                     />
                 </div>
 
@@ -117,6 +118,7 @@
                         :novedad="esnovedad(joya.fecha_creacion)"
                         :medidas="joya.medidas"
                         :slug="joya.slug"
+                        :loading="index > 2 ? 'lazy' : 'eager'"
                     />
                 </div>
 
@@ -362,8 +364,10 @@ const esnovedad = (fecha_creacion) => {
 
 //Sacar las ultimas novedades en joyas (Sacar las 8 Ultimas subidas)
 const novedades = computed(() => {
-  return [...(store_general.todas || [])]
-    .sort((a, b) => (b.fecha_creacion || 0) - (a.fecha_creacion || 0))
+  if (!store_general.todas.length) return []
+  // Solo devolvemos las 8 necesarias para no renderizar cards invisibles
+  return [...store_general.todas]
+    .sort((a, b) => b.fecha_creacion - a.fecha_creacion)
     .slice(0, 8)
 })
 
