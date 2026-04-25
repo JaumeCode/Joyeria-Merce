@@ -1,7 +1,15 @@
 <template>
   <div class="card-joya">
     <div class="imagen_wrapper">
-      <img class="imagen" :src="imagen" :alt="nombre" loading="lazy" />
+      <OptimizedImage 
+        class="imagen" 
+        :src="imagen" 
+        :alt="nombre" 
+        loading="lazy"
+        width="315"
+        height="315"
+        sizes="(max-width: 480px) 100vw, 315px"
+      />
       <div class="badge_nuevo" v-if="novedad">Nuevo</div>
       <button
         class="btn_fav"
@@ -34,6 +42,8 @@
 
 <script setup>
 import { useFavoritosStore } from '@/stores/favoritos'
+import OptimizedImage from '@/components/OptimizedImage.vue'
+
 const favStore = useFavoritosStore()
 
 defineProps({
@@ -44,10 +54,9 @@ defineProps({
   textoBoton: { type: String, default: 'Ver joya' },
   novedad: { type: Boolean, default: false },
   material: { type: String, default: 'Artesanal' },
-  medidas: {type: String, default: "Medida Unica"},
-  slug: { type: String, default: "No contiene Slug"}
+  medidas: { type: String, default: "Medida Unica" },
+  slug: { type: String, default: "No contiene Slug" }
 })
-
 </script>
 
 <style lang="sass" scoped>

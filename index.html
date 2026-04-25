@@ -1,48 +1,69 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="CsjZElY0HPAlX1I6HfGjBbQN9scMUhUj9jWkNSEQO74" />
-    
-    <title>Joyería en Puerto de Sagunto | Anillos, Pulseras y Joyas - Joyería Mercè</title>
-    <meta name="description" content="Joyería en Puerto de Sagunto (Valencia). Joyería Mercè: anillos, pulseras, cadenas, colgantes y pendientes de oro, plata y acero.">
-    <link rel="canonical" href="https://joyeriamerce.es">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://firebasestorage.googleapis.com">
-    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
-
-    <style>
-      :root { --bg-color: #FDFCF8; }
-      body { font-family: sans-serif; margin:0; background: var(--bg-color); }
-      #app { min-height: 100vh; }
-      .header_fixed { position: fixed; top: 0; width: 100%; height: 70px; background: white; z-index: 1000; }
-    </style>
-
-    <link rel="stylesheet" href="/assets/app-Bn4vuIhu.css" media="print" onload="this.media='all'">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
-
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Joyería Mercè — Joyería en Puerto de Sagunto">
-    <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2FLogo%20Tienda.png?alt=media&token=bce2532e-a646-4570-92a5-fb00a541fc79">
-
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-W8RB367C');</script>
-  </head>
-  <body>
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8RB367C" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    
-    <div id="app"></div>
-    
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="CsjZElY0HPAlX1I6HfGjBbQN9scMUhUj9jWkNSEQO74" />
+  <title>Joyería en Puerto de Sagunto | Anillos, Pulseras y Joyas - Joyería Mercè</title>
+  <meta name="description" content="Joyería en Puerto de Sagunto (Valencia). Joyería Mercè: anillos, pulseras, cadenas, colgantes y pendientes de oro, plata y acero.">
+  <link rel="canonical" href="https://joyeriamerce.es">
+  
+  <!-- ⚡ CRITICAL INLINE STYLES (Evita render-blocking) -->
+  <style>
+    :root { --bg-color: #FDFCF8; }
+    body { font-family: sans-serif; margin: 0; background: var(--bg-color); }
+    #app { min-height: 100vh; }
+    .header_fixed { position: fixed; top: 0; width: 100%; height: 70px; background: white; z-index: 1000; }
+  </style>
+  
+  <!-- 🔗 PRECONNECT: DNS + TCP handshake temprano -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://firebasestorage.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+  
+  <!-- 📦 DNS PREFETCH: Solo DNS para terceros no críticos -->
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+  
+  <!-- ⏱️ PRELOAD: Carga recursos críticos en paralelo -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" as="style">
+  
+  <!-- 📄 CSS PRINCIPAL - Sin atributo media (render-blocking pero necesaria) -->
+  <link rel="stylesheet" href="/assets/app-Bn4vuIhu.css">
+  
+  <!-- 📄 CSS SECUNDARIA - Lazy load con print trick -->
+  <link rel="preload" href="/assets/app-Coe4o9oF.css" as="style">
+  <link rel="stylesheet" href="/assets/app-Coe4o9oF.css" media="print" onload="this.media='all'">
+  
+  <!-- 🔤 GOOGLE FONTS - Lazy load -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  
+  <!-- ✨ FONT-AWESOME - Lazy load -->
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Joyería Mercè — Joyería en Puerto de Sagunto">
+  <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2FLogo%20Tienda.png?alt=media&token=bce2532e-a646-4570-92a5-fb00a541fc79">
+  
+  <!-- Google Tag Manager - ASYNC (no bloquea) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GTM-W8RB367C"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'GTM-W8RB367C', { 'anonymize_ip': true });
+  </script>
+  
+  <!-- GTM Noscript -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W8RB367C" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+</head>
+<body>
+  <div id="app"></div>
+  
+  <!-- Main Vue Script - Module + Async -->
+  <script type="module" src="/src/main.js"></script>
+</body>
 </html>
