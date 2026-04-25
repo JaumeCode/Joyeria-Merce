@@ -1,7 +1,6 @@
 <template>
     <a href="https://wa.me/34666238158">
-
-        <img loading="lazy" class="whatsapp_btn" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fwhatsapp.png?alt=media&token=4a5f7d1a-ccf4-4bd4-9d6d-d8b67fb8f183" alt="">
+        <OptimizedImage loading="eager" class="whatsapp_btn" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fwhatsapp.png?alt=media&token=4a5f7d1a-ccf4-4bd4-9d6d-d8b67fb8f183" width="96" height="96" alt="WhatsApp"/>
     </a>
     <div id="main">
         <header_all class="header_fixed"/>
@@ -60,25 +59,25 @@
             <div class="joyas_tipos">
                 <div class="tipos1">
                     <div class="seccion" @click="goTo('/joyas/anillos')">
-                        <img loading="lazy" decoding="async" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_anillo.webp?alt=media&token=529bcdc7-7175-4d40-a7d0-3cc1d7bcc24f" alt="">
+                        <OptimizedImage loading="lazy" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_anillo.webp?alt=media&token=529bcdc7-7175-4d40-a7d0-3cc1d7bcc24f" alt="Anillos"/>
                         <h3>Anillos</h3>
                     </div>
-                    <div loading="lazy" decoding="async" width="228" height="120" class="seccion" @click="goTo('/joyas/pulseras')">
-                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pulseras.webp?alt=media&token=f1f85e99-78da-45d2-8e03-99edd78bf8bb" alt="">
+                    <div class="seccion" @click="goTo('/joyas/pulseras')">
+                        <OptimizedImage loading="lazy" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pulseras.webp?alt=media&token=f1f85e99-78da-45d2-8e03-99edd78bf8bb" alt="Pulseras"/>
                         <h3>Pulseras</h3>
                     </div>
-                    <div loading="lazy" decoding="async" width="228" height="120" class="seccion" @click="goTo('/joyas/cadenas')">
-                        <img loading="lazy" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_cadenas.webp?alt=media&token=7beaee3f-d559-4f12-8692-d3fb129a9b63" alt="">
+                    <div class="seccion" @click="goTo('/joyas/cadenas')">
+                        <OptimizedImage loading="lazy" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_cadenas.webp?alt=media&token=7beaee3f-d559-4f12-8692-d3fb129a9b63" alt="Cadenas"/>
                         <h3>Cadenas</h3>
                     </div>
                 </div>
                 <div class="tipos2">
                     <div class="seccion" @click="goTo('/joyas/colgantes')">
-                        <img loading="lazy" decoding="async" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_colgantes.webp?alt=media&token=c7610d83-f5cc-4080-800f-47160a4d9f46" alt="">
+                        <OptimizedImage loading="lazy" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_colgantes.webp?alt=media&token=c7610d83-f5cc-4080-800f-47160a4d9f46" alt="Colgantes"/>
                         <h3>Colgantes</h3>
                     </div>
                     <div class="seccion" @click="goTo('/joyas/pendientes')">
-                        <img loading="lazy" decoding="async" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pendientes.webp?alt=media&token=fa0aa854-f592-4937-95af-32a624b9cba8" alt="">
+                        <OptimizedImage loading="lazy" width="228" height="120" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fseccion_pendientes.webp?alt=media&token=fa0aa854-f592-4937-95af-32a624b9cba8" alt="Pendientes"/>
                         <h3>Pendientes</h3>
                     </div>
                 </div>
@@ -134,13 +133,13 @@
         <reviews class="reveal"/>
         <section id="categorias" class="reveal">
             <div class="categoria_pedida">
-                <img loading="lazy" decoding="async" width="580" height="350" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_pedida.webp?alt=media&token=face0f05-7c44-4f63-b329-339c718e3987" alt="">
+                <OptimizedImage loading="lazy" width="580" height="350" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_pedida.webp?alt=media&token=face0f05-7c44-4f63-b329-339c718e3987" alt="Anillos de Pedida"/>
                 <h3>Anillos de Pedida</h3>
                 <p>El símbolo perfecto del amor eterno, diseñado para brillar en el momento más especial de tu vida con elegancia y distinción.</p>
                 <button @click="goTo('/anillos-compromiso')">Consultar Anillos</button>
             </div>
             <div class="categoria_colgante">
-                <img loading="lazy" decoding="async" width="580" height="350" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_colgante.webp?alt=media&token=5403fa18-00f1-486c-90eb-a1f0a7b755c8" alt="">
+                <OptimizedImage loading="lazy" width="580" height="350" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fcategoria_colgante.webp?alt=media&token=5403fa18-00f1-486c-90eb-a1f0a7b755c8" alt="Regalos"/>
                 <h3>Regalos</h3>
                 <p>Regalos exclusivos que sorprenden y emocionan, perfectos para momentos especiales y para expresar cariño con estilo y elegancia.</p>
                 <button @click="goTo('/regalos')">Consultar Regalos</button>
@@ -210,7 +209,7 @@
                 <button @click="abrir_mapa">Localízanos</button>
             </div>
             <div class="right">
-                <img loading="lazy" decoding="async" width="400" height="480" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Ffoto_tienda.webp?alt=media&token=c385689d-d2d2-4a10-ad18-19cbbdc2aa00" alt="">
+                <OptimizedImage loading="lazy" width="400" height="480" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Ffoto_tienda.webp?alt=media&token=c385689d-d2d2-4a10-ad18-19cbbdc2aa00" alt="Tienda Joyería Mercè"/>
             </div>
 
         </section>
@@ -240,6 +239,7 @@
 
 import header_all from '@/components/header_all.vue';
 import card_jewlery from '@/components/card_jewlery.vue';
+import OptimizedImage from '@/components/OptimizedImage.vue';
 import { useJoyasPublicasStore } from '@/stores/joyas';
 import footer_component from '@/components/footer_component.vue';
 import { useCorreosStore } from '@/stores/correos';
@@ -1362,4 +1362,3 @@ const irBuscador = async () => {
         transform: translateX(0)
 
 </style>
-
