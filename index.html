@@ -32,25 +32,40 @@
     }
   </style>
 
-  <!-- 🔗 PRECONNECT (solo lo necesario) -->
+  <!-- 🔗 PRECONNECT para recursos críticos -->
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://firebasestorage.googleapis.com" crossorigin>
 
-  <!-- 🔤 GOOGLE FONTS (no bloquea render) -->
-  <link rel="preload" as="style"
-    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@600&display=swap"
-    onload="this.onload=null;this.rel='stylesheet'">
-
+  <!-- 🔤 GOOGLE FONTS (display=swap + carga asincrónica) -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
   <noscript>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
   </noscript>
 
-  <!-- 📦 CSS PRINCIPAL (no bloquea render - carga asincrónica con fallback) -->
+  <!-- 📦 CSS PRINCIPAL (asincrónico sin bloqueo) -->
   <link rel="preload" href="/assets/app.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript>
     <link rel="stylesheet" href="/assets/app.css">
   </noscript>
+
+  <!-- ⚡ Fallback para CSS si no carga (FOUT control) -->
+  <style>
+    body.app-loading { 
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+  </style>
+  <script>
+    // Marcar que la app está cargando
+    document.documentElement.classList.add('app-loading');
+    // Remover cuando CSS esté listo
+    const link = document.querySelector('link[rel="preload"][as="style"]');
+    if (link) {
+      link.addEventListener('load', () => {
+        document.documentElement.classList.remove('app-loading');
+      });
+    }
+  </script>
 
   <!-- 🧠 Optimización de recursos (DNS & Preconnect ya en head) -->
 
@@ -59,26 +74,33 @@
   <meta property="og:title" content="Joyería Mercè">
   <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2FLogo%20Tienda.png?alt=media">
 
-  <!-- ⚡ GOOGLE TAG MANAGER (carga optimizada sin bloqueo de render) -->
+  <!-- ⚡ GOOGLE TAG MANAGER (totalmente asincrónico) -->
   <script>
+    // Init dataLayer antes de cargar GTM
     window.dataLayer = window.dataLayer || [];
+    
+    // Cargar GTM de forma completamente asincrónica
+    // después del evento 'interactive' para no bloquear render
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const script = document.createElement('script');
+          script.src = 'https://www.googletagmanager.com/gtag/js?id=GTM-W8RB367C';
+          script.async = true;
+          script.defer = true;
+          document.head.appendChild(script);
+          
+          window.dataLayer.push({
+            'event': 'gtm.js',
+            'gtm.start': new Date().getTime()
+          });
+        }, 100);
+      });
+    }
+    
     function gtag(){dataLayer.push(arguments)}
     gtag('js', new Date());
     gtag('config', 'GTM-W8RB367C', { anonymize_ip: true });
-    
-    // Cargar script de GTM de forma asincrónica para no bloquear render
-    const loadGTM = () => {
-      const script = document.createElement('script');
-      script.src = 'https://www.googletagmanager.com/gtag/js?id=GTM-W8RB367C';
-      script.async = true;
-      document.head.appendChild(script);
-    };
-    
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', loadGTM);
-    } else {
-      loadGTM();
-    }
   </script>
 
 </head>

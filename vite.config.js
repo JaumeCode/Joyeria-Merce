@@ -65,5 +65,33 @@ export default defineConfig({
   },
   ssgOptions: {
     includedRoutes: (paths) => [...paths, ...joyaRoutes]
-  }
+  },
+  build: {
+    // ⚡ Optimizaciones de rendimiento
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+    cssMinify: true,
+    cssCodeSplit: true, // Divide CSS por chunk
+    rollupOptions: {
+      output: {
+        // Divide vendors en archivo separado
+        manualChunks: {
+          'vue': ['vue'],
+          'vendor': ['vue-router', 'pinia', 'axios'],
+        },
+        // Minimiza nombres de archivos
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
+      },
+    },
+    // Compresión agresiva
+    reportCompressedSize: false,
+    chunkSizeWarningLimit: 500, // Alerta si chunk > 500KB
+  },
 })
