@@ -79,11 +79,6 @@ export default defineConfig({
     cssCodeSplit: true, // Divide CSS por chunk
     rollupOptions: {
       output: {
-        // Divide vendors en archivo separado
-        manualChunks: {
-          'vue': ['vue'],
-          'vendor': ['vue-router', 'pinia', 'axios'],
-        },
         // Minimiza nombres de archivos
         entryFileNames: 'assets/[name]-[hash].js',
         chunkFileNames: 'assets/[name]-[hash].js',
