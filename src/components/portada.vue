@@ -1,6 +1,6 @@
 <template>
   <div class="scene">
-    <canvas ref="bgCanvas"></canvas>
+    <canvas v-if="showCanvas" ref="bgCanvas"></canvas>
 
     <!-- Orbit rings -->
     <div class="rings-layer">
@@ -62,6 +62,7 @@
 
     <!-- Floating gems -->
     <div
+      v-if="showGems"
       v-for="gem in gems"
       :key="gem.id"
       class="gem"
@@ -109,14 +110,39 @@ import { ref, onMounted, onUnmounted } from 'vue'
 defineEmits(['catalogo'])
 
 const bgCanvas = ref(null)
+const showCanvas = ref(false)
+const showGems = ref(false)
+const hasMounted = ref(false)
 let ctx, W, H, rafId
 let mouse = { x: -9999, y: -9999 }
+let sectionObserver = null
+let gemCleanupTimers = []
+let gemTimeouts = []
+let canvasVisible = true
+let motionAllowed = false
+let isCompactViewport = false
+let resizeTicking = false
 
 const isMobile = () => window.innerWidth < 768
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+const scheduleIdle = (callback) => {
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(callback, { timeout: 900 })
+    return
+  }
+  window.setTimeout(callback, 120)
+}
 
 function resize() {
-  W = bgCanvas.value.width  = bgCanvas.value.offsetWidth
-  H = bgCanvas.value.height = bgCanvas.value.offsetHeight
+  if (!bgCanvas.value || !ctx) return
+  const ratio = Math.min(window.devicePixelRatio || 1, 1.25)
+  W = bgCanvas.value.offsetWidth
+  H = bgCanvas.value.offsetHeight
+  bgCanvas.value.width = Math.round(W * ratio)
+  bgCanvas.value.height = Math.round(H * ratio)
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0)
 }
 
 class Dust {
@@ -202,11 +228,26 @@ let dustArr  = []
 let starsArr = []
 
 function loop() {
+  if (!ctx || !motionAllowed || !canvasVisible || document.hidden) {
+    rafId = null
+    return
+  }
   ctx.clearRect(0, 0, W, H)
   dustArr.forEach(d  => { d.tick(); d.draw() })
   starsArr.forEach(s => { s.tick(); s.draw() })
   ctx.globalAlpha = 1
   rafId = requestAnimationFrame(loop)
+}
+
+function startLoop() {
+  if (rafId || !motionAllowed || !canvasVisible || document.hidden) return
+  rafId = requestAnimationFrame(loop)
+}
+
+function stopLoop() {
+  if (!rafId) return
+  cancelAnimationFrame(rafId)
+  rafId = null
 }
 
 const gems = ref([])
@@ -215,13 +256,18 @@ let gemInterval = null
 const gemColors = ['#C9A55A','#D4AF6E','#B8985A','#E8C882','#A07840','#F2D590']
 
 function spawnGem() {
+  if (!showGems.value) return
   const size  = 3 + Math.random() * 7
   const x     = Math.random() * 100
-  const dur   = 7 + Math.random() * 11
-  const delay = Math.random() * 2
+  const dur   = 8 + Math.random() * 6
+  const delay = Math.random() * 1.4
   const color = gemColors[Math.floor(Math.random() * gemColors.length)]
   const isSquare = Math.random() > 0.5
   const id    = gemCounter++
+
+  if (gems.value.length >= 8) {
+    gems.value.shift()
+  }
 
   gems.value.push({
     id,
@@ -239,42 +285,100 @@ function spawnGem() {
     `
   })
 
-  setTimeout(() => {
+  const cleanupTimer = window.setTimeout(() => {
     gems.value = gems.value.filter(g => g.id !== id)
   }, (dur + delay + 1) * 1000)
+  gemCleanupTimers.push(cleanupTimer)
 }
 
 function onMouseMove(e) {
+  if (!showCanvas.value || isCompactViewport || !bgCanvas.value) return
   const rect = bgCanvas.value?.getBoundingClientRect()
   if (rect) { mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top }
 }
 
-onMounted(() => {
-  ctx = bgCanvas.value.getContext('2d')
-  
-  setTimeout(() => {
+function onVisibilityChange() {
+  if (document.hidden) {
+    stopLoop()
+    return
+  }
+  startLoop()
+}
+
+function onResize() {
+  isCompactViewport = isMobile()
+  showGems.value = motionAllowed
+
+  if (showCanvas.value) {
+    if (resizeTicking) return
+    resizeTicking = true
+    window.requestAnimationFrame(() => {
+      resize()
+      resizeTicking = false
+    })
+  }
+}
+
+function initMotionLayer() {
+  if (!hasMounted.value || !motionAllowed || showCanvas.value) return
+
+  showCanvas.value = true
+  showGems.value = true
+
+  window.requestAnimationFrame(() => {
+    ctx = bgCanvas.value?.getContext('2d', { alpha: true })
+    if (!ctx) return
+
     resize()
-    
-    const mobile = isMobile()
-    dustArr  = Array.from({ length: mobile ? 35 : 80 }, () => new Dust())
-    starsArr = Array.from({ length: mobile ? 10 : 22  }, () => new StarSparkle(true))
+    dustArr = Array.from({ length: isCompactViewport ? 14 : 38 }, () => new Dust())
+    starsArr = Array.from({ length: isCompactViewport ? 4 : 12 }, () => new StarSparkle(true))
 
-    loop()
+    startLoop()
 
-    const gemCount = mobile ? 8 : 18
-    for (let i = 0; i < gemCount; i++) setTimeout(spawnGem, i * 260)
-    gemInterval = setInterval(spawnGem, mobile ? 700 : 420)
-  }, 50)
+    const initialGems = isCompactViewport ? 3 : 6
+    const gemDelayStep = isCompactViewport ? 360 : 260
+    for (let i = 0; i < initialGems; i++) {
+      const timer = window.setTimeout(spawnGem, i * gemDelayStep)
+      gemTimeouts.push(timer)
+    }
 
-  window.addEventListener('resize', resize)
-  window.addEventListener('mousemove', onMouseMove)
+    gemInterval = window.setInterval(spawnGem, isCompactViewport ? 1800 : 950)
+    sectionObserver = new IntersectionObserver(([entry]) => {
+      canvasVisible = entry.isIntersecting
+      if (canvasVisible) {
+        startLoop()
+      } else {
+        stopLoop()
+      }
+    }, { threshold: 0.08 })
+
+    sectionObserver.observe(bgCanvas.value)
+  })
+}
+
+onMounted(() => {
+  hasMounted.value = true
+  isCompactViewport = isMobile()
+  motionAllowed = !prefersReducedMotion()
+
+  scheduleIdle(() => {
+    initMotionLayer()
+  })
+
+  window.addEventListener('resize', onResize, { passive: true })
+  window.addEventListener('mousemove', onMouseMove, { passive: true })
+  document.addEventListener('visibilitychange', onVisibilityChange)
 })
 
 onUnmounted(() => {
-  cancelAnimationFrame(rafId)
+  stopLoop()
   clearInterval(gemInterval)
-  window.removeEventListener('resize', resize)
+  sectionObserver?.disconnect()
+  gemTimeouts.forEach(window.clearTimeout)
+  gemCleanupTimers.forEach(window.clearTimeout)
+  window.removeEventListener('resize', onResize)
   window.removeEventListener('mousemove', onMouseMove)
+  document.removeEventListener('visibilitychange', onVisibilityChange)
 })
 </script>
 
@@ -283,8 +387,9 @@ onUnmounted(() => {
 
 .scene
   width: 100%
-  height: 100vh
+  min-height: 100vh
   background: #F4F0E8
+  background-image: radial-gradient(circle at 50% 42%, rgba(212,175,110,0.12), transparent 30%), radial-gradient(circle at 50% 50%, rgba(184,152,90,0.08), transparent 46%)
   position: relative
   display: flex
   align-items: center
@@ -402,6 +507,7 @@ canvas
   pointer-events: none
   z-index: 4
   animation: floatUp linear infinite
+  will-change: transform, opacity
 
 // ── Content ───────────────────────────────────────────────────────────────────
 .content
@@ -437,6 +543,7 @@ canvas
   background-clip: text
   opacity: 0
   animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) forwards 0.6s, goldShimmer 4s linear infinite 2.5s
+  text-wrap: balance
 
 .divider
   display: flex
@@ -486,6 +593,7 @@ canvas
   position: relative
   overflow: hidden
   transition: color 0.4s
+  will-change: transform
 
   &::before
     content: ''
@@ -558,6 +666,25 @@ canvas
   animation: fadeUp 1s ease forwards 2.1s
   z-index: 10
 
+.scene--static canvas
+  display: none
+
+@media (prefers-reduced-motion: reduce)
+  .ring,
+  .ring-dot,
+  .gem,
+  .divider-diamond,
+  .title,
+  .eyebrow,
+  .tagline,
+  .cta,
+  .mobile-cats,
+  .side-orn,
+  .scroll-arrow,
+  .footer-text
+    animation: none !important
+    transition: none !important
+
 // ── Keyframes ─────────────────────────────────────────────────────────────────
 @keyframes spin
   from
@@ -618,7 +745,6 @@ canvas
 @media (max-width: 768px)
 
   .scene
-    // Centrado vertical más alto en móvil para dejar espacio al scroll hint
     align-items: center
     padding-top: 12vh
 
@@ -659,6 +785,12 @@ canvas
   .ring.ring-3
     width: 500px
     height: 500px
+
+  canvas
+    opacity: 0.72
+
+  .gem
+    opacity: 0.8
 
   // Texto principal más compacto
   .eyebrow
