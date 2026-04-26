@@ -24,7 +24,7 @@
 
                 <div class="estante_1" ref="carrusel">
                     <card_jewlery
-                        v-for="joya in store_general.destacadas"
+                        v-for="(joya,index) in store_general.destacadas"
                         :key="joya.id"
                         :id="joya.id"
                         :imagen="joya.imagenes[0] || '/default.jpg'"
@@ -106,7 +106,7 @@
 
                 <div class="estante_1" ref="carruselNovedades">
                     <card_jewlery
-                        v-for="joya in novedades"
+                        v-for="(joya, index) in novedades"
                         :key="joya.id"
                         :id="joya.id"
                         :imagen="joya.imagenes[0] || '/default.jpg'"

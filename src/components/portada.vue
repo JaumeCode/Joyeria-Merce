@@ -114,97 +114,75 @@ let mouse = { x: -9999, y: -9999 }
 
 const isMobile = () => window.innerWidth < 768
 
-// ─────────────────────────────────────────
-// FPS CONTROL (CLAVE)
-// ─────────────────────────────────────────
-let lastTime = 0
-const FPS = 30
-const interval = 1000 / FPS
-
 function resize() {
   W = bgCanvas.value.width  = bgCanvas.value.offsetWidth
   H = bgCanvas.value.height = bgCanvas.value.offsetHeight
 }
 
-// ─────────────────────────────────────────
-// PARTICLES
-// ─────────────────────────────────────────
 class Dust {
   constructor() { this.init() }
   init() {
-    this.x = Math.random() * W
-    this.y = Math.random() * H
-    this.r = Math.random() * 1.4 + 0.3
-    this.vx = (Math.random() - 0.5) * 0.15
-    this.vy = (Math.random() - 0.5) * 0.15
-    this.a = Math.random() * 0.25 + 0.05
+    this.x  = Math.random() * W
+    this.y  = Math.random() * H
+    this.r  = Math.random() * 1.6 + 0.3
+    this.vx = (Math.random() - 0.5) * 0.18
+    this.vy = (Math.random() - 0.5) * 0.18
+    this.a  = Math.random() * 0.3 + 0.06
     this.phase = Math.random() * Math.PI * 2
-    this.speed = 0.01
-    this.gold = Math.random() > 0.4
+    this.speed = 0.012 + Math.random() * 0.01
+    this.gold  = Math.random() > 0.35
   }
-
   tick() {
     this.x += this.vx
     this.y += this.vy
     this.phase += this.speed
-
     const dx = this.x - mouse.x
     const dy = this.y - mouse.y
-    const d2 = dx * dx + dy * dy
-
-    if (d2 < 8100) {
-      this.vx += dx * 0.0002
-      this.vy += dy * 0.0002
-    }
-
-    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) {
-      this.init()
-    }
+    const d  = Math.sqrt(dx * dx + dy * dy)
+    if (d < 90) { this.vx += dx * 0.00025; this.vy += dy * 0.00025 }
+    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.init()
   }
-
   draw() {
-    const alpha = this.a * (0.7 + 0.3 * Math.sin(this.phase))
+    const alpha = this.a * (0.65 + 0.35 * Math.sin(this.phase))
     ctx.globalAlpha = alpha
-    ctx.fillStyle = this.gold ? '#C9A55A' : '#8B7A6A'
-
+    ctx.fillStyle   = this.gold ? '#C9A55A' : '#8B7A6A'
     ctx.beginPath()
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2)
     ctx.fill()
+    if (this.r > 1.1 && Math.sin(this.phase) > 0.6) {
+      ctx.globalAlpha = alpha * 0.25
+      ctx.beginPath()
+      ctx.arc(this.x, this.y, this.r * 3.5, 0, Math.PI * 2)
+      ctx.fill()
+    }
   }
 }
 
 class StarSparkle {
-  constructor() { this.init(true) }
-
+  constructor(randomDelay = true) { this.init(randomDelay) }
   init(randomDelay = false) {
-    this.x = 40 + Math.random() * (W - 80)
-    this.y = 40 + Math.random() * (H - 80)
-    this.maxSize = 6 + Math.random() * 10
-    this.life = 0
-    this.maxLife = 60 + Math.random() * 60
-    this.delay = randomDelay ? Math.random() * 120 : 0
-    this.timer = 0
+    this.x       = 40 + Math.random() * (W - 80)
+    this.y       = 40 + Math.random() * (H - 80)
+    this.maxSize = 8 + Math.random() * 12
+    this.life    = 0
+    this.maxLife = 70 + Math.random() * 90
+    this.delay   = randomDelay ? Math.random() * 180 : 0
+    this.timer   = 0
   }
-
   tick() {
     this.timer++
     if (this.timer < this.delay) return
-
     this.life++
     if (this.life > this.maxLife) this.init(false)
   }
-
   draw() {
     if (this.timer < this.delay) return
-
-    const t = this.life / this.maxLife
-    const alpha = Math.sin(t * Math.PI) * 0.7
-    const s = this.maxSize * Math.sin(t * Math.PI)
-
+    const t     = this.life / this.maxLife
+    const alpha = Math.sin(t * Math.PI) * 0.85
+    const s     = this.maxSize * Math.sin(t * Math.PI)
     ctx.globalAlpha = alpha
-    ctx.strokeStyle = '#D4AF6E'
-    ctx.lineWidth = 0.8
-
+    ctx.strokeStyle  = '#D4AF6E'
+    ctx.lineWidth    = 0.9
     for (let i = 0; i < 4; i++) {
       const angle = (i / 4) * Math.PI
       ctx.beginPath()
@@ -212,108 +190,94 @@ class StarSparkle {
       ctx.lineTo(this.x - Math.cos(angle) * s, this.y - Math.sin(angle) * s)
       ctx.stroke()
     }
+    ctx.globalAlpha = alpha * 0.35
+    ctx.fillStyle   = '#F0D090'
+    ctx.beginPath()
+    ctx.arc(this.x, this.y, s * 0.25, 0, Math.PI * 2)
+    ctx.fill()
   }
 }
 
-let dustArr = []
+let dustArr  = []
 let starsArr = []
 
-function loop(time) {
-  if (time - lastTime > interval) {
-    lastTime = time
-
-    ctx.clearRect(0, 0, W, H)
-
-    dustArr.forEach(d => { d.tick(); d.draw() })
-    starsArr.forEach(s => { s.tick(); s.draw() })
-
-    ctx.globalAlpha = 1
-  }
-
+function loop() {
+  ctx.clearRect(0, 0, W, H)
+  dustArr.forEach(d  => { d.tick(); d.draw() })
+  starsArr.forEach(s => { s.tick(); s.draw() })
+  ctx.globalAlpha = 1
   rafId = requestAnimationFrame(loop)
 }
 
-// ─────────────────────────────────────────
-// GEMS OPTIMIZADAS
-// ─────────────────────────────────────────
 const gems = ref([])
 let gemCounter = 0
 let gemInterval = null
-const MAX_GEMS = 15
+const gemColors = ['#C9A55A','#D4AF6E','#B8985A','#E8C882','#A07840','#F2D590']
 
 function spawnGem() {
-  if (gems.value.length >= MAX_GEMS) return
-
-  const size = 3 + Math.random() * 6
-  const x = Math.random() * 100
-  const dur = 8 + Math.random() * 10
-
-  const id = gemCounter++
+  const size  = 3 + Math.random() * 7
+  const x     = Math.random() * 100
+  const dur   = 7 + Math.random() * 11
+  const delay = Math.random() * 2
+  const color = gemColors[Math.floor(Math.random() * gemColors.length)]
+  const isSquare = Math.random() > 0.5
+  const id    = gemCounter++
 
   gems.value.push({
     id,
     style: `
       left:${x}%;
+      bottom:-10px;
       width:${size}px;
       height:${size}px;
-      background:#C9A55A;
+      background:${color};
+      border-radius:${isSquare ? '1px' : '50%'};
+      transform: rotate(${isSquare ? '45deg' : '0'});
       animation-duration:${dur}s;
+      animation-delay:${delay}s;
+      box-shadow: 0 0 ${size * 2}px ${color}99;
     `
   })
 
   setTimeout(() => {
     gems.value = gems.value.filter(g => g.id !== id)
-  }, dur * 1000)
+  }, (dur + delay + 1) * 1000)
 }
 
-// ─────────────────────────────────────────
-// EVENTS
-// ─────────────────────────────────────────
 function onMouseMove(e) {
   const rect = bgCanvas.value?.getBoundingClientRect()
-  if (rect) {
-    mouse.x = e.clientX - rect.left
-    mouse.y = e.clientY - rect.top
-  }
+  if (rect) { mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top }
 }
-
-let resizeTimeout
 
 onMounted(() => {
   ctx = bgCanvas.value.getContext('2d')
-
+  
   setTimeout(() => {
     resize()
-
+    
     const mobile = isMobile()
-
-    dustArr = Array.from({ length: mobile ? 20 : 45 }, () => new Dust())
-    starsArr = mobile ? [] : Array.from({ length: 10 }, () => new StarSparkle())
+    dustArr  = Array.from({ length: mobile ? 35 : 80 }, () => new Dust())
+    starsArr = Array.from({ length: mobile ? 10 : 22  }, () => new StarSparkle(true))
 
     loop()
 
-    gemInterval = setInterval(spawnGem, mobile ? 1200 : 800)
+    const gemCount = mobile ? 8 : 18
+    for (let i = 0; i < gemCount; i++) setTimeout(spawnGem, i * 260)
+    gemInterval = setInterval(spawnGem, mobile ? 700 : 420)
   }, 50)
 
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout)
-    resizeTimeout = setTimeout(resize, 150)
-  })
-
+  window.addEventListener('resize', resize)
   window.addEventListener('mousemove', onMouseMove)
-
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) cancelAnimationFrame(rafId)
-    else loop()
-  })
 })
 
 onUnmounted(() => {
   cancelAnimationFrame(rafId)
   clearInterval(gemInterval)
+  window.removeEventListener('resize', resize)
   window.removeEventListener('mousemove', onMouseMove)
 })
 </script>
+
 <style lang="sass" scoped>
 
 
@@ -734,12 +698,5 @@ canvas
     display: block
 
   .footer-text
-    display: none
-
-.ring, .gem, .ring-dot, .divider-diamond
-  will-change: transform, opacity
-
-@media (max-width: 768px)
-  .ring.ring-3
     display: none
 </style>
