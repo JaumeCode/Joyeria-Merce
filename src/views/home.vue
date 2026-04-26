@@ -1,6 +1,6 @@
 <template>
     <a href="https://wa.me/34666238158">
-        <OptimizedImage loading="eager" class="whatsapp_btn" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fwhatsapp.png?alt=media&token=4a5f7d1a-ccf4-4bd4-9d6d-d8b67fb8f183" width="96" height="96" alt="WhatsApp"/>
+        <OptimizedImage loading="eager" class="whatsapp_btn" src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2Fwhatsapp.webp?alt=media&token=4a5f7d1a-ccf4-4bd4-9d6d-d8b67fb8f183" width="96" height="96" alt="WhatsApp"/>
     </a>
     <div id="main">
         <header_all class="header_fixed"/>

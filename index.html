@@ -4,18 +4,22 @@
   <meta charset="UTF-8">
   <link rel="icon" href="/favicon.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Optimización de recursos: dns-prefetch para terceros -->
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+  <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com">
 
   <title>Joyería en Puerto de Sagunto | Joyería Mercè</title>
   <meta name="description" content="Joyería en Puerto de Sagunto (Valencia). Anillos, pulseras, cadenas y más.">
   <link rel="canonical" href="https://joyeriamerce.es">
 
-  <!-- ⚡ CRITICAL CSS -->
+  <!-- ⚡ CRITICAL CSS (inline para evitar bloqueo) -->
   <style>
     :root { --bg-color: #FDFCF8; }
     body {
       margin: 0;
       background: var(--bg-color);
-      font-family: sans-serif;
+      font-family: system-ui, -apple-system, sans-serif;
     }
     #app { min-height: 100vh; }
     .header_fixed {
@@ -42,31 +46,39 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
   </noscript>
 
-  <!-- 📦 CSS PRINCIPAL (no bloquea render) -->
-  <link rel="preload" href="/assets/app-Coe4o9oF.css" as="style">
-  <link rel="stylesheet" href="/assets/app-Coe4o9oF.css" media="print" onload="this.media='all'">
+  <!-- 📦 CSS PRINCIPAL (no bloquea render - carga asincrónica con fallback) -->
+  <link rel="preload" href="/assets/app.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="/assets/app.css">
+  </noscript>
 
-  <!-- 🧠 DNS PREFETCH -->
-  <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+  <!-- 🧠 Optimización de recursos (DNS & Preconnect ya en head) -->
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Joyería Mercè">
   <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2FLogo%20Tienda.png?alt=media">
 
-  <!-- ⚡ GOOGLE TAG MANAGER diferido -->
+  <!-- ⚡ GOOGLE TAG MANAGER (carga optimizada sin bloqueo de render) -->
   <script>
-    window.addEventListener('load', () => {
-      const s = document.createElement('script')
-      s.src = "https://www.googletagmanager.com/gtag/js?id=GTM-W8RB367C"
-      s.async = true
-      document.head.appendChild(s)
-
-      window.dataLayer = window.dataLayer || []
-      function gtag(){dataLayer.push(arguments)}
-      gtag('js', new Date())
-      gtag('config', 'GTM-W8RB367C', { anonymize_ip: true })
-    })
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments)}
+    gtag('js', new Date());
+    gtag('config', 'GTM-W8RB367C', { anonymize_ip: true });
+    
+    // Cargar script de GTM de forma asincrónica para no bloquear render
+    const loadGTM = () => {
+      const script = document.createElement('script');
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=GTM-W8RB367C';
+      script.async = true;
+      document.head.appendChild(script);
+    };
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadGTM);
+    } else {
+      loadGTM();
+    }
   </script>
 
 </head>
@@ -74,7 +86,7 @@
 <body>
   <div id="app"></div>
 
-  <!-- 🚀 JS PRINCIPAL -->
+  <!-- 🚀 JS PRINCIPAL (módulo Vue) -->
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>
