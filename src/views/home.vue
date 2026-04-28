@@ -12,7 +12,7 @@
                 <h1>Productos Destacados</h1>
 
             </div>
-            <div class="cargando" v-if="store_general.todas.length === 0">
+            <div class="cargando" v-if="!store_general.destacadas || store_general.destacadas.length === 0">
                 <div class="loader-inner">
                 <div class="loader-ring"></div>
                 <span>✦</span>
@@ -95,7 +95,7 @@
                 <h1>Novedades</h1>
 
             </div>
-            <div class="cargando" v-if="store_general.todas.length === 0">
+            <div class="cargando" v-if="!store_general.novedades || store_general.novedades.length === 0">
                 <div class="loader-inner">
                 <div class="loader-ring"></div>
                 <span>✦</span>
@@ -237,18 +237,20 @@
 
 <script setup>
 
+import { defineAsyncComponent } from 'vue';
 import header_all from '@/components/header_all.vue';
 import card_jewlery from '@/components/card_jewlery.vue';
 import OptimizedImage from '@/components/OptimizedImage.vue';
 import { useJoyasPublicasStore } from '@/stores/joyas';
-import footer_component from '@/components/footer_component.vue';
+const footer_component = defineAsyncComponent(() => import('@/components/footer_component.vue'))
 import { useCorreosStore } from '@/stores/correos';
 import portada from '@/components/portada.vue';
 import { useHead } from '@vueuse/head';
-import reviews from '@/components/reviews.vue';
+const reviews = defineAsyncComponent(() => import('@/components/reviews.vue'))
 import { useRouter } from 'vue-router';
 import { onMounted, ref, computed } from 'vue';
 import { CountUp } from 'countup.js';
+
 
 useHead({
   title: 'Joyería Mercè — Joyería en Puerto de Sagunto',
@@ -302,10 +304,10 @@ const statsAnimated = ref(false)
 
 //Obtenemos las joyas desde la store
 onMounted(async () => {
-  if (store_general.todas.length === 0) {
-    await store_general.obtener_joya()
-  }
-  const observer = new IntersectionObserver((entries) => {
+    if (store_general.destacadas.length === 0) {
+        await store_general.cargarHome()
+    }
+    const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
         e.target.classList.add('visible')
@@ -364,11 +366,7 @@ const esnovedad = (fecha_creacion) => {
 
 //Sacar las ultimas novedades en joyas (Sacar las 8 Ultimas subidas)
 const novedades = computed(() => {
-  if (!store_general.todas.length) return []
-  // Solo devolvemos las 8 necesarias para no renderizar cards invisibles
-  return [...store_general.todas]
-    .sort((a, b) => b.fecha_creacion - a.fecha_creacion)
-    .slice(0, 8)
+  return [...store_general.novedades]
 })
 
 

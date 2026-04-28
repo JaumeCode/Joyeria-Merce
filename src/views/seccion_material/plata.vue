@@ -142,15 +142,18 @@ useHead({
 const busqueda = ref('')
 const orden = ref('az')
 const tipoFiltro = ref('')
+const cargando = ref(false)
 
 onMounted(async () => {
-  if (store.todas.length === 0) await store.obtener_joya()
+  cargando.value = true
+  await store.cargarJoyasPorFiltro(null, 'plata', 1, 12)
+  cargando.value = false
 })
 
 const esNovedad = (fecha) => Date.now() - fecha < 14 * 24 * 60 * 60 * 1000
 
 const joyasFiltradas = computed(() => {
-  let resultado = store.todas.filter(j => j.material === 'plata')
+  let resultado = store.todas
 
   if (busqueda.value) {
     resultado = resultado.filter(j =>

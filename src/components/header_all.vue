@@ -389,7 +389,7 @@ $sans:  'DM Sans', sans-serif
     letter-spacing: 0.04rem
     text-transform: none
     font-style: italic
-    color: darken($color-oro, 15%)
+    color: rgba($color-oro, 15%)
     opacity: 0
 
     &:hover

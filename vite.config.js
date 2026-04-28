@@ -6,87 +6,133 @@ import Sitemap from 'vite-plugin-sitemap'
 
 const PROJECT_ID = "joyeriamerce-runing"
 
-let joyaRoutes = []
-try {
-  const res = await fetch(
-    `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/joyas`
-  )
-  const data = await res.json()
-  console.log("Respuesta Firestore:", JSON.stringify(data).slice(0, 300))
-  if (data.documents) {
-    joyaRoutes = data.documents
-      .map(doc => {
-        const slug = doc.fields?.slug?.stringValue
-        if (!slug) return null
-        return `/joya/${slug}`
-      })
-      .filter(Boolean) 
+// 🔥 Función para obtener TODAS las joyas (con paginación)
+async function getAllJoyas() {
+  let joyaRoutes = []
+  let pageToken = null
+
+  try {
+    do {
+      const url = new URL(
+        `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/joyas`
+      )
+
+      if (pageToken) {
+        url.searchParams.append('pageToken', pageToken)
+      }
+
+      const res = await fetch(url)
+      const data = await res.json()
+
+      if (data.documents) {
+        const newRoutes = data.documents
+          .map(doc => {
+            const slug = doc.fields?.slug?.stringValue
+            return slug ? `/joya/${slug}` : null
+          })
+          .filter(Boolean)
+
+        joyaRoutes.push(...newRoutes)
+      }
+
+      pageToken = data.nextPageToken || null
+
+    } while (pageToken)
+
+  } catch (e) {
+    console.error("❌ Error cargando joyas:", e)
   }
-  console.log("Rutas de joyas:", joyaRoutes)
-} catch (e) {
-  console.error("Error:", e)
+
+  // 🔥 Eliminar duplicados
+  joyaRoutes = [...new Set(joyaRoutes)]
+
+  console.log(`✅ ${joyaRoutes.length} joyas cargadas para sitemap`)
+
+  return joyaRoutes
 }
 
+export default defineConfig(async () => {
+  const joyaRoutes = await getAllJoyas()
 
+  if (!joyaRoutes.length) {
+    console.warn("⚠️ No se cargaron joyas dinámicas")
+  }
 
-export default defineConfig({
-  plugins: [
-    vue(),
-    vueDevTools(),
-    Sitemap({
-      hostname: 'https://joyeriamerce.es',
-      dynamicRoutes: [
-        '/catalogo',
-        '/ubicacion',
-        '/buscar-joya',
-        '/sobre-nosotros',
-        '/joyas',
-        '/joyas/regalos',
-        '/joyas/anillos-compromiso',
-        '/joyas/oro',
-        '/joyas/plata',
-        '/joyas/acero',
-        '/joyas/anillos',
-        '/joyas/colgantes',
-        '/joyas/cadenas',
-        '/joyas/pendientes',
-        '/joyas/pulseras',
-        ...joyaRoutes
-      ]
-    }),
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    },
-  },
-  ssr: {
-    noExternal: ['vue-toastification']
-  },
-  ssgOptions: {
-    includedRoutes: (paths) => [...paths, ...joyaRoutes]
-  },
-  build: {
-    // ⚡ Optimizaciones de rendimiento
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
+  const staticRoutes = [
+    '/catalogo',
+    '/ubicacion',
+    '/buscar-joya',
+    '/sobre-nosotros',
+    '/joyas',
+    '/joyas/regalos',
+    '/joyas/anillos-compromiso',
+    '/joyas/oro',
+    '/joyas/plata',
+    '/joyas/acero',
+    '/joyas/anillos',
+    '/joyas/colgantes',
+    '/joyas/cadenas',
+    '/joyas/pendientes',
+    '/joyas/pulseras',
+  ]
+
+  const allRoutes = [...staticRoutes, ...joyaRoutes]
+
+  return {
+    plugins: [
+      vue(),
+      vueDevTools(),
+      Sitemap({
+        hostname: 'https://joyeriamerce.es',
+
+        // 🔥 Rutas dinámicas + estáticas
+        dynamicRoutes: allRoutes,
+
+        // 🔥 Opciones SEO (MUY recomendable)
+        changefreq: 'weekly',
+        priority: 0.7,
+        lastmod: new Date(),
+
+        // 🔥 Opcional: excluir rutas si quieres
+        // exclude: ['/admin']
+
+      }),
+    ],
+
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url))
       },
     },
-    cssMinify: true,
-    cssCodeSplit: true, // Divide CSS por chunk
-    rollupOptions: {
-      output: {
-        // Minimiza nombres de archivos
-        entryFileNames: 'assets/[name]-[hash].js',
-        chunkFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]',
-      },
+
+    ssr: {
+      noExternal: ['vue-toastification']
     },
-    // Compresión agresiva
-    reportCompressedSize: false,
-    chunkSizeWarningLimit: 500, // Alerta si chunk > 500KB
-  },
+
+    // 🔥 SSG compatible
+    ssgOptions: {
+      includedRoutes: () => allRoutes
+    },
+
+    build: {
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
+        },
+      },
+      cssMinify: true,
+      cssCodeSplit: true,
+      rollupOptions: {
+        output: {
+          entryFileNames: 'assets/[name]-[hash].js',
+          chunkFileNames: 'assets/[name]-[hash].js',
+          assetFileNames: 'assets/[name]-[hash].[ext]',
+        },
+      },
+      reportCompressedSize: false,
+      chunkSizeWarningLimit: 500,
+    },
+  }
 })
