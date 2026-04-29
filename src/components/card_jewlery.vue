@@ -64,18 +64,20 @@ defineProps({
 .card-joya
   display: flex
   flex-direction: column
-  width: 280px
+  width: 310px
   background: #FAF8F5
   border: 0.5px solid #E8E2D9
   position: relative
   cursor: pointer
-  transition: transform 0.35s ease
+  transition: transform 0.35s ease, box-shadow 0.35s ease
+  will-change: transform
 
   &:hover
-    transform: translateY(-6px)
+    transform: translateY(-5px)
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08)
 
     .imagen
-      transform: scale(1.04)
+      transform: scale(1.03)
 
     .btn
       letter-spacing: 0.18rem
@@ -83,7 +85,7 @@ defineProps({
 .imagen_wrapper
   position: relative
   width: 100%
-  height: 220px
+  height: 240px
   overflow: hidden
   background: #F2EDE5
 
@@ -92,7 +94,8 @@ defineProps({
     height: 100%
     object-fit: contain
     padding: 0px
-    transition: transform 0.5s ease
+    transition: transform 0.35s ease
+    will-change: transform
 
   .badge_nuevo
     position: absolute

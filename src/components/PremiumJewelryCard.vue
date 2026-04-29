@@ -144,26 +144,23 @@ $shadow-lg: 0 20px 48px rgba(26, 26, 26, 0.15)
   border-radius: 20px
   overflow: hidden
   cursor: pointer
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1)
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease
   box-shadow: $shadow-sm
   border: 1px solid $border
+  will-change: transform, box-shadow
 
   &:hover
-    transform: translateY(-8px)
+    transform: translateY(-6px)
     box-shadow: $shadow-lg
     border-color: $accent
 
     .jewelry-image
-      transform: scale(1.08)
+      transform: scale(1.05)
 
     .btn-view-detail
       background: $primary
       color: white
-      transform: translateX(4px)
-
-    .card-decoration
-      opacity: 1
-      transform: scale(1.1)
+      transform: translateX(3px)
 
 // 🎨 Image Container
 .image-container
@@ -188,7 +185,8 @@ $shadow-lg: 0 20px 48px rgba(26, 26, 26, 0.15)
   height: 100%
   object-fit: contain
   padding: 1.5rem
-  transition: transform 0.5s cubic-bezier(0.23, 1, 0.320, 1)
+  transition: transform 0.35s ease
+  will-change: transform
 
 // 🌈 Image Overlay
 .image-overlay
@@ -245,11 +243,10 @@ $shadow-lg: 0 20px 48px rgba(26, 26, 26, 0.15)
   font-weight: 600
   letter-spacing: 0.06rem
   text-transform: uppercase
-  backdrop-filter: blur(8px)
-  background: rgba(255, 255, 255, 0.92)
-  border: 1px solid rgba(255, 255, 255, 0.6)
+  background: rgba(255, 255, 255, 0.95)
+  border: 1px solid rgba(255, 255, 255, 0.7)
   color: $primary
-  transition: all 0.3s ease
+  transition: background 0.25s ease, border-color 0.25s ease
 
   svg
     width: 14px
@@ -273,17 +270,17 @@ $shadow-lg: 0 20px 48px rgba(26, 26, 26, 0.15)
   left: 12px
   width: 44px
   height: 44px
-  background: rgba(255, 255, 255, 0.95)
-  border: 1px solid rgba(255, 255, 255, 0.8)
+  background: rgba(255, 255, 255, 0.97)
+  border: 1px solid rgba(255, 255, 255, 0.85)
   border-radius: 50%
   display: flex
   align-items: center
   justify-content: center
   cursor: pointer
   color: #9a8f7f
-  transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1)
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.25s ease
   z-index: 4
-  backdrop-filter: blur(8px)
+  will-change: transform, background
 
   &:hover
     background: white
@@ -411,17 +408,15 @@ $shadow-lg: 0 20px 48px rgba(26, 26, 26, 0.15)
   justify-content: center
   gap: 6px
   cursor: pointer
-  transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1)
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease
   font-family: inherit
+  will-change: transform, background
 
   &:hover
     background: $primary
     color: white
     border-color: $primary
     transform: translateX(2px)
-
-    svg
-      transform: translateX(2px)
 
   svg
     transition: transform 0.3s ease
@@ -438,8 +433,7 @@ $shadow-lg: 0 20px 48px rgba(26, 26, 26, 0.15)
   border-radius: 50%
   pointer-events: none
   opacity: 0
-  transition: all 0.4s ease
-  transform: scale(0.8)
+  transform: scale(1)
   z-index: 0
 
 // 🎬 Animations
