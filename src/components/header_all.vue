@@ -62,7 +62,7 @@
         <a href="/joyas/cadenas"    class="mobile-link" @click="menuAbierto = false">Cadenas</a>
         <a href="/ubicacion"  class="mobile-link" @click="menuAbierto = false">Ubicación / Horarios</a>
         <a href="/sobre-nosotros" class="mobile-link" @click="menuAbierto = false">Sobre Nosotros</a>
-        <div class="mobile-divider"></div>
+        <div class="mobile-materials-label">✦ MATERIALES</div>
         <a href="/joyas/oro"   class="mobile-link mobile-link--material" @click="menuAbierto = false">Oro</a>
         <a href="/joyas/plata" class="mobile-link mobile-link--material" @click="menuAbierto = false">Plata</a>
         <a href="/joyas/acero" class="mobile-link mobile-link--material" @click="menuAbierto = false">Acero</a>
@@ -362,6 +362,21 @@ $sans:  'DM Sans', sans-serif
   margin-bottom: 1rem
   animation: ornamentPulse 3s ease-in-out infinite
 
+.mobile-materials-label
+  width: 100%
+  text-align: center
+  font-size: 0.65rem
+  letter-spacing: 0.2rem
+  text-transform: uppercase
+  color: $color-oro
+  font-weight: 600
+  margin: 1.2rem 0 0.8rem 0
+  padding-top: 1rem
+  border-top: 1px solid rgba(201, 165, 90, 0.2)
+  opacity: 0
+  animation: mobileLinkIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both
+  animation-delay: 0.5s
+
 .mobile-link
   width: 100%
   max-width: 280px
@@ -384,22 +399,21 @@ $sans:  'DM Sans', sans-serif
     letter-spacing: 0.2rem
 
   &--material
-    font-family: $serif
-    font-size: 1rem
-    letter-spacing: 0.04rem
-    text-transform: none
-    font-style: italic
-    color: rgba($color-oro, 15%)
-    opacity: 0
+    font-family: $sans
+    font-size: 0.8rem
+    letter-spacing: 0.12rem
+    text-transform: uppercase
+    font-weight: 600
+    color: $color-oro
+    padding: 0.75rem 1.5rem
+    border: 1px solid rgba(201, 165, 90, 0.3)
+    border-radius: 6px
+    background: rgba(201, 165, 90, 0.05)
+    margin-top: 0.5rem
 
     &:hover
-      color: $color-oro
-
-.mobile-divider
-  width: 40px
-  height: 1px
-  background: rgba(201, 165, 90, 0.3)
-  margin: 0.6rem auto
+      background: rgba(201, 165, 90, 0.15)
+      border-color: rgba(201, 165, 90, 0.6)
 
 // ── Keyframes ─────────────────────────────────────────────
 @keyframes mobileLinkIn

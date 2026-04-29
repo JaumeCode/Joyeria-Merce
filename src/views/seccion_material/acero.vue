@@ -32,37 +32,21 @@
       <p class="resultado_info">{{ joyasFiltradas.length }} piezas encontradas</p>
 
       <div class="rejilla" v-if="joyasPaginadas.length">
-        <div
+        <PremiumJewelryCard
           v-for="joya in joyasPaginadas"
           :key="joya.id"
-          class="tarjeta"
-          @click="router.push(`/joya/${joya.slug}`)"
-        >
-          <div class="tarjeta_imagen">
-            <img :src="joya.imagenes[0]" :alt="joya.nombre" />
-            <span v-if="esNovedad(joya.fecha_creacion)" class="etiqueta etiqueta_nuevo">Nuevo</span>
-            <span v-if="!joya.disponible" class="etiqueta etiqueta_agotado">Agotado</span>
-          </div>
-          <div class="tarjeta_cuerpo">
-            <p class="tarjeta_tipo">{{ joya.tipo }}</p>
-            <h3 class="tarjeta_nombre">{{ joya.nombre }}</h3>
-            <p class="tarjeta_desc">{{ joya.descripcion }}</p>
-            <div class="tarjeta_pie">
-              <span class="precio">{{ joya.precio }} €</span>
-              <span class="disponibilidad" :class="joya.disponible ? 'disponible' : 'no_disponible'">
-                <span class="punto" />
-                {{ joya.disponible ? 'Disponible' : 'No disponible' }}
-              </span>
-              <button
-                class="btn_favorito"
-                :class="{ activo: favoritos.esFavorito(joya.id) }"
-                @click.stop="favoritos.toggleFavorito(joya.id)"
-              >
-                {{ favoritos.esFavorito(joya.id) ? '♥' : '♡' }}
-              </button>
-            </div>
-          </div>
-        </div>
+          :id="joya.id"
+          :imagen="joya.imagenes[0]"
+          :nombre="joya.nombre"
+          :descripcion="joya.descripcion"
+          :tipo="joya.tipo"
+          :material="joya.material"
+          :medidas="joya.medidas"
+          :precio="joya.precio"
+          :disponible="joya.disponible"
+          :slug="joya.slug"
+          :esNuevo="esNovedad(joya.fecha_creacion)"
+        />
       </div>
 
       <div class="vacio" v-if="!joyasFiltradas.length">
@@ -96,6 +80,7 @@ import { useFavoritosStore } from '@/stores/favoritos'
 import { useHead } from '@vueuse/head'
 import header_all from '@/components/header_all.vue'
 import footer_component from '@/components/footer_component.vue'
+import PremiumJewelryCard from '@/components/PremiumJewelryCard.vue'
 
 const router = useRouter()
 const store = useJoyasPublicasStore()
@@ -463,7 +448,7 @@ watch([busqueda, orden, tipoFiltro], () => { paginaActual.value = 1 })
     width: 100%
     box-sizing: border-box
   .rejilla
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr))
+    grid-template-columns: 1fr
     gap: 1rem
   .tarjeta_imagen
     height: 160px

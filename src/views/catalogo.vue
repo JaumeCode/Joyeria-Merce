@@ -48,37 +48,21 @@
 
       <!-- Grid -->
       <div class="grid" v-if="joyasPaginadas">
-        <div
+        <PremiumJewelryCard
           v-for="joya in joyasPaginadas"
           :key="joya.id"
-          class="card"
-          @click="router.push(`/joya/${joya.slug}`)"
-        >
-          <div class="card_img">
-            <img :src="joya.imagenes[0]" :alt="joya.nombre" />
-            <span v-if="esNovedad(joya.fecha_creacion)" class="badge badge_nov">Nuevo</span>
-            <span v-if="!joya.disponible" class="badge badge_ago">Agotado</span>
-          </div>
-          <div class="card_body">
-            <p class="cat_label">{{ joya.tipo }}</p>
-            <h3 class="nombre">{{ joya.nombre }}</h3>
-            <p class="desc">{{ joya.descripcion }}</p>
-            <div class="card_footer">
-              <span class="precio">{{ joya.precio }} €</span>
-              <span class="dispo" :class="joya.disponible ? 'si' : 'no'">
-                <span class="dot" />
-                {{ joya.disponible ? 'Disponible' : 'No disponible' }}
-              </span>
-              <button
-                class="btn_fav"
-                :class="{ activo: favoritos.esFavorito(joya.id) }"
-                @click.stop="favoritos.toggleFavorito(joya.id)"
-                >
-                {{ favoritos.esFavorito(joya.id) ? '♥' : '♡' }}
-                </button>
-            </div>
-          </div>
-        </div>
+          :id="joya.id"
+          :imagen="joya.imagenes[0]"
+          :nombre="joya.nombre"
+          :descripcion="joya.descripcion"
+          :tipo="joya.tipo"
+          :material="joya.material"
+          :medidas="joya.medidas"
+          :precio="joya.precio"
+          :disponible="joya.disponible"
+          :slug="joya.slug"
+          :esNuevo="esNovedad(joya.fecha_creacion)"
+        />
       </div>
       
       <div class="vacio" v-if="!joyasFiltradas.length">
@@ -110,6 +94,7 @@ import footer_component from '@/components/footer_component.vue'
 import { useFavoritosStore } from '@/stores/favoritos'
 import { useRoute } from 'vue-router'
 import { watch } from 'vue'
+import PremiumJewelryCard from '@/components/PremiumJewelryCard.vue'
 //Recuperamos el storage de favoritos
 const favoritos=useFavoritosStore()
 
@@ -570,7 +555,7 @@ watch([catActiva, busqueda, orden, materialFiltro], () => { paginaActual.value =
     box-sizing: border-box
 
   .grid
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr))
+    grid-template-columns: 1fr
     gap: 1rem
 
   .card_img
