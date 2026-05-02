@@ -6,8 +6,8 @@
         :src="imagen" 
         :alt="nombre" 
         loading="lazy"
-        width="315"
-        height="315"
+        width="350"
+        height="350"
         sizes="(max-width: 480px) 100vw, 315px"
       />
       <div class="badge_nuevo" v-if="novedad">Nuevo</div>
@@ -189,7 +189,7 @@ defineProps({
     width: 100%
 
   .imagen_wrapper
-    height: 180px
+    height: 240px
 
   .nombre
     font-size: 0.9rem
