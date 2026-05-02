@@ -9,26 +9,21 @@
   <meta name="description" content="Joyería en Puerto de Sagunto (Valencia). Anillos, pulseras, cadenas y más.">
   <link rel="canonical" href="https://joyeriamerce.es">
 
-  <!-- 1. PRECARGAS (ROMPE EL ÁRBOL DE DEPENDENCIA) -->
-  <!-- Esto le dice al navegador: "Bájalo YA, no esperes a que el JS lo pida" -->
-  <link rel="preload" href="/assets/app-CVr5fCQR.js" as="script">
+  <!-- 1. PRECARGA DEL CSS (Crucial para eliminar el bloqueo) -->
   <link rel="preload" href="/assets/app-JjwvjJJM.css" as="style">
-  <!-- Precarga la fuente principal (cambia el nombre si cambia en el build) -->
-  <link rel="preload" href="/assets/nuFiD-vYS.woff2" as="font" type="font/woff2" crossorigin>
-
-  <!-- 2. CARGA DE CSS (ESTRATEGIA ASÍNCRONA) -->
+  <link rel="preload" fetchpriority="high" as="image" href="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2FLogo-Tienda.webp?alt=media&token=d4af9462-6814-4dbf-ad5d-50aa35ef4cef" type="image/webp">
+  <!-- 2. CARGA NO BLOQUEANTE -->
   <link rel="stylesheet" href="/assets/app-JjwvjJJM.css" media="print" onload="this.media='all'">
 
-  <!-- 3. CRITICAL CSS -->
+  <!-- 3. CRITICAL CSS (Ampliado para mejorar el FCP) -->
   <style>
     body { margin: 0; background: #F4F0E8; font-family: system-ui, -apple-system, sans-serif; }
     #app { min-height: 100vh; display: flex; flex-direction: column; }
+    /* Evita que la página salte cuando cargue el JS */
     .loading-placeholder { height: 100vh; width: 100%; background: #F4F0E8; }
   </style>
 
-  <!-- 4. OPTIMIZAR CONEXIONES EXTERNAS -->
   <link rel="preconnect" href="https://firebasestorage.googleapis.com" crossorigin>
-  <link rel="preconnect" href="https://firestore.googleapis.com">
   <link rel="dns-prefetch" href="https://www.googletagmanager.com">
 
   <!-- Open Graph -->
@@ -37,7 +32,7 @@
   <meta property="og:description" content="Joyería en Puerto de Sagunto (Valencia). Anillos, pulseras, cadenas y más.">
   <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2FLogo%20Tienda.png?alt=media">
 
-  <!-- GTM Optimizado (Carga solo cuando el navegador esté libre) -->
+  <!-- GTM Optimizado -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){ dataLayer.push(arguments); }
@@ -45,27 +40,22 @@
     gtag('config', 'GTM-W8RB367C', { 'anonymize_ip': true });
 
     window.addEventListener('load', () => {
-      // Usamos requestIdleCallback si está disponible para no molestar al renderizado
-      const loadGTM = () => {
+      setTimeout(() => {
         const s = document.createElement('script');
         s.src = 'https://www.googletagmanager.com/gtag/js?id=GTM-W8RB367C';
         s.async = true;
         document.head.appendChild(s);
-      };
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(loadGTM);
-      } else {
-        setTimeout(loadGTM, 3000);
-      }
+      }, 2000);
     });
   </script>
 </head>
 <body>
   <div id="app">
+    <!-- Placeholder opcional para mejorar la percepción de carga -->
     <div class="loading-placeholder"></div>
   </div>
   
-  <!-- 5. JS PRINCIPAL CON DEFER -->
-  <script type="module" src="/src/main.js" defer></script>
+  <!-- 4. JS AL FINAL (Asegúrate de que la ruta sea correcta tras el build) -->
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>

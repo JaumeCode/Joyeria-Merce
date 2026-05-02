@@ -74,6 +74,7 @@
       <img
         src="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2FLogo-Tienda.webp?alt=media&token=d4af9462-6814-4dbf-ad5d-50aa35ef4cef"
         alt="Logo Joyería"
+        fetchpriority="high"
       >
     </div>
 
