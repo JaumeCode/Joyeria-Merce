@@ -4,111 +4,56 @@
   <meta charset="UTF-8">
   <link rel="icon" href="/favicon.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- Optimización de recursos: dns-prefetch para terceros -->
-  <link rel="dns-prefetch" href="https://www.googletagmanager.com">
-  <link rel="dns-prefetch" href="https://firebasestorage.googleapis.com">
 
   <title>Joyería en Puerto de Sagunto | Joyería Mercè</title>
   <meta name="description" content="Joyería en Puerto de Sagunto (Valencia). Anillos, pulseras, cadenas y más.">
   <link rel="canonical" href="https://joyeriamerce.es">
 
-  <!-- ⚡ CRITICAL CSS (inline para evitar bloqueo) -->
+  <!-- CRITICAL CSS inline -->
   <style>
-    :root { --bg-color: #FDFCF8; }
+    :root { --bg-color: #F4F0E8; }
     body {
       margin: 0;
       background: var(--bg-color);
       font-family: system-ui, -apple-system, sans-serif;
     }
     #app { min-height: 100vh; }
-    .header_fixed {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      height: 70px;
-      background: white;
-      z-index: 1000;
-    }
   </style>
 
-  <!-- 🔗 PRECONNECT para recursos críticos -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <!-- PRECONNECT -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://firebasestorage.googleapis.com" crossorigin>
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com">
 
-  <!-- 🔤 GOOGLE FONTS (display=swap + carga asincrónica) -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
-  </noscript>
-
-  <!-- 📦 CSS PRINCIPAL (asincrónico sin bloqueo) -->
-  <link rel="preload" href="/assets/app.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript>
-    <link rel="stylesheet" href="/assets/app.css">
-  </noscript>
-
-  <!-- ⚡ Fallback para CSS si no carga (FOUT control) -->
-  <style>
-    body.app-loading { 
-      font-family: system-ui, -apple-system, sans-serif;
-    }
-  </style>
-  <script>
-    // Marcar que la app está cargando
-    document.documentElement.classList.add('app-loading');
-    // Remover cuando CSS esté listo
-    const link = document.querySelector('link[rel="preload"][as="style"]');
-    if (link) {
-      link.addEventListener('load', () => {
-        document.documentElement.classList.remove('app-loading');
-      });
-    }
-  </script>
-
-  <!-- 🧠 Optimización de recursos (DNS & Preconnect ya en head) -->
+  <!-- GOOGLE FONTS — display=swap elimina el bloqueo -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Joyería Mercè">
+  <meta property="og:description" content="Joyería en Puerto de Sagunto (Valencia). Anillos, pulseras, cadenas y más.">
   <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2FLogo%20Tienda.png?alt=media">
 
-  <!-- ⚡ GOOGLE TAG MANAGER (totalmente asincrónico) -->
+  <!-- GTM asincrónico -->
   <script>
-    // Init dataLayer antes de cargar GTM
-    window.dataLayer = window.dataLayer || [];
-    
-    // Cargar GTM de forma completamente asincrónica
-    // después del evento 'interactive' para no bloquear render
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-          const script = document.createElement('script');
-          script.src = 'https://www.googletagmanager.com/gtag/js?id=GTM-W8RB367C';
-          script.async = true;
-          script.defer = true;
-          document.head.appendChild(script);
-          
-          window.dataLayer.push({
-            'event': 'gtm.js',
-            'gtm.start': new Date().getTime()
-          });
-        }, 100);
-      });
-    }
-    
-    function gtag(){dataLayer.push(arguments)}
-    gtag('js', new Date());
-    gtag('config', 'GTM-W8RB367C', { anonymize_ip: true });
+    window.dataLayer = window.dataLayer || []
+    function gtag(){ dataLayer.push(arguments) }
+    gtag('js', new Date())
+    gtag('config', 'GTM-W8RB367C', { anonymize_ip: true })
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const s = document.createElement('script')
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=GTM-W8RB367C'
+        s.async = true
+        document.head.appendChild(s)
+      }, 2000) // 2s tras load — no afecta LCP ni FCP
+    })
   </script>
-
 </head>
-
 <body>
   <div id="app"></div>
-
-  <!-- 🚀 JS PRINCIPAL (módulo Vue) -->
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>
