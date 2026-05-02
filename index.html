@@ -9,25 +9,19 @@
   <meta name="description" content="Joyería en Puerto de Sagunto (Valencia). Anillos, pulseras, cadenas y más.">
   <link rel="canonical" href="https://joyeriamerce.es">
 
-  <!-- CRITICAL CSS inline -->
+  <!-- CRITICAL CSS inline — evita flash blanco -->
   <style>
-    :root { --bg-color: #F4F0E8; }
     body {
       margin: 0;
-      background: var(--bg-color);
+      background: #F4F0E8;
       font-family: system-ui, -apple-system, sans-serif;
     }
     #app { min-height: 100vh; }
   </style>
 
-  <!-- PRECONNECT -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- PRECONNECT solo a Firebase (Fonts ya son locales) -->
   <link rel="preconnect" href="https://firebasestorage.googleapis.com" crossorigin>
   <link rel="dns-prefetch" href="https://www.googletagmanager.com">
-
-  <!-- GOOGLE FONTS — display=swap elimina el bloqueo -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
@@ -35,7 +29,7 @@
   <meta property="og:description" content="Joyería en Puerto de Sagunto (Valencia). Anillos, pulseras, cadenas y más.">
   <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2FLogo%20Tienda.png?alt=media">
 
-  <!-- GTM asincrónico -->
+  <!-- GTM — se carga 2s después del load, fuera del LCP -->
   <script>
     window.dataLayer = window.dataLayer || []
     function gtag(){ dataLayer.push(arguments) }
@@ -48,7 +42,7 @@
         s.src = 'https://www.googletagmanager.com/gtag/js?id=GTM-W8RB367C'
         s.async = true
         document.head.appendChild(s)
-      }, 2000) // 2s tras load — no afecta LCP ni FCP
+      }, 2000)
     })
   </script>
 </head>

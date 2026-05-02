@@ -3,27 +3,23 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import Sitemap from 'vite-plugin-sitemap'
+import webfontDownload from 'vite-plugin-webfont-dl'
 
 const PROJECT_ID = "joyeriamerce-runing"
 
-// 🔥 Función para obtener TODAS las joyas (con paginación)
 async function getAllJoyas() {
   let joyaRoutes = []
   let pageToken = null
-
   try {
     do {
       const url = new URL(
         `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/joyas`
       )
-
       if (pageToken) {
         url.searchParams.append('pageToken', pageToken)
       }
-
       const res = await fetch(url)
       const data = await res.json()
-
       if (data.documents) {
         const newRoutes = data.documents
           .map(doc => {
@@ -31,23 +27,15 @@ async function getAllJoyas() {
             return slug ? `/joya/${slug}` : null
           })
           .filter(Boolean)
-
         joyaRoutes.push(...newRoutes)
       }
-
       pageToken = data.nextPageToken || null
-
     } while (pageToken)
-
   } catch (e) {
     console.error("❌ Error cargando joyas:", e)
   }
-
-  // 🔥 Eliminar duplicados
   joyaRoutes = [...new Set(joyaRoutes)]
-
   console.log(`✅ ${joyaRoutes.length} joyas cargadas para sitemap`)
-
   return joyaRoutes
 }
 
@@ -82,38 +70,29 @@ export default defineConfig(async () => {
     plugins: [
       vue(),
       vueDevTools(),
+      webfontDownload([
+        'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap',
+        'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap',
+      ]),
       Sitemap({
         hostname: 'https://joyeriamerce.es',
-
-        // 🔥 Rutas dinámicas + estáticas
         dynamicRoutes: allRoutes,
-
-        // 🔥 Opciones SEO (MUY recomendable)
         changefreq: 'weekly',
         priority: 0.7,
         lastmod: new Date(),
-
-        // 🔥 Opcional: excluir rutas si quieres
-        // exclude: ['/admin']
-
       }),
     ],
-
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url))
       },
     },
-
     ssr: {
       noExternal: ['vue-toastification']
     },
-
-    // 🔥 SSG compatible
     ssgOptions: {
       includedRoutes: () => allRoutes
     },
-
     build: {
       minify: 'terser',
       terserOptions: {
