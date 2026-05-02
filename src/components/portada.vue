@@ -127,14 +127,6 @@ const isMobile = () => window.innerWidth < 768
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-const scheduleIdle = (callback) => {
-  if ('requestIdleCallback' in window) {
-    window.requestIdleCallback(callback, { timeout: 900 })
-    return
-  }
-  window.setTimeout(callback, 120)
-}
-
 function resize() {
   if (!bgCanvas.value || !ctx) return
   const ratio = Math.min(window.devicePixelRatio || 1, 1.25)
@@ -343,6 +335,7 @@ function initMotionLayer() {
     }
 
     gemInterval = window.setInterval(spawnGem, isCompactViewport ? 1800 : 950)
+
     sectionObserver = new IntersectionObserver(([entry]) => {
       canvasVisible = entry.isIntersecting
       if (canvasVisible) {
@@ -361,9 +354,11 @@ onMounted(() => {
   isCompactViewport = isMobile()
   motionAllowed = !prefersReducedMotion()
 
-  scheduleIdle(() => {
-    initMotionLayer()
-  })
+  // ✅ OPTIMIZADO: setTimeout(0) en lugar de requestIdleCallback
+  // El canvas no es contenido LCP, pero no debe esperar a que el navegador
+  // esté completamente idle (puede ser 500ms+ en móvil con CPU limitada).
+  // Con setTimeout(0) se encola tras el primer paint, sin bloquear el render.
+  window.setTimeout(() => initMotionLayer(), 0)
 
   window.addEventListener('resize', onResize, { passive: true })
   window.addEventListener('mousemove', onMouseMove, { passive: true })
@@ -383,7 +378,6 @@ onUnmounted(() => {
 </script>
 
 <style lang="sass" scoped>
-
 
 .scene
   width: 100%
@@ -489,7 +483,8 @@ canvas
   position: absolute
   z-index: 3
   opacity: 0
-  animation: fadeUp 1.5s ease forwards 1.8s
+  // ✅ OPTIMIZADO: delay reducido de 1.8s → 1s
+  animation: fadeUp 1.2s ease forwards 1s
 
   &.left
     left: 6%
@@ -518,6 +513,7 @@ canvas
   flex-direction: column
   align-items: center
 
+// ✅ OPTIMIZADO: delay 0.3s → 0.1s
 .eyebrow
   font-family: 'Cormorant Garamond', serif
   font-weight: 300
@@ -526,9 +522,10 @@ canvas
   color: #A0896A
   text-transform: uppercase
   opacity: 0
-  animation: fadeUp 1.2s ease forwards 0.3s
+  animation: fadeUp 0.9s ease forwards 0.1s
   margin-bottom: 20px
 
+// ✅ OPTIMIZADO: delay 0.6s → 0.2s
 .title
   font-family: 'Playfair Display', serif
   font-weight: 600
@@ -542,16 +539,17 @@ canvas
   -webkit-text-fill-color: transparent
   background-clip: text
   opacity: 0
-  animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) forwards 0.6s, goldShimmer 4s linear infinite 2.5s
+  animation: fadeUp 1.1s cubic-bezier(0.16,1,0.3,1) forwards 0.2s, goldShimmer 4s linear infinite 2s
   text-wrap: balance
 
+// ✅ OPTIMIZADO: delay 1s → 0.5s
 .divider
   display: flex
   align-items: center
   gap: 14px
   margin: 22px 0
   opacity: 0
-  animation: fadeUp 1.2s ease forwards 1s
+  animation: fadeUp 0.9s ease forwards 0.5s
 
 .divider-line
   width: 70px
@@ -566,6 +564,7 @@ canvas
   box-shadow: 0 0 6px 2px rgba(184,152,90,0.4)
   animation: diamondPulse 2.2s ease-in-out infinite 1.5s
 
+// ✅ OPTIMIZADO: delay 1.2s → 0.65s
 .tagline
   font-family: 'Cormorant Garamond', serif
   font-style: italic
@@ -574,9 +573,10 @@ canvas
   color: #6B5A42
   letter-spacing: 0.3em
   opacity: 0
-  animation: fadeUp 1.2s ease forwards 1.2s
+  animation: fadeUp 0.9s ease forwards 0.65s
   margin-bottom: 40px
 
+// ✅ OPTIMIZADO: delay 1.6s → 0.85s
 .cta
   font-family: 'Cormorant Garamond', serif
   font-weight: 400
@@ -589,7 +589,7 @@ canvas
   padding: 17px 48px
   cursor: pointer
   opacity: 0
-  animation: fadeUp 1s ease forwards 1.6s
+  animation: fadeUp 0.8s ease forwards 0.85s
   position: relative
   overflow: hidden
   transition: color 0.4s
@@ -612,13 +612,14 @@ canvas
     z-index: 1
 
 // Categorías rápidas (solo mobile)
+// ✅ OPTIMIZADO: delay 2s → 1.1s
 .mobile-cats
   display: none
   align-items: center
   gap: 10px
   margin-top: 28px
   opacity: 0
-  animation: fadeUp 1s ease forwards 2s
+  animation: fadeUp 0.8s ease forwards 1.1s
 
   span
     font-family: 'Cormorant Garamond', serif
@@ -633,6 +634,7 @@ canvas
       font-size: 8px
 
 // Scroll hint (solo mobile)
+// ✅ OPTIMIZADO: delay 2.3s → 1.3s
 .scroll-hint
   display: none
   position: absolute
@@ -641,7 +643,7 @@ canvas
   transform: translateX(-50%)
   z-index: 10
   opacity: 0
-  animation: fadeUp 1s ease forwards 2.3s
+  animation: fadeUp 0.8s ease forwards 1.3s
 
 .scroll-arrow
   width: 20px
@@ -651,6 +653,7 @@ canvas
   transform: rotate(45deg)
   animation: scrollBounce 1.8s ease-in-out infinite
 
+// ✅ OPTIMIZADO: delay 2.1s → 1.2s
 .footer-text
   position: absolute
   bottom: 32px
@@ -663,7 +666,7 @@ canvas
   text-transform: uppercase
   white-space: nowrap
   opacity: 0
-  animation: fadeUp 1s ease forwards 2.1s
+  animation: fadeUp 0.8s ease forwards 1.2s
   z-index: 10
 
 .scene--static canvas
@@ -751,7 +754,6 @@ canvas
   .side-orn
     display: none
 
-  // Esquinas más pequeñas en móvil
   .corner
     width: 44px
     height: 44px
@@ -773,7 +775,6 @@ canvas
       bottom: 16px
       right: 16px
 
-  // Anillos ajustados al viewport móvil
   .ring.ring-1
     width: 280px
     height: 280px
@@ -792,7 +793,6 @@ canvas
   .gem
     opacity: 0.8
 
-  // Texto principal más compacto
   .eyebrow
     font-size: 9px
     letter-spacing: 0.35em
@@ -817,15 +817,12 @@ canvas
     padding: 15px 36px
     font-size: 11px
     letter-spacing: 0.35em
-    // Área táctil cómoda
     min-height: 50px
     min-width: 200px
 
-  // Mostrar categorías rápidas en móvil
   .mobile-cats
     display: flex
 
-  // Mostrar scroll hint en móvil, ocultar footer-text
   .scroll-hint
     display: block
 
