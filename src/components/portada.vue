@@ -116,6 +116,7 @@ const hasMounted = ref(false)
 let ctx, W, H, rafId
 let mouse = { x: -9999, y: -9999 }
 let sectionObserver = null
+let resizeObserver = null  // ✅ reemplaza offsetWidth/offsetHeight
 let gemCleanupTimers = []
 let gemTimeouts = []
 let canvasVisible = true
@@ -127,12 +128,13 @@ const isMobile = () => window.innerWidth < 768
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-function resize() {
+// ✅ Acepta dimensiones externas para evitar leer offsetWidth/offsetHeight (reflow)
+function resize(width, height) {
   if (!bgCanvas.value || !ctx) return
   const ratio = Math.min(window.devicePixelRatio || 1, 1.25)
-  W = bgCanvas.value.offsetWidth
-  H = bgCanvas.value.offsetHeight
-  bgCanvas.value.width = Math.round(W * ratio)
+  W = width  ?? bgCanvas.value.offsetWidth
+  H = height ?? bgCanvas.value.offsetHeight
+  bgCanvas.value.width  = Math.round(W * ratio)
   bgCanvas.value.height = Math.round(H * ratio)
   ctx.setTransform(ratio, 0, 0, ratio, 0, 0)
 }
@@ -140,12 +142,12 @@ function resize() {
 class Dust {
   constructor() { this.init() }
   init() {
-    this.x  = Math.random() * W
-    this.y  = Math.random() * H
-    this.r  = Math.random() * 1.6 + 0.3
-    this.vx = (Math.random() - 0.5) * 0.18
-    this.vy = (Math.random() - 0.5) * 0.18
-    this.a  = Math.random() * 0.3 + 0.06
+    this.x     = Math.random() * W
+    this.y     = Math.random() * H
+    this.r     = Math.random() * 1.6 + 0.3
+    this.vx    = (Math.random() - 0.5) * 0.18
+    this.vy    = (Math.random() - 0.5) * 0.18
+    this.a     = Math.random() * 0.3 + 0.06
     this.phase = Math.random() * Math.PI * 2
     this.speed = 0.012 + Math.random() * 0.01
     this.gold  = Math.random() > 0.35
@@ -198,7 +200,7 @@ class StarSparkle {
     const t     = this.life / this.maxLife
     const alpha = Math.sin(t * Math.PI) * 0.85
     const s     = this.maxSize * Math.sin(t * Math.PI)
-    ctx.globalAlpha = alpha
+    ctx.globalAlpha  = alpha
     ctx.strokeStyle  = '#D4AF6E'
     ctx.lineWidth    = 0.9
     for (let i = 0; i < 4; i++) {
@@ -249,17 +251,15 @@ const gemColors = ['#C9A55A','#D4AF6E','#B8985A','#E8C882','#A07840','#F2D590']
 
 function spawnGem() {
   if (!showGems.value) return
-  const size  = 3 + Math.random() * 7
-  const x     = Math.random() * 100
-  const dur   = 8 + Math.random() * 6
-  const delay = Math.random() * 1.4
-  const color = gemColors[Math.floor(Math.random() * gemColors.length)]
+  const size     = 3 + Math.random() * 7
+  const x        = Math.random() * 100
+  const dur      = 8 + Math.random() * 6
+  const delay    = Math.random() * 1.4
+  const color    = gemColors[Math.floor(Math.random() * gemColors.length)]
   const isSquare = Math.random() > 0.5
-  const id    = gemCounter++
+  const id       = gemCounter++
 
-  if (gems.value.length >= 8) {
-    gems.value.shift()
-  }
+  if (gems.value.length >= 8) gems.value.shift()
 
   gems.value.push({
     id,
@@ -290,44 +290,49 @@ function onMouseMove(e) {
 }
 
 function onVisibilityChange() {
-  if (document.hidden) {
-    stopLoop()
-    return
-  }
+  if (document.hidden) { stopLoop(); return }
   startLoop()
 }
 
+// ✅ onResize solo actualiza flags — ResizeObserver gestiona el canvas
 function onResize() {
   isCompactViewport = isMobile()
   showGems.value = motionAllowed
-
-  if (showCanvas.value) {
-    if (resizeTicking) return
-    resizeTicking = true
-    window.requestAnimationFrame(() => {
-      resize()
-      resizeTicking = false
-    })
-  }
 }
 
 function initMotionLayer() {
   if (!hasMounted.value || !motionAllowed || showCanvas.value) return
 
   showCanvas.value = true
-  showGems.value = true
+  showGems.value   = true
 
   window.requestAnimationFrame(() => {
     ctx = bgCanvas.value?.getContext('2d', { alpha: true })
     if (!ctx) return
 
-    resize()
-    dustArr = Array.from({ length: isCompactViewport ? 14 : 38 }, () => new Dust())
-    starsArr = Array.from({ length: isCompactViewport ? 4 : 12 }, () => new StarSparkle(true))
+    // ✅ ResizeObserver entrega width/height sin forzar reflow
+    resizeObserver = new ResizeObserver((entries) => {
+      if (resizeTicking) return
+      resizeTicking = true
+      window.requestAnimationFrame(() => {
+        const entry = entries[0]
+        const { inlineSize: width, blockSize: height } = entry.contentBoxSize?.[0] ?? {
+          inlineSize: entry.contentRect.width,
+          blockSize:  entry.contentRect.height,
+        }
+        resize(width, height)
+        resizeTicking = false
+      })
+    })
+    resizeObserver.observe(bgCanvas.value)
+
+    resize() // medición inicial — canvas ya en DOM, dimensiones estables
+    dustArr  = Array.from({ length: isCompactViewport ? 14 : 38 }, () => new Dust())
+    starsArr = Array.from({ length: isCompactViewport ? 4  : 12 }, () => new StarSparkle(true))
 
     startLoop()
 
-    const initialGems = isCompactViewport ? 3 : 6
+    const initialGems  = isCompactViewport ? 3   : 6
     const gemDelayStep = isCompactViewport ? 360 : 260
     for (let i = 0; i < initialGems; i++) {
       const timer = window.setTimeout(spawnGem, i * gemDelayStep)
@@ -338,11 +343,8 @@ function initMotionLayer() {
 
     sectionObserver = new IntersectionObserver(([entry]) => {
       canvasVisible = entry.isIntersecting
-      if (canvasVisible) {
-        startLoop()
-      } else {
-        stopLoop()
-      }
+      if (canvasVisible) startLoop()
+      else stopLoop()
     }, { threshold: 0.08 })
 
     sectionObserver.observe(bgCanvas.value)
@@ -350,18 +352,14 @@ function initMotionLayer() {
 }
 
 onMounted(() => {
-  hasMounted.value = true
+  hasMounted.value  = true
   isCompactViewport = isMobile()
-  motionAllowed = !prefersReducedMotion()
+  motionAllowed     = !prefersReducedMotion()
 
-  // ✅ OPTIMIZADO: setTimeout(0) en lugar de requestIdleCallback
-  // El canvas no es contenido LCP, pero no debe esperar a que el navegador
-  // esté completamente idle (puede ser 500ms+ en móvil con CPU limitada).
-  // Con setTimeout(0) se encola tras el primer paint, sin bloquear el render.
   window.setTimeout(() => initMotionLayer(), 0)
 
-  window.addEventListener('resize', onResize, { passive: true })
-  window.addEventListener('mousemove', onMouseMove, { passive: true })
+  window.addEventListener('resize',            onResize,             { passive: true })
+  window.addEventListener('mousemove',         onMouseMove,          { passive: true })
   document.addEventListener('visibilitychange', onVisibilityChange)
 })
 
@@ -369,10 +367,11 @@ onUnmounted(() => {
   stopLoop()
   clearInterval(gemInterval)
   sectionObserver?.disconnect()
+  resizeObserver?.disconnect()  // ✅ limpieza
   gemTimeouts.forEach(window.clearTimeout)
   gemCleanupTimers.forEach(window.clearTimeout)
-  window.removeEventListener('resize', onResize)
-  window.removeEventListener('mousemove', onMouseMove)
+  window.removeEventListener('resize',            onResize)
+  window.removeEventListener('mousemove',         onMouseMove)
   document.removeEventListener('visibilitychange', onVisibilityChange)
 })
 </script>
@@ -483,7 +482,6 @@ canvas
   position: absolute
   z-index: 3
   opacity: 0
-  // ✅ OPTIMIZADO: delay reducido de 1.8s → 1s
   animation: fadeUp 1.2s ease forwards 1s
 
   &.left
@@ -513,7 +511,6 @@ canvas
   flex-direction: column
   align-items: center
 
-// ✅ OPTIMIZADO: delay 0.3s → 0.1s
 .eyebrow
   font-family: 'Cormorant Garamond', serif
   font-weight: 300
@@ -525,7 +522,6 @@ canvas
   animation: fadeUp 0.9s ease forwards 0.1s
   margin-bottom: 20px
 
-// ✅ OPTIMIZADO: delay 0.6s → 0.2s
 .title
   font-family: 'Playfair Display', serif
   font-weight: 600
@@ -542,7 +538,6 @@ canvas
   animation: fadeUp 1.1s cubic-bezier(0.16,1,0.3,1) forwards 0.2s, goldShimmer 4s linear infinite 2s
   text-wrap: balance
 
-// ✅ OPTIMIZADO: delay 1s → 0.5s
 .divider
   display: flex
   align-items: center
@@ -564,7 +559,6 @@ canvas
   box-shadow: 0 0 6px 2px rgba(184,152,90,0.4)
   animation: diamondPulse 2.2s ease-in-out infinite 1.5s
 
-// ✅ OPTIMIZADO: delay 1.2s → 0.65s
 .tagline
   font-family: 'Cormorant Garamond', serif
   font-style: italic
@@ -576,7 +570,6 @@ canvas
   animation: fadeUp 0.9s ease forwards 0.65s
   margin-bottom: 40px
 
-// ✅ OPTIMIZADO: delay 1.6s → 0.85s
 .cta
   font-family: 'Cormorant Garamond', serif
   font-weight: 400
@@ -611,8 +604,6 @@ canvas
     position: relative
     z-index: 1
 
-// Categorías rápidas (solo mobile)
-// ✅ OPTIMIZADO: delay 2s → 1.1s
 .mobile-cats
   display: none
   align-items: center
@@ -633,8 +624,6 @@ canvas
       color: #C9A55A
       font-size: 8px
 
-// Scroll hint (solo mobile)
-// ✅ OPTIMIZADO: delay 2.3s → 1.3s
 .scroll-hint
   display: none
   position: absolute
@@ -653,7 +642,6 @@ canvas
   transform: rotate(45deg)
   animation: scrollBounce 1.8s ease-in-out infinite
 
-// ✅ OPTIMIZADO: delay 2.1s → 1.2s
 .footer-text
   position: absolute
   bottom: 32px
