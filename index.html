@@ -9,22 +9,36 @@
   <meta name="description" content="Joyería en Puerto de Sagunto (Valencia). Anillos, pulseras, cadenas y más.">
   <link rel="canonical" href="https://joyeriamerce.es">
 
-  <!-- 1. PRECARGA DEL CSS (Crucial para eliminar el bloqueo) -->
+  <!-- 1. PRECARGAS CRÍTICAS (Eliminan el retraso del LCP) -->
+  <!-- CSS Principal -->
   <link rel="preload" href="/assets/app-JjwvjJJM.css" as="style">
-  <link rel="preload" fetchpriority="high" as="image" href="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2FLogo-Tienda.webp?alt=media&token=d4af9462-6814-4dbf-ad5d-50aa35ef4cef" type="image/webp">
-  <!-- 2. CARGA NO BLOQUEANTE -->
-  <link rel="stylesheet" href="/assets/app-JjwvjJJM.css" media="print" onload="this.media='all'">
+  <!-- Imagen LCP: Prioridad máxima para bajar esos 5.1s -->
+  <link rel="preload" href="https://firebasestorage.googleapis.com/v0/b/joyeriamerce-runing.firebasestorage.app/o/assets%2FLogo-Tienda.webp?alt=media&token=d4af9462-6814-4dbf-ad5d-50aa35ef4cef" as="image" type="image/webp" fetchpriority="high">
 
-  <!-- 3. CRITICAL CSS (Ampliado para mejorar el FCP) -->
+  <!-- 2. CARGA DE CSS NO BLOQUEANTE -->
+  <!-- Se descarga en segundo plano y se activa al terminar -->
+  <link rel="stylesheet" href="/assets/app-JjwvjJJM.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="/assets/app-JjwvjJJM.css"></noscript>
+
+  <!-- 3. CSS CRÍTICO INLINE (Pinta la base de la web al instante) -->
   <style>
-    body { margin: 0; background: #F4F0E8; font-family: system-ui, -apple-system, sans-serif; }
+    body { 
+      margin: 0; 
+      background: #F4F0E8; 
+      font-family: system-ui, -apple-system, sans-serif; 
+      display: block;
+    }
     #app { min-height: 100vh; display: flex; flex-direction: column; }
-    /* Evita que la página salte cuando cargue el JS */
-    .loading-placeholder { height: 100vh; width: 100%; background: #F4F0E8; }
+    .loading-placeholder { 
+      height: 100vh; 
+      width: 100%; 
+      background: #F4F0E8; 
+    }
   </style>
 
+  <!-- 4. OPTIMIZACIÓN DE CONEXIONES -->
   <link rel="preconnect" href="https://firebasestorage.googleapis.com" crossorigin>
-  <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
@@ -45,17 +59,17 @@
         s.src = 'https://www.googletagmanager.com/gtag/js?id=GTM-W8RB367C';
         s.async = true;
         document.head.appendChild(s);
-      }, 2000);
+      }, 2000); // Se carga 2 segundos después para no competir con el LCP
     });
   </script>
 </head>
 <body>
   <div id="app">
-    <!-- Placeholder opcional para mejorar la percepción de carga -->
+    <!-- Placeholder para mejorar la percepción de carga -->
     <div class="loading-placeholder"></div>
   </div>
   
-  <!-- 4. JS AL FINAL (Asegúrate de que la ruta sea correcta tras el build) -->
-  <script type="module" src="/src/main.js"></script>
+  <!-- 5. JS PRINCIPAL CON ASYNC/DEFER -->
+  <script type="module" src="/src/main.js" defer></script>
 </body>
 </html>
