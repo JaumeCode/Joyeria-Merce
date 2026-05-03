@@ -40,7 +40,7 @@ const { mostrarBanner, aceptar, rechazar } = useCookieConsent()
   bottom: 0;
   left: 0;
   right: 0;
-  background: #faf8f5;
+  background: rgb(26, 26, 26);
   z-index: 9999;
   font-family: 'Montserrat', sans-serif;
   box-shadow: 0 -8px 40px rgba(180, 150, 80, 0.08), 0 -1px 0 rgba(201,168,76,0.15);
