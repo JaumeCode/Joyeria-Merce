@@ -300,6 +300,7 @@ function onResize() {
   showGems.value = motionAllowed
 }
 
+//Funcion
 function initMotionLayer() {
   if (!hasMounted.value || !motionAllowed || showCanvas.value) return
 

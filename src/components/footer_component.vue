@@ -29,13 +29,13 @@
             <a href="/admin">Para Administradores</a>
             <div class="redes">
                 <a href="https://wa.me/34666238158">
-                    <i class="fa-brands fa-square-whatsapp"></i>
+                    <i class="fa-brands fa-square-whatsapp" alt="Icono de WhatsApp"></i>
                 </a>
                 <a href="https://www.instagram.com/mercejoyeria/">
-                    <i class="fa-brands fa-square-instagram"></i>
+                    <i class="fa-brands fa-square-instagram" alt="Icono de Instagram"></i>
                 </a>
                 <a href="https://www.facebook.com/joyeriamerce/?locale=es_ES">
-                    <i class="fa-brands fa-square-facebook"></i>
+                    <i class="fa-brands fa-square-facebook" alt="Icono de Facebook"></i>
                 </a>
             </div>
         </div>
@@ -104,7 +104,7 @@
 
         i
             font-size: 40px
-
+            
             &:hover
                 transform: scale(1.15)
 
