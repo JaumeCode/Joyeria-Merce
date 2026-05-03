@@ -11,7 +11,8 @@
       <div class="ring ring-2">
         <div class="ring-dot dot-top"></div>
       </div>
-      <div class="ring ring-3"></div>
+      <!-- ring-3 solo desktop: demasiado caro en móvil -->
+      <div class="ring ring-3 desktop-only"></div>
     </div>
 
     <!-- Corner frames -->
@@ -60,7 +61,7 @@
       </svg>
     </div>
 
-    <!-- Floating gems -->
+    <!-- Gems: solo desktop -->
     <div
       v-if="showGems"
       v-for="gem in gems"
@@ -70,7 +71,7 @@
     ></div>
 
     <!-- Main content -->
-    <div class="content">
+    <div class="content" :class="{ animate: mounted }">
       <p class="eyebrow">Puerto de Sagunto &nbsp;·&nbsp; Joyería Artesanal</p>
       <h1 class="title">Joyería Mercè</h1>
       <div class="divider">
@@ -83,7 +84,6 @@
         <span>Descubrir Colección</span>
       </button>
 
-      <!-- Solo mobile: categorías rápidas -->
       <div class="mobile-cats">
         <span>Anillos</span>
         <span>·</span>
@@ -109,29 +109,34 @@ import { ref, onMounted, onUnmounted } from 'vue'
 
 defineEmits(['catalogo'])
 
-const bgCanvas = ref(null)
+const bgCanvas   = ref(null)
 const showCanvas = ref(false)
-const showGems = ref(false)
+const showGems   = ref(false)
 const hasMounted = ref(false)
+const mounted    = ref(false)   // ✅ LCP fix
+
 let ctx, W, H, rafId
 let mouse = { x: -9999, y: -9999 }
-let sectionObserver = null
-let resizeObserver = null  // ✅ reemplaza offsetWidth/offsetHeight
+let sectionObserver  = null
+let resizeObserver   = null
 let gemCleanupTimers = []
-let gemTimeouts = []
-let canvasVisible = true
-let motionAllowed = false
+let gemTimeouts      = []
+let canvasVisible    = true
+let motionAllowed    = false
 let isCompactViewport = false
-let resizeTicking = false
+let resizeTicking    = false
 
 const isMobile = () => window.innerWidth < 768
 const prefersReducedMotion = () =>
-  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  typeof window !== 'undefined' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-// ✅ Acepta dimensiones externas para evitar leer offsetWidth/offsetHeight (reflow)
 function resize(width, height) {
   if (!bgCanvas.value || !ctx) return
-  const ratio = Math.min(window.devicePixelRatio || 1, 1.25)
+  // ✅ DPR cap a 1 en móvil — pantalla retina no justifica doblar el trabajo del canvas
+  const ratio = isCompactViewport
+    ? 1
+    : Math.min(window.devicePixelRatio || 1, 1.25)
   W = width  ?? bgCanvas.value.offsetWidth
   H = height ?? bgCanvas.value.offsetHeight
   bgCanvas.value.width  = Math.round(W * ratio)
@@ -156,10 +161,13 @@ class Dust {
     this.x += this.vx
     this.y += this.vy
     this.phase += this.speed
-    const dx = this.x - mouse.x
-    const dy = this.y - mouse.y
-    const d  = Math.sqrt(dx * dx + dy * dy)
-    if (d < 90) { this.vx += dx * 0.00025; this.vy += dy * 0.00025 }
+    // ✅ Sin interacción mouse en móvil — ahorra cálculos por frame
+    if (!isCompactViewport) {
+      const dx = this.x - mouse.x
+      const dy = this.y - mouse.y
+      const d  = Math.sqrt(dx * dx + dy * dy)
+      if (d < 90) { this.vx += dx * 0.00025; this.vy += dy * 0.00025 }
+    }
     if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.init()
   }
   draw() {
@@ -169,7 +177,8 @@ class Dust {
     ctx.beginPath()
     ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2)
     ctx.fill()
-    if (this.r > 1.1 && Math.sin(this.phase) > 0.6) {
+    // ✅ Sin halo en móvil — reduce overdraw
+    if (!isCompactViewport && this.r > 1.1 && Math.sin(this.phase) > 0.6) {
       ctx.globalAlpha = alpha * 0.25
       ctx.beginPath()
       ctx.arc(this.x, this.y, this.r * 3.5, 0, Math.PI * 2)
@@ -294,23 +303,22 @@ function onVisibilityChange() {
   startLoop()
 }
 
-// ✅ onResize solo actualiza flags — ResizeObserver gestiona el canvas
 function onResize() {
   isCompactViewport = isMobile()
-  showGems.value = motionAllowed
+  showGems.value = motionAllowed && !isCompactViewport
 }
 
 function initMotionLayer() {
   if (!hasMounted.value || !motionAllowed || showCanvas.value) return
 
   showCanvas.value = true
-  showGems.value   = true
+  // ✅ Gems solo desktop — en móvil son layout + paint extra innecesarios
+  showGems.value = !isCompactViewport
 
   window.requestAnimationFrame(() => {
     ctx = bgCanvas.value?.getContext('2d', { alpha: true })
     if (!ctx) return
 
-    // ✅ ResizeObserver entrega width/height sin forzar reflow
     resizeObserver = new ResizeObserver((entries) => {
       if (resizeTicking) return
       resizeTicking = true
@@ -326,20 +334,21 @@ function initMotionLayer() {
     })
     resizeObserver.observe(bgCanvas.value)
 
-    resize() // medición inicial — canvas ya en DOM, dimensiones estables
-    dustArr  = Array.from({ length: isCompactViewport ? 14 : 38 }, () => new Dust())
-    starsArr = Array.from({ length: isCompactViewport ? 4  : 12 }, () => new StarSparkle(true))
+    resize()
+    // ✅ Móvil: 8 partículas, 0 estrellas. Desktop: igual que antes
+    dustArr  = Array.from({ length: isCompactViewport ? 8  : 38 }, () => new Dust())
+    starsArr = Array.from({ length: isCompactViewport ? 0  : 12 }, () => new StarSparkle(true))
 
     startLoop()
 
-    const initialGems  = isCompactViewport ? 3   : 6
-    const gemDelayStep = isCompactViewport ? 360 : 260
-    for (let i = 0; i < initialGems; i++) {
-      const timer = window.setTimeout(spawnGem, i * gemDelayStep)
-      gemTimeouts.push(timer)
+    // ✅ Gems solo desktop
+    if (!isCompactViewport) {
+      for (let i = 0; i < 6; i++) {
+        const timer = window.setTimeout(spawnGem, i * 260)
+        gemTimeouts.push(timer)
+      }
+      gemInterval = window.setInterval(spawnGem, 950)
     }
-
-    gemInterval = window.setInterval(spawnGem, isCompactViewport ? 1800 : 950)
 
     sectionObserver = new IntersectionObserver(([entry]) => {
       canvasVisible = entry.isIntersecting
@@ -356,10 +365,21 @@ onMounted(() => {
   isCompactViewport = isMobile()
   motionAllowed     = !prefersReducedMotion()
 
-  window.setTimeout(() => initMotionLayer(), 0)
+  // ✅ LCP fix: h1 visible en el primer paint, animación arranca un frame después
+  requestAnimationFrame(() => {
+    mounted.value = true
+  })
 
-  window.addEventListener('resize',            onResize,             { passive: true })
-  window.addEventListener('mousemove',         onMouseMove,          { passive: true })
+  // ✅ Móvil: espera 300ms antes de iniciar el canvas para no competir
+  //    con el thread principal en el primer render
+  const canvasDelay = isCompactViewport ? 300 : 0
+  window.setTimeout(() => initMotionLayer(), canvasDelay)
+
+  window.addEventListener('resize', onResize, { passive: true })
+  // ✅ mousemove solo en desktop
+  if (!isCompactViewport) {
+    window.addEventListener('mousemove', onMouseMove, { passive: true })
+  }
   document.addEventListener('visibilitychange', onVisibilityChange)
 })
 
@@ -367,7 +387,7 @@ onUnmounted(() => {
   stopLoop()
   clearInterval(gemInterval)
   sectionObserver?.disconnect()
-  resizeObserver?.disconnect()  // ✅ limpieza
+  resizeObserver?.disconnect()
   gemTimeouts.forEach(window.clearTimeout)
   gemCleanupTimers.forEach(window.clearTimeout)
   window.removeEventListener('resize',            onResize)
@@ -380,7 +400,8 @@ onUnmounted(() => {
 
 .scene
   width: 100%
-  min-height: 100vh
+  // ✅ svh en vez de vh — estable cuando aparece/desaparece la barra del navegador móvil (fix CLS)
+  min-height: 100svh
   background: #F4F0E8
   background-image: radial-gradient(circle at 50% 42%, rgba(212,175,110,0.12), transparent 30%), radial-gradient(circle at 50% 50%, rgba(184,152,90,0.08), transparent 46%)
   position: relative
@@ -412,6 +433,9 @@ canvas
   position: absolute
   border-radius: 50%
   border: 0.5px solid rgba(184,152,90,0.22)
+  // ✅ will-change: transform → el browser promueve el ring a su propia capa
+  //    y lo anima en el compositor sin tocar el main thread
+  will-change: transform
 
   &.ring-1
     width: 420px
@@ -429,6 +453,11 @@ canvas
     height: 860px
     border-color: rgba(184,152,90,0.1)
     animation: spin 45s linear infinite
+
+// ✅ ring-3 oculto en móvil: el más grande y el más caro de animar
+.desktop-only
+  @media (max-width: 768px)
+    display: none
 
 .ring-dot
   position: absolute
@@ -503,6 +532,8 @@ canvas
   will-change: transform, opacity
 
 // ── Content ───────────────────────────────────────────────────────────────────
+// Sin .animate → todo visible → browser pinta h1 → LCP registrado ✅
+// Con .animate (1 rAF después) → opacity 0 + fadeUp → efecto visual idéntico ✅
 .content
   position: relative
   z-index: 10
@@ -511,6 +542,54 @@ canvas
   flex-direction: column
   align-items: center
 
+  .eyebrow
+    opacity: 1
+
+  .title
+    opacity: 1
+    background: linear-gradient(90deg, #2A2318 0%, #8B6D45 30%, #D4AF6E 50%, #8B6D45 70%, #2A2318 100%)
+    background-size: 250% auto
+    -webkit-background-clip: text
+    -webkit-text-fill-color: transparent
+    background-clip: text
+
+  .divider
+    opacity: 1
+
+  .tagline
+    opacity: 1
+
+  .cta
+    opacity: 1
+
+  .mobile-cats
+    opacity: 1
+
+  &.animate
+    .eyebrow
+      opacity: 0
+      animation: fadeUp 0.9s ease forwards 0.1s
+
+    .title
+      opacity: 0
+      animation: fadeUp 1.1s cubic-bezier(0.16,1,0.3,1) forwards 0.2s, goldShimmer 4s linear infinite 2s
+
+    .divider
+      opacity: 0
+      animation: fadeUp 0.9s ease forwards 0.5s
+
+    .tagline
+      opacity: 0
+      animation: fadeUp 0.9s ease forwards 0.65s
+
+    .cta
+      opacity: 0
+      animation: fadeUp 0.8s ease forwards 0.85s
+
+    .mobile-cats
+      opacity: 0
+      animation: fadeUp 0.8s ease forwards 1.1s
+
 .eyebrow
   font-family: 'Cormorant Garamond', serif
   font-weight: 300
@@ -518,8 +597,6 @@ canvas
   letter-spacing: 0.55em
   color: #A0896A
   text-transform: uppercase
-  opacity: 0
-  animation: fadeUp 0.9s ease forwards 0.1s
   margin-bottom: 20px
 
 .title
@@ -529,13 +606,6 @@ canvas
   letter-spacing: 0.07em
   line-height: 1.15
   padding-bottom: 0.12em
-  background: linear-gradient(90deg, #2A2318 0%, #8B6D45 30%, #D4AF6E 50%, #8B6D45 70%, #2A2318 100%)
-  background-size: 250% auto
-  -webkit-background-clip: text
-  -webkit-text-fill-color: transparent
-  background-clip: text
-  opacity: 0
-  animation: fadeUp 1.1s cubic-bezier(0.16,1,0.3,1) forwards 0.2s, goldShimmer 4s linear infinite 2s
   text-wrap: balance
 
 .divider
@@ -543,8 +613,6 @@ canvas
   align-items: center
   gap: 14px
   margin: 22px 0
-  opacity: 0
-  animation: fadeUp 0.9s ease forwards 0.5s
 
 .divider-line
   width: 70px
@@ -566,8 +634,6 @@ canvas
   font-size: clamp(15px, 2.2vw, 22px)
   color: #6B5A42
   letter-spacing: 0.3em
-  opacity: 0
-  animation: fadeUp 0.9s ease forwards 0.65s
   margin-bottom: 40px
 
 .cta
@@ -581,8 +647,6 @@ canvas
   border: none
   padding: 17px 48px
   cursor: pointer
-  opacity: 0
-  animation: fadeUp 0.8s ease forwards 0.85s
   position: relative
   overflow: hidden
   transition: color 0.4s
@@ -609,8 +673,6 @@ canvas
   align-items: center
   gap: 10px
   margin-top: 28px
-  opacity: 0
-  animation: fadeUp 0.8s ease forwards 1.1s
 
   span
     font-family: 'Cormorant Garamond', serif
@@ -665,14 +727,9 @@ canvas
   .ring-dot,
   .gem,
   .divider-diamond,
-  .title,
-  .eyebrow,
-  .tagline,
-  .cta,
-  .mobile-cats,
-  .side-orn,
   .scroll-arrow,
-  .footer-text
+  .footer-text,
+  .side-orn
     animation: none !important
     transition: none !important
 
@@ -771,15 +828,8 @@ canvas
     width: 380px
     height: 380px
 
-  .ring.ring-3
-    width: 500px
-    height: 500px
-
   canvas
     opacity: 0.72
-
-  .gem
-    opacity: 0.8
 
   .eyebrow
     font-size: 9px

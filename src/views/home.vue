@@ -246,7 +246,7 @@ const footer_component = defineAsyncComponent(() => import('@/components/footer_
 import { useCorreosStore } from '@/stores/correos';
 import portada from '@/components/portada.vue';
 import { useHead } from '@vueuse/head';
-const reviews = defineAsyncComponent(() => import('@/components/reviews.vue'))
+import reviews from '@/components/reviews.vue';
 import { useRouter } from 'vue-router';
 import { onMounted, ref, computed } from 'vue';
 import { CountUp } from 'countup.js';
