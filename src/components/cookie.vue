@@ -40,7 +40,7 @@ const { mostrarBanner, aceptar, rechazar } = useCookieConsent()
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgb(75, 75, 75);
+  background: #faf8f5;
   z-index: 9999;
   font-family: 'Montserrat', sans-serif;
   box-shadow: 0 -8px 40px rgba(180, 150, 80, 0.08), 0 -1px 0 rgba(201,168,76,0.15);
@@ -99,14 +99,14 @@ const { mostrarBanner, aceptar, rechazar } = useCookieConsent()
 .cookie-desc {
   font-size: 0.75rem;
   font-weight: 300;
-  color: #d8d8d8;
+  color: #7a7570;
   margin: 0;
   line-height: 1.7;
   letter-spacing: 0.03em;
 }
 
 .cookie-link {
-  color: #d7a92c;
+  color: #b8922a;
   text-decoration: none;
   border-bottom: 1px solid rgba(184, 146, 42, 0.35);
   padding-bottom: 1px;
