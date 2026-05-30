@@ -26,7 +26,7 @@
             <h4>Administradores</h4>
             <a href="/catalogo">Productos</a>
             <a href="/">Principal</a>
-            <a href="/admin">Para Administradores</a>
+            
             <div class="redes">
                 <a href="https://wa.me/34666238158">
                     <i class="fa-brands fa-square-whatsapp" alt="Icono de WhatsApp"></i>

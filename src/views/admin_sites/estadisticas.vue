@@ -321,7 +321,6 @@ $sans:  'DM Sans', sans-serif
   min-height: 100vh
   background: $bg
 
-// ── Sidebar ───────────────────────────────────────────────
 .sidebar
   width: 260px
   flex-shrink: 0
@@ -389,14 +388,14 @@ $sans:  'DM Sans', sans-serif
     color: $text
     font-weight: 500
 
-// ── Main ──────────────────────────────────────────────────
+
 .main-content
   flex: 1
   padding: 2.5rem 3rem
   overflow-y: auto
   min-width: 0
 
-// ── KPIs ──────────────────────────────────────────────────
+
 .stats-row
   display: flex
   gap: 1rem
@@ -441,7 +440,7 @@ $sans:  'DM Sans', sans-serif
   text-transform: uppercase
   color: $text-muted
 
-// ── Gráficas ──────────────────────────────────────────────
+
 .charts-grid
   display: grid
   grid-template-columns: 1fr 1fr 1fr
@@ -482,7 +481,7 @@ $sans:  'DM Sans', sans-serif
 .chart-wrap-tall
   height: 240px
 
-// ── Responsive ────────────────────────────────────────────
+
 @media (max-width: 1024px)
   .charts-grid
     grid-template-columns: 1fr 1fr

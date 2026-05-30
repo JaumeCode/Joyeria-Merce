@@ -93,9 +93,7 @@ const joyasStore = useJoyasPublicasStore()
 const menuAbierto = ref(false)
 const favStore = useFavoritosStore()
 
-const totalFavoritos = computed(() =>
-  favStore.ids.filter(id => joyasStore.todas.some(j => j.id === id)).length
-)
+const totalFavoritos = computed(() => favStore.ids.length)
 </script>
 
 <style lang="sass" scoped>

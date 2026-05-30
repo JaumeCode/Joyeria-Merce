@@ -13,11 +13,14 @@
       <div class="badge_nuevo" v-if="novedad">Nuevo</div>
       <button
         class="btn_fav"
-        @click.stop="favStore.toggleFavorito(id)"
-        :class="{ activo: favStore.esFavorito(id) }"
-        :aria-label="favStore.esFavorito(id) ? 'Quitar de favoritos' : 'Añadir a favoritos'"
+        @click.stop="toggleFavorito"
+        :class="{ activo: isFavorito }"
+        :aria-label="isFavorito ? 'Quitar de favoritos' : 'Añadir a favoritos'"
       >
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg v-if="!isFavorito" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+        <svg v-else width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
           <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
         </svg>
       </button>
@@ -41,13 +44,14 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useFavoritosStore } from '@/stores/favoritos'
 import OptimizedImage from '@/components/OptimizedImage.vue'
 
 const favStore = useFavoritosStore()
 
-defineProps({
-  id: { type: String, required: true },
+const props = defineProps({
+  id: { type: [String, Number], required: true },
   imagen: { type: String, required: true },
   nombre: { type: String, required: true },
   descripcion: { type: String, required: true },
@@ -57,6 +61,16 @@ defineProps({
   medidas: { type: String, default: "Medida Unica" },
   slug: { type: String, default: "No contiene Slug" }
 })
+
+const isFavorito = computed(() => {
+  const id = String(props.id)
+  return favStore.esFavorito(id)
+})
+
+const toggleFavorito = () => {
+  const id = String(props.id)
+  favStore.toggleFavorito(id)
+}
 </script>
 
 <style lang="sass" scoped>

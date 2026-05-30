@@ -18,7 +18,7 @@
     <transition name="fade_page" mode="out-in">
       <div class="contenido" v-if="joya && !cargandoJoya" :key="joya.id">
         
-        <!-- Breadcrumb -->
+       
         <nav class="breadcrumb">
           <span @click="router.push('/')">Inicio</span> / 
           <span @click="router.push(`/${joya.tipo.toLowerCase()}`)">{{ joya.tipo }}</span> /
@@ -378,7 +378,7 @@ useHead(computed(() => ({
       height: 100%
       object-fit: contain
 
-// --- INFO ---
+
 .material_tag
   font-size: 0.7rem
   text-transform: uppercase

@@ -7,7 +7,9 @@ import {
   query,
   where,
   orderBy,
-  limit
+  limit,
+  doc,
+  getDoc
 } from 'firebase/firestore'
 import { db } from '@/firebase/main'
 import { obtener_joya as obtenerJoyasFirebase } from '@/functions_firebase/profile'
@@ -17,6 +19,7 @@ export const useJoyasPublicasStore = defineStore('joyasPublicas', () => {
     const destacadas = ref([])
     const novedades = ref([])
     const todas = ref([])
+    const todasLasJoyas = ref([]) // NEW: Todas sin límite
     
     // Por sección y material (caché combinada)
     const joyasPorFiltro = ref({})
@@ -25,6 +28,7 @@ export const useJoyasPublicasStore = defineStore('joyasPublicas', () => {
     const cargandoFiltro = ref(false)
 
     const cargadasTodas = ref(false)
+    const cargadasTodasSinLimite = ref(false) // NEW
 
     const mapDocs = (snap) =>
         snap.docs.map(doc => ({
@@ -32,14 +36,14 @@ export const useJoyasPublicasStore = defineStore('joyasPublicas', () => {
             ...doc.data()
         }))
 
-    // 🔑 Generar clave de caché para filtros
+    // Generar clave de caché para filtros
     const generarClaveCache = (tipo, material) => {
         const t = tipo || '*'
         const m = material || '*'
         return `${t}_${m}`
     }
 
-    // 🔥 HOME: solo lo necesario
+    // HOME: solo lo necesario
     const cargarHome = async () => {
         await Promise.all([
             cargarDestacadas(),
@@ -47,7 +51,7 @@ export const useJoyasPublicasStore = defineStore('joyasPublicas', () => {
         ])
     }
 
-    // 🔥 DESTACADAS
+    // DESTACADAS
     const cargarDestacadas = async () => {
         const q = query(
             collection(db, "joyas"),
@@ -59,7 +63,7 @@ export const useJoyasPublicasStore = defineStore('joyasPublicas', () => {
         destacadas.value = mapDocs(snap)
     }
 
-    // 🆕 NOVEDADES
+    // NOVEDADES
     const cargarNovedades = async () => {
         const q = query(
             collection(db, "joyas"),
@@ -71,7 +75,7 @@ export const useJoyasPublicasStore = defineStore('joyasPublicas', () => {
         novedades.value = mapDocs(snap)
     }
 
-    // 📦 TODAS (lazy load + límite)
+    //  TODAS (lazy load + límite)
     const cargarTodas = async () => {
 
         // evita recargar cada vez
@@ -89,18 +93,19 @@ export const useJoyasPublicasStore = defineStore('joyasPublicas', () => {
         cargadasTodas.value = true
     }
 
-    // 🔥 OBTENER TODAS LAS JOYAS (para catálogo)
+    // OBTENER TODAS LAS JOYAS (para catálogo)
     const obtener_joya = async () => {
-        if (todas.value.length > 0) return { ok: true, favs: todas.value }
+        if (cargadasTodasSinLimite.value && todasLasJoyas.value.length > 0) return { ok: true, favs: todasLasJoyas.value }
         
         const resultado = await obtenerJoyasFirebase()
         if (resultado.ok) {
-            todas.value = resultado.favs || []
+            todasLasJoyas.value = resultado.favs || []
+            cargadasTodasSinLimite.value = true
         }
         return resultado
     }
 
-    // 🎯 CARGAR CON FILTROS (tipo y/o material) + PAGINACIÓN
+    // CARGAR CON FILTROS (tipo y/o material) + PAGINACIÓN
     const cargarJoyasPorFiltro = async (tipo = null, material = null, pagina = 1, itemsPorPagina = 12) => {
         try {
             cargandoFiltro.value = true
@@ -153,17 +158,47 @@ export const useJoyasPublicasStore = defineStore('joyasPublicas', () => {
         }
     }
 
-    // 📄 CARGAR MÁS (Infinite Scroll)
+    // CARGAR MÁS (Infinite Scroll)
     const cargarMasConFiltro = async (tipo = null, material = null) => {
         const clave = generarClaveCache(tipo, material)
         const paginaActualVal = paginaActual.value[clave] || 1
         await cargarJoyasPorFiltro(tipo, material, paginaActualVal + 1)
     }
 
-    // 🔄 OBTENER TOTAL CON FILTROS
+    // OBTENER TOTAL CON FILTROS
     const obtenerTotal = (tipo = null, material = null) => {
         const clave = generarClaveCache(tipo, material)
         return joyasPorFiltro.value[clave]?.length || 0
+    }
+
+    // CARGAR JOYAS EN FAVORITOS (solo por IDs)
+    const cargarJoyasPorIds = async (ids) => {
+        if (!ids || ids.length === 0) return []
+        
+        try {
+            const joyas = []
+            
+            // Usar getDoc para cada ID (el ID es el document ID, no un campo)
+            for (const id of ids) {
+                try {
+                    const docRef = doc(db, "joyas", String(id))
+                    const docSnap = await getDoc(docRef)
+                    if (docSnap.exists()) {
+                        joyas.push({
+                            id: docSnap.id,
+                            ...docSnap.data()
+                        })
+                    }
+                } catch (e) {
+                    console.error(`Error cargando joya con ID ${id}:`, e)
+                }
+            }
+            
+            return joyas
+        } catch (error) {
+            console.error('Error cargando joyas por IDs:', error)
+            return []
+        }
     }
 
 
@@ -172,6 +207,7 @@ export const useJoyasPublicasStore = defineStore('joyasPublicas', () => {
         destacadas,
         novedades,
         todas,
+        todasLasJoyas,
         joyasPorFiltro,
         filtroActual,
         cargandoFiltro,
@@ -185,6 +221,7 @@ export const useJoyasPublicasStore = defineStore('joyasPublicas', () => {
         cargarMasConFiltro,
         obtenerTotal,
         generarClaveCache,
-        obtener_joya
+        obtener_joya,
+        cargarJoyasPorIds
     }
 })
