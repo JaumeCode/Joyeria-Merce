@@ -60,47 +60,52 @@ import { computed, ref, watch } from 'vue'
 import { useFavoritosStore } from '@/stores/favoritos'
 import { useJoyasPublicasStore } from '@/stores/joyas'
 
-const favStore = useFavoritosStore()
+const favStore   = useFavoritosStore()
 const joyasStore = useJoyasPublicasStore()
 
 const joyasCargadas = ref([])
-const cargando = ref(false)
+const cargando      = ref(false)
 
-// Cargar las joyas completas desde la base de datos
+// Caché local: evita ir a Firebase si los IDs no han cambiado
+const idsCargados = ref(null)
+
 const cargarJoyasFavoritos = async () => {
   const ids = favStore.ids
-  
+
   if (!ids || ids.length === 0) {
     joyasCargadas.value = []
     return
   }
-  
+
+  // FIX: Si los IDs son exactamente los mismos que la última carga, no ir a Firebase
+  const idsKey = [...ids].sort().join(',')
+  if (idsKey === idsCargados.value) return
+
   cargando.value = true
   try {
     const joyas = await joyasStore.cargarJoyasPorIds(ids)
     joyasCargadas.value = joyas || []
+    idsCargados.value   = idsKey  // guardar en caché
   } catch (e) {
-    console.error('Error cargando favoritos desde la API:', e)
+    console.error('Error cargando favoritos:', e)
     joyasCargadas.value = []
   } finally {
-    // 600ms para que dé tiempo a disfrutar de la nueva animación fluida
-    setTimeout(() => {
-      cargando.value = false
-    }, 600)
+    // FIX: Sin setTimeout — mostrar los datos en cuanto lleguen
+    cargando.value = false
   }
 }
 
-// Disparar la petición HTTP solo cuando el usuario abre el Drawer
+// Solo carga al abrir si los datos han cambiado
 watch(() => favStore.drawerAbierto, (abierto) => {
-  if (abierto) {
-    cargarJoyasFavoritos()
-  }
+  if (abierto) cargarJoyasFavoritos()
 })
 
-// Quitar favorito: feedback instantáneo en pantalla
+// Quitar favorito: feedback instantáneo, sin refetch
 const quitarDeFavoritos = (id) => {
   favStore.toggleFavorito(id)
-  joyasCargadas.value = joyasCargadas.value.filter(joya => String(joya.id) !== String(id))
+  joyasCargadas.value = joyasCargadas.value.filter(j => String(j.id) !== String(id))
+  // Invalidar caché para que la próxima apertura sea coherente
+  idsCargados.value = null
 }
 
 const joyas_favoritas = computed(() => joyasCargadas.value)
@@ -157,7 +162,6 @@ const joyas_favoritas = computed(() => joyasCargadas.value)
       &:hover
         background: rgba(0,0,0,0.05)
 
-  /* --- NUEVO ESTADO DE CARGA PRESTIGE --- */
   .luxury_loader
     flex: 1
     display: flex
@@ -180,7 +184,7 @@ const joyas_favoritas = computed(() => joyasCargadas.value)
         width: 100%
         height: 100%
         border: 2px solid rgba(122, 110, 95, 0.15)
-        border-top: 2px solid #7a6e5f // Un tono sutil oro/tostado elegante
+        border-top: 2px solid #7a6e5f
         border-radius: 50%
         animation: spin 1s infinite linear
 
@@ -290,7 +294,6 @@ const joyas_favoritas = computed(() => joyasCargadas.value)
         color: #EDE9D8
         border-color: #1a1a1a
 
-/* --- ANIMACIONES CSS --- */
 @keyframes spin
   0%
     transform: rotate(0deg)
@@ -311,7 +314,6 @@ const joyas_favoritas = computed(() => joyasCargadas.value)
   50%
     opacity: 1
 
-/* Transiciones del Drawer */
 .fade-enter-active, .fade-leave-active
   transition: opacity 0.3s ease
 
