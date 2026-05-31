@@ -139,14 +139,14 @@ const imagenActiva = ref('')
 
 onMounted(async () => {
   window.scrollTo({ top: 0, behavior: 'instant' })
-  if (joyasStore.todas.length === 0) await joyasStore.obtener_joya()
+  if (joyasStore.todasLasJoyas.length === 0) await joyasStore.obtener_joya()
 })
 
-const joya = computed(() => joyasStore.todas.find(j => j.slug === route.params.slug))
+const joya = computed(() => joyasStore.todasLasJoyas.find(j => j.slug === route.params.slug))
 
 const similares = computed(() => {
   if (!joya.value) return []
-  return joyasStore.todas
+  return joyasStore.todasLasJoyas
     .filter(j => j.id !== joya.value.id && j.tipo === joya.value.tipo)
     .slice(0, 4)
 })

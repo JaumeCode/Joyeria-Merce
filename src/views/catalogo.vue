@@ -2,14 +2,17 @@
   <div class="pagina">
     <header_all />
     <div class="contenido">
+
       <!-- Cabecera -->
       <div class="cat_header">
         <h1>Catálogo</h1>
-        <p class="sub">Explora nuestra colección completa de joyas en Puerto de Sagunto. Descubre anillos, pulseras, colgantes y pendientes de oro, plata y acero, con diseño exclusivo y acabados de alta calidad, perfectos para cualquier ocasión.</p>
-        
+        <p class="sub">
+          Explora nuestra colección completa de joyas en Puerto de Sagunto. Descubre anillos, pulseras,
+          colgantes y pendientes de oro, plata y acero, con diseño exclusivo y acabados de alta calidad,
+          perfectos para cualquier ocasión.
+        </p>
       </div>
 
-      <!-- Controles -->
       <!-- Controles -->
       <div class="controles">
         <div class="filtros_header">
@@ -28,6 +31,7 @@
             {{ filtrosAbiertos ? '✕ Cerrar' : '⊞ Categorías' }}
           </button>
         </div>
+
         <div class="derecha">
           <input v-model="busqueda" class="buscar" placeholder="Buscar joya..." />
           <select v-model="orden" class="ordenar">
@@ -44,177 +48,188 @@
         </div>
       </div>
 
-      <p class="resultado_info">{{ joyasFiltradas.length }} piezas encontradas</p>
+      <!-- Estado de carga -->
+      <div class="cargando" v-if="cargando">
+        <span class="spinner" />
+        <p>Cargando joyas…</p>
+      </div>
 
-      <!-- Grid -->
-      <div class="grid" v-if="joyasPaginadas">
-        <PremiumJewelryCard
-          v-for="joya in joyasPaginadas"
-          :key="joya.id"
-          :id="joya.id"
-          :imagen="joya.imagenes[0]"
-          :nombre="joya.nombre"
-          :descripcion="joya.descripcion"
-          :tipo="joya.tipo"
-          :material="joya.material"
-          :medidas="joya.medidas"
-          :precio="joya.precio"
-          :disponible="joya.disponible"
-          :slug="joya.slug"
-          :esNuevo="esNovedad(joya.fecha_creacion)"
-        />
+      <!-- Error -->
+      <div class="vacio" v-else-if="error">
+        <p>⚠️</p>
+        <p>Error al cargar las joyas. Inténtalo de nuevo.</p>
+        <button class="chip activo" @click="cargar()">Reintentar</button>
       </div>
-      
-      <div class="vacio" v-if="!joyasFiltradas.length">
-        <p>✦</p>
-        <p>No se encontraron joyas con esos filtros</p>
-      </div>
-    </div>
-    <div class="paginacion" v-if="totalPaginas > 1">
-      <button class="pag_btn" @click="paginaActual--" :disabled="paginaActual === 1">‹</button>
-      <button
-        v-for="n in totalPaginas"
-        :key="n"
-        class="pag_btn"
-        :class="{ activo: paginaActual === n }"
-        @click="cambiarPagina(n)"
-      >{{ n }}</button>
-      <button class="pag_btn" @click="paginaActual++" :disabled="paginaActual === totalPaginas">›</button>
+
+      <template v-else>
+        <p class="resultado_info">{{ joyasFiltradas.length }} piezas encontradas</p>
+
+        <!-- Grid -->
+        <div class="grid" v-if="joyasPaginadas.length">
+          <PremiumJewelryCard
+            v-for="joya in joyasPaginadas"
+            :key="joya.id"
+            :id="joya.id"
+            :imagen="joya.imagenes[0]"
+            :nombre="joya.nombre"
+            :descripcion="joya.descripcion"
+            :tipo="joya.tipo"
+            :material="joya.material"
+            :medidas="joya.medidas"
+            :precio="joya.precio"
+            :disponible="joya.disponible"
+            :slug="joya.slug"
+            :esNuevo="esNovedad(joya.fecha_creacion)"
+          />
+        </div>
+
+        <!-- Sin resultados -->
+        <div class="vacio" v-else>
+          <p>✦</p>
+          <p>No se encontraron joyas con esos filtros</p>
+        </div>
+
+        <!-- Paginación -->
+        <div class="paginacion" v-if="totalPaginas > 1">
+          <button class="pag_btn" @click="cambiarPagina(paginaActual - 1)" :disabled="paginaActual === 1">‹</button>
+          <button
+            v-for="n in totalPaginas"
+            :key="n"
+            class="pag_btn"
+            :class="{ activo: paginaActual === n }"
+            @click="cambiarPagina(n)"
+          >{{ n }}</button>
+          <button class="pag_btn" @click="cambiarPagina(paginaActual + 1)" :disabled="paginaActual === totalPaginas">›</button>
+        </div>
+      </template>
+
     </div>
     <footer_component />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { useHead } from '@vueuse/head'
 import { useJoyasPublicasStore } from '@/stores/joyas'
+import { useFavoritosStore } from '@/stores/favoritos'
 import header_all from '@/components/header_all.vue'
 import footer_component from '@/components/footer_component.vue'
-import { useFavoritosStore } from '@/stores/favoritos'
-import { useRoute } from 'vue-router'
-import { watch } from 'vue'
 import PremiumJewelryCard from '@/components/PremiumJewelryCard.vue'
-//Recuperamos el storage de favoritos
-const favoritos=useFavoritosStore()
 
-//Agregar a favoritos
-const route=useRoute()
-const router = useRouter()
-const store = useJoyasPublicasStore()
+// ── Stores ────────────────────────────────────────────────────────────────────
+const store     = useJoyasPublicasStore()
+const favoritos = useFavoritosStore()
+const route     = useRoute()
 
-const categorias = ['Todas', 'Anillos', 'Pulseras', 'Cadenas', 'Colgantes', 'Pendientes']
-const catActiva = ref('Todas')
-const busqueda = ref('')
-const orden = ref('az')
-const materialFiltro = ref('')
+// ── Estado local de carga ─────────────────────────────────────────────────────
+// obtener_joya() guarda los datos en store.todasLasJoyas (NO en store.todas).
+// Gestionamos cargando/error localmente para mostrar feedback correcto.
+const cargando = ref(false)
+const error    = ref(false)
+
+// ── Filtros / orden ───────────────────────────────────────────────────────────
+const categorias      = ['Todas', 'Anillos', 'Pulseras', 'Cadenas', 'Colgantes', 'Pendientes']
+const catActiva       = ref('Todas')
+const busqueda        = ref('')
+const orden           = ref('az')
+const materialFiltro  = ref('')
 const filtrosAbiertos = ref(false)
 
-import { useHead } from '@vueuse/head'
+// ── Paginación ────────────────────────────────────────────────────────────────
+const paginaActual = ref(1)
+const POR_PAGINA   = 12
 
+// ── SEO ───────────────────────────────────────────────────────────────────────
 useHead({
   title: 'Catálogo de Joyas en Puerto de Sagunto — Joyería Mercè',
-   link: [
-    { rel: 'canonical', href: 'https://joyeriamerce.es/catalogo' }
-  ],
+  link: [{ rel: 'canonical', href: 'https://joyeriamerce.es/catalogo' }],
   meta: [
-    {
-      name: 'description',
-      content: 'Explora la colección de joyas únicas de oro, plata y acero en Joyería Mercè, Puerto de Sagunto. Anillos, pulseras, colgantes y pendientes con diseño exclusivo y acabados de calidad.'
-    },
-    {
-      property: 'og:title',
-      content: 'Catálogo de Joyas en Puerto de Sagunto — Joyería Mercè'
-    },
-    {
-      property: 'og:description',
-      content: 'Descubre anillos, pulseras, colgantes y pendientes de oro, plata y acero en Joyería Mercè. Diseño exclusivo y acabados de alta calidad en Puerto de Sagunto.'
-    },
-    {
-      property: 'og:type',
-      content: 'website'
-    },
-    {
-      name: 'keywords',
-      content: 'joyas, joyería, Puerto de Sagunto, anillos, pulseras, colgantes, pendientes, oro, plata, acero, diseño exclusivo, calidad'
-    },
-  ]
+    { name: 'description',        content: 'Explora la colección de joyas únicas de oro, plata y acero en Joyería Mercè, Puerto de Sagunto. Anillos, pulseras, colgantes y pendientes con diseño exclusivo y acabados de calidad.' },
+    { property: 'og:title',       content: 'Catálogo de Joyas en Puerto de Sagunto — Joyería Mercè' },
+    { property: 'og:description', content: 'Descubre anillos, pulseras, colgantes y pendientes de oro, plata y acero en Joyería Mercè. Diseño exclusivo y acabados de alta calidad en Puerto de Sagunto.' },
+    { property: 'og:type',        content: 'website' },
+    { name: 'keywords',           content: 'joyas, joyería, Puerto de Sagunto, anillos, pulseras, colgantes, pendientes, oro, plata, acero, diseño exclusivo, calidad' },
+  ],
 })
+
+// ── Carga ─────────────────────────────────────────────────────────────────────
+// FIX PRINCIPAL: obtener_joya() llena store.todasLasJoyas, no store.todas.
+// El computed joyasFiltradas lee store.todasLasJoyas.
+const cargar = async () => {
+  if (store.todasLasJoyas?.length) return  // ya en caché, no repetir fetch
+  cargando.value = true
+  error.value    = false
+  try {
+    await store.obtener_joya()
+  } catch (e) {
+    console.error('Error cargando joyas:', e)
+    error.value = true
+  } finally {
+    cargando.value = false
+  }
+}
 
 onMounted(async () => {
-  if (store.todas.length === 0) await store.obtener_joya()
-  if (route.query.tipo) {
-    catActiva.value = route.query.tipo
-
-  }
-  if (route.query.material) {
-    materialFiltro.value = route.query.material
-  }
-})
-//Query de seccion de anillos de compromiso 
-watch(() => route.query, (query) => {
-  if (query.tipo) catActiva.value = query.tipo
-  if (query.material) materialFiltro.value = query.material
-
+  if (route.query.tipo)     catActiva.value      = route.query.tipo
+  if (route.query.material) materialFiltro.value = route.query.material
+  await cargar()
 })
 
+// Sincronizar filtros si cambia la URL
+watch(
+  () => route.query,
+  (query) => {
+    if (query.tipo)     catActiva.value      = query.tipo
+    if (query.material) materialFiltro.value = query.material
+  }
+)
 
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const esNovedad = (fecha) => Boolean(fecha) && Date.now() - fecha < 14 * 24 * 60 * 60 * 1000
 
-const esNovedad = (fecha) => Date.now() - fecha < 14 * 24 * 60 * 60 * 1000
-
+// ── Computed: filtrado + ordenación ──────────────────────────────────────────
+// FIX: lee store.todasLasJoyas (donde obtener_joya() guarda los datos)
 const joyasFiltradas = computed(() => {
-  let resultado = []
+  const term     = busqueda.value.trim().toLowerCase()
+  const material = materialFiltro.value.toLowerCase()
+  const tipo     = catActiva.value === 'Todas' ? '' : catActiva.value.toLowerCase()
 
-  
-  for (let joya of store.todas) {
+  const resultado = (store.todasLasJoyas ?? []).filter((joya) => {
+    if (tipo     && joya.tipo?.toLowerCase()     !== tipo)     return false
+    if (material && joya.material?.toLowerCase() !== material) return false
+    if (term     && !joya.nombre?.toLowerCase().includes(term)) return false
+    return true
+  })
 
-    
-    if (catActiva.value !== 'Todas' && joya.tipo !== catActiva.value.toLowerCase()) continue
-
-    
-    if (!joya.nombre.toLowerCase().includes(busqueda.value.toLowerCase())) continue
-
-    if (materialFiltro.value && joya.material !=materialFiltro.value.toLocaleLowerCase()) continue
-    
-    resultado.push(joya)
+  const ordenadores = {
+    az:          (a, b) => a.nombre.localeCompare(b.nombre),
+    precio_asc:  (a, b) => a.precio - b.precio,
+    precio_desc: (a, b) => b.precio - a.precio,
   }
 
-  if (orden.value === 'az') {
-    resultado.sort((a, b) => a.nombre.localeCompare(b.nombre))
-  }
-
-  if (orden.value === 'precio_asc') {
-    resultado.sort((a, b) => a.precio - b.precio)
-  }
-
-  if (orden.value === 'precio_desc') {
-    resultado.sort((a, b) => b.precio - a.precio)
-  }
-
-
-  return resultado
+  return resultado.sort(ordenadores[orden.value] ?? ordenadores.az)
 })
 
-//Paginacion de joyas 
-const paginaActual = ref(1)
-const porPagina = 12
+// ── Computed: paginación ──────────────────────────────────────────────────────
+const totalPaginas = computed(() => Math.ceil(joyasFiltradas.value.length / POR_PAGINA) || 1)
 
 const joyasPaginadas = computed(() => {
-  const inicio = (paginaActual.value - 1) * porPagina
-  
-  return joyasFiltradas.value.slice(inicio, inicio + porPagina)
+  const inicio = (paginaActual.value - 1) * POR_PAGINA
+  return joyasFiltradas.value.slice(inicio, inicio + POR_PAGINA)
 })
-const cambiarPagina=(n)=>{
+
+// Volver a página 1 cuando cambia cualquier filtro
+watch([catActiva, busqueda, orden, materialFiltro], () => { paginaActual.value = 1 })
+
+const cambiarPagina = (n) => {
+  if (n < 1 || n > totalPaginas.value) return
   paginaActual.value = n
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
-const totalPaginas = computed(() => Math.floor(joyasFiltradas.value.length / porPagina) + 1)
-watch(paginaActual, () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-}, { flush: 'post' })
-watch([catActiva, busqueda, orden, materialFiltro], () => { paginaActual.value = 1 })
-
 </script>
+
 <style lang="sass" scoped>
 .pagina
   min-height: 100vh
@@ -225,7 +240,7 @@ watch([catActiva, busqueda, orden, materialFiltro], () => { paginaActual.value =
   margin: 0 auto
   padding: 6rem 2rem 3rem
 
-
+// ── Cabecera ──────────────────────────────────────────────────────────────────
 .cat_header
   text-align: center
   margin-bottom: 3rem
@@ -240,11 +255,11 @@ watch([catActiva, busqueda, orden, materialFiltro], () => { paginaActual.value =
   .sub
     font-size: 0.85rem
     color: #7a6e5f
-    text-transform: none
     letter-spacing: 0.05rem
     line-height: 1.5
     margin-bottom: 3rem
 
+// ── Controles ─────────────────────────────────────────────────────────────────
 .controles
   display: flex
   flex-wrap: wrap
@@ -315,260 +330,60 @@ watch([catActiva, busqueda, orden, materialFiltro], () => { paginaActual.value =
   outline: none
   font-family: inherit
 
-
+// ── Info ──────────────────────────────────────────────────────────────────────
 .resultado_info
   font-size: 0.78rem
   color: #9a8f7f
   letter-spacing: 0.06rem
   margin: 0 0 1.5rem
 
+// ── Cargando ──────────────────────────────────────────────────────────────────
+.cargando
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 1rem
+  padding: 6rem 2rem
+  color: #9a8f7f
+  font-size: 0.9rem
 
+.spinner
+  width: 32px
+  height: 32px
+  border: 2px solid rgba(0,0,0,0.1)
+  border-top-color: #1a1a1a
+  border-radius: 50%
+  animation: girar 0.8s linear infinite
+
+@keyframes girar
+  to
+    transform: rotate(360deg)
+
+// ── Grid ──────────────────────────────────────────────────────────────────────
 .grid
   display: grid
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr))
   gap: 1.5rem
 
-
-.card
-  background: #fff
-  border-radius: 16px
-  overflow: hidden
-  border: 1px solid rgba(0,0,0,0.07)
-  cursor: pointer
-  transition: transform 0.3s ease, box-shadow 0.3s ease
-
-  &:hover
-    transform: translateY(-5px)
-    box-shadow: 0 16px 40px rgba(0,0,0,0.09)
-
-    .card_img img
-      transform: scale(1.04)
-
-.card_img
-  background: linear-gradient(145deg, #f5f0e8, #ede9d8)
-  height: 220px
-  overflow: hidden
-  position: relative
-  display: flex
-  align-items: center
-  justify-content: center
-
-  img
-    width: 100%
-    height: 100%
-    object-fit: contain
-    padding: 1.5rem
-    transition: transform 0.4s ease
-
-.badge
-  position: absolute
-  top: 12px
-  font-size: 0.62rem
-  letter-spacing: 0.07rem
-  padding: 3px 10px
-  border-radius: 20px
-  font-weight: 600
-  text-transform: uppercase
-
-  &.badge_nov
-    left: 12px
-    background: #1a1a1a
-    color: #EDE9D8
-
-  &.badge_ago
-    right: 12px
-    background: rgba(255,255,255,0.85)
-    color: #aaa
-    border: 1px solid rgba(0,0,0,0.08)
-
-.card_body
-  padding: 1.2rem
-
-.cat_label
-  font-size: 0.65rem
-  letter-spacing: 0.15rem
-  color: #9a8f7f
-  text-transform: uppercase
-  margin: 0 0 6px
-
-.nombre
-  font-family: 'Playfair Display', serif
-  font-size: 1.05rem
-  font-weight: 700
-  color: #1a1a1a
-  margin: 0 0 8px
-  line-height: 1.3
-
-.desc
-  font-size: 0.8rem
-  color: #7a6e5f
-  margin: 0 0 14px
-  line-height: 1.6
-  display: -webkit-box
-  -webkit-line-clamp: 2
-  -webkit-box-orient: vertical
-  overflow: hidden
-
-.card_footer
-  display: flex
-  justify-content: space-between
-  align-items: center
-  padding-top: 10px
-  border-top: 1px solid rgba(0,0,0,0.06)
-
-.btn_fav
-  background: transparent
-  border: none
-  cursor: pointer
-  font-size: 1.2rem
-  color: #ccc
-  transition: all 0.2s
-  padding: 0
-
-  &:hover
-    color: #e07070
-
-  &.activo
-    color: #e07070
-
-.precio
-  font-size: 1rem
-  font-weight: 700
-  color: #1a1a1a
-
-.dispo
-  display: flex
-  align-items: center
-  gap: 5px
-  font-size: 0.68rem
-  font-weight: 600
-  letter-spacing: 0.04rem
-
-  .dot
-    width: 6px
-    height: 6px
-    border-radius: 50%
-    flex-shrink: 0
-
-  &.si
-    color: #2d7a4f
-    .dot
-      background: #2d7a4f
-      animation: pulso 1.8s infinite
-
-  &.no
-    color: #bbb
-    .dot
-      background: #ccc
-
-// ── Vacío ─────────────────────────────────────────────────────────────────────
+// ── Vacío / Error ─────────────────────────────────────────────────────────────
 .vacio
   text-align: center
   padding: 6rem 2rem
   color: #9a8f7f
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 1rem
 
   p:first-child
     font-size: 2rem
     opacity: 0.3
-    margin: 0 0 1rem
+    margin: 0
 
   p:last-child
     font-size: 0.9rem
     letter-spacing: 0.05rem
-
-
-@keyframes pulso
-  0%, 100%
-    opacity: 1
-    transform: scale(1)
-  50%
-    opacity: 0.3
-    transform: scale(0.6)
-
-
-.btn_filtros
-  display: none
-
-@media (max-width: 768px)
-  .contenido
-    padding: 4rem 1rem 3rem
-
-  .controles
-    flex-direction: column
-    align-items: stretch
-    gap: 0.75rem
-    padding-bottom: 1rem
-
-  .filtros_header
-    display: flex
-    flex-direction: column
-    gap: 8px
-
-  // Chips ocultos por defecto en móvil
-  .filtros
-    display: none
-    grid-template-columns: repeat(3, 1fr)
-    gap: 6px
-
-    &.abierto
-      display: grid
-
-  .chip
-    font-size: 0.68rem
-    padding: 8px 14px
-    text-align: center
-    border-radius: 10px
-
-  // Botón visible solo en móvil
-  .btn_filtros
-    display: flex
-    align-items: center
-    justify-content: center
-    gap: 6px
-    width: 100%
-    padding: 9px 16px
-    border: 1px solid rgba(0,0,0,0.14)
-    border-radius: 20px
-    background: transparent
-    font-family: inherit
-    font-size: 0.75rem
-    letter-spacing: 0.08rem
-    color: #1a1a1a
-    cursor: pointer
-    transition: all 0.2s
-
-    &:hover
-      background: rgba(0,0,0,0.04)
-
-  .derecha
-    display: flex
-    flex-direction: column
-    gap: 8px
-    width: 100%
-
-  .buscar
-    width: 100%
-    box-sizing: border-box
-
-  .ordenar
-    width: 100%
-    box-sizing: border-box
-
-  .grid
-    grid-template-columns: 1fr
-    gap: 1rem
-
-  .card_img
-    height: 160px
-
-  .nombre
-    font-size: 0.9rem
-
-  .desc
-    display: none
-
-  .precio
-    font-size: 0.9rem
+    margin: 0
 
 // ── Paginación ────────────────────────────────────────────────────────────────
 .paginacion
@@ -609,7 +424,70 @@ watch([catActiva, busqueda, orden, materialFiltro], () => { paginaActual.value =
     border-color: #1a1a1a
     font-weight: 500
 
+// ── Responsive ────────────────────────────────────────────────────────────────
 @media (max-width: 768px)
+  .contenido
+    padding: 4rem 1rem 3rem
+
+  .controles
+    flex-direction: column
+    align-items: stretch
+    gap: 0.75rem
+    padding-bottom: 1rem
+
+  .filtros_header
+    display: flex
+    flex-direction: column
+    gap: 8px
+
+  .filtros
+    display: none
+    grid-template-columns: repeat(3, 1fr)
+    gap: 6px
+
+    &.abierto
+      display: grid
+
+  .chip
+    font-size: 0.68rem
+    padding: 8px 14px
+    text-align: center
+    border-radius: 10px
+
+  .btn_filtros
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: 6px
+    width: 100%
+    padding: 9px 16px
+    border: 1px solid rgba(0,0,0,0.14)
+    border-radius: 20px
+    background: transparent
+    font-family: inherit
+    font-size: 0.75rem
+    letter-spacing: 0.08rem
+    color: #1a1a1a
+    cursor: pointer
+    transition: all 0.2s
+
+    &:hover
+      background: rgba(0,0,0,0.04)
+
+  .derecha
+    flex-direction: column
+    gap: 8px
+    width: 100%
+
+  .buscar,
+  .ordenar
+    width: 100%
+    box-sizing: border-box
+
+  .grid
+    grid-template-columns: 1fr
+    gap: 1rem
+
   .paginacion
     gap: 4px
     margin: 2rem auto 1.5rem
@@ -620,4 +498,8 @@ watch([catActiva, busqueda, orden, materialFiltro], () => { paginaActual.value =
     height: 34px
     font-size: 0.78rem
     border-radius: 8px
+
+// Ocultar en desktop
+.btn_filtros
+  display: none
 </style>
