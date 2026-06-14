@@ -141,7 +141,7 @@ onMounted(async () => {
 const esNovedad = (fecha) => Date.now() - fecha < 14 * 24 * 60 * 60 * 1000
 
 const joyasFiltradas = computed(() => {
-  let resultado = store.todas.filter(j => j.seccion === 'pedidas')
+  let resultado = store.todasLasJoyas.filter(j => j.seccion === 'pedidas')
 
   if (busqueda.value) resultado = resultado.filter(j => j.nombre.toLowerCase().includes(busqueda.value.toLowerCase()))
   if (tipoFiltro.value) resultado = resultado.filter(j => j.tipo === tipoFiltro.value)
